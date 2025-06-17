@@ -13,6 +13,13 @@
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
+
+      "i18n": {
+      "sourceLocale": "en-US",
+      "locales": {
+        "ar": "src/locale/messages.ar.xlf"
+      }},
+
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
@@ -21,17 +28,23 @@
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
-              "zone.js"
+              "zone.js",
+              "@angular/localize/init"
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "css",
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
+                "src/assets",
+                {
+                  "glob": "**/*",
+                  "input": "public",
+                  "output": "/"
+                }
+              ],
+
             "styles": [
+              "node_modules/leaflet/dist/leaflet.css",
+              "node_modules/flatpickr/dist/flatpickr.min.css",
               "src/styles.css"
             ],
             "scripts": []
@@ -56,6 +69,17 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "ar": {
+              "localize": ["ar"],
+              "outputPath": "dist/sakan-app-ar",
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                }
+              }
             }
           },
           "defaultConfiguration": "production"
@@ -80,7 +104,8 @@
           "options": {
             "polyfills": [
               "zone.js",
-              "zone.js/testing"
+              "zone.js/testing",
+              "@angular/localize/init"
             ],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "css",

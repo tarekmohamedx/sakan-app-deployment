@@ -1,0 +1,196 @@
+<div class="listing-container">
+  
+  <div class="lang-switcher" style="display: flex; justify-content: flex-end; margin-bottom: 1rem;"></div>
+  <button (click)="switchLanguage()" class="lang-btn" style="background: #f5f5f5; border: none; border-radius: 20px; padding: 0.5rem 1.2rem; display: flex; align-items: center; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.07); transition: background 0.2s;">
+    <span class="lang-icon" style="font-size: 1.3rem; margin-right: 0.5rem;">🌐</span>
+    <span class="lang-label" style="font-weight: 600; letter-spacing: 1px;">{{ currentLang === 'en' ? 'AR' : 'EN' }}</span>
+  </button>
+
+  <h1 i18n>{{ listing.title }}</h1>
+  <div class="gallery">
+    <img [src]="listing.photos[0]" class="main-photo" alt="Main" />
+    <div class="thumbs">
+      <img *ngFor="let photo of listing.photos.slice(1, 5)" [src]="photo" class="thumb" />
+    </div>
+  </div>
+
+  <div class="details-layout">
+    <!-- Left section -->
+    <div class="description">
+      <h2>{{ listing.location }}</h2>
+      <div class="icons">
+        <span>🛏 {{ listing.bedrooms }} {{ 'bedroom' | translate }}</span>
+        <span>🛁{{ listing.bathrooms }} {{ 'bath' | translate }}</span>
+        <br>
+        <!-- <h4>Hosted By {{ listing.host.name }}</h4> -->
+        <div class="host-summary">
+          <div class="avatar-circle">
+            {{ listing.host.name.charAt(0) | uppercase }}
+          </div>
+          <h3>{{ 'Hosted by ' | translate }} {{ listing.host.name }}</h3>
+        </div>
+
+      </div>
+
+      <h3>{{ 'Description' | translate }}</h3>
+      <p>{{ listing.description }}</p>
+    </div>
+
+
+    <!-- Right booking card -->
+    <div class="booking-card">
+      <h2>£{{ listing.pricePerMonth }} / {{ 'Month' | translate }}</h2>
+
+      <div class="booking-dates">
+       <div *ngIf="monthRanges.length > 0">
+        <label>{{ 'Booking Ranges:' | translate }}</label>
+        <ul>
+          <li *ngFor="let r of monthRanges">
+            {{ r.start }} → {{ r.end }}
+          </li>
+        </ul>
+      </div>
+
+      </div>
+
+      <div class="guests">
+        <label>👤 {{ 'Guests' | translate }}</label>
+        <div class="guest-controls">
+          <button [disabled]="guests <= 1" (click)="decreaseGuests()">-</button>
+          <span>{{ guests }}</span>
+          <button (click)="increaseGuests()">+</button>
+        </div>
+      </div>
+
+      <p class="small-muted">{{ 'All utilities are included' | translate }}</p>
+
+      <div class="price-breakdown">
+      <div class="row">
+        <span>{{ 'Average monthly rent' | translate }}</span>
+        <span>£{{ listing.pricePerMonth }}</span>
+      </div>
+      <div class="row">
+        <span>{{ 'Selected room(s) total' | translate }}</span>
+        <span>£{{ selectedRoomsTotal }}</span>
+      </div>
+      <div class="row">
+        <span>{{ 'Number of rooms booked' | translate }}</span>
+        <span>{{ selectedRoomCount }}</span>
+      </div>
+
+      <div class="row total">
+        <span>{{ 'Total costs' | translate }}</span>
+        <span>£{{ totalCost.toFixed(2) }}</span>
+      </div>
+      <div class="row" *ngIf="allRoomsSelected">
+        <span>{{ 'You Select all rooms (The hole apartment)' | translate }}</span>
+      </div>
+
+    </div>
+
+
+      <!-- <button class="book-now" (click)="sendBookingRequest()">Send Request</button> -->
+       <!-- Booking Request or Chat Button -->
+        <div class="text-center mt-3">
+          <button *ngIf="!requestSent" (click)="sendBookingRequest()" class="book-now">{{ 'Send Booking Request' | translate }}</button>
+
+          <button *ngIf="requestSent" [routerLink]="['/chat', hostId]" class="book-now">{{ 'Chat with Host' | translate }}</button>
+        </div>
+
+
+      <p class="notice">{{ 'When you book this apartment, your reservation will be confirmed instantly' | translate }}</p>
+    </div>
+
+  </div>
+
+
+   <br><hr /><br>
+
+<h3 style="text-align: center;">{{ 'Select check-in month' | translate }}</h3>
+<div class="calendar-year-selector">
+  <button (click)="previousYear()">&#8592;</button>
+  <strong>{{ currentYear }}</strong>
+  <button (click)="nextYear()">&#8594;</button>
+</div>
+
+<div class="months-grid">
+<div *ngFor="let m of monthsShort; let i = index"
+     (click)="selectMonth(i + 1)"
+     class="month-tile"
+     [class.selected]="isMonthSelected(i + 1)"
+     [class.booked]="isMonthBooked(currentYear, i + 1)"
+     [attr.aria-pressed]="isMonthSelected(i + 1)"
+     role="button">
+  {{ m }}
+</div>
+
+</div>
+
+<div *ngIf="selectedMonths.length" class="summary">
+  <p>{{ 'You selected :' | translate }} {{selectedMonths.length}} {{'month(s)' | translate}}</p>
+  <p>{{ moveIn }} → {{ moveOut }}</p>
+</div>
+
+ <br><hr /><br>
+
+  <!-- <h3 class="mt-5 mb-3">🛏 Bedrooms</h3>
+<div class="room-grid">
+  <div class="room-card" *ngFor="let room of listing.bedroomList" (click)="goToRoom(room.id)">
+    <img [src]="room.photos[0]" alt="Room Image" />
+    <div class="info">
+      <h4>{{ room.name }}</h4>
+      <p>£{{ room.pricePerNight ?? 'N/A' }} / night</p>
+    </div>
+  </div>
+</div> -->
+<h3 class="mt-5 mb-3">🛏 {{ 'Bedrooms' | translate }}</h3>
+<div class="room-grid">
+  <div class="room-card" *ngFor="let room of listing.bedroomList">
+    <img [src]="room.photos[0]" alt="Room Image" (click)="goToRoom(room.id)" />
+    <div class="info">
+      <h4>{{ room.name }}</h4>
+      <p>£{{ room.pricePerNight ?? 'N/A' }} / {{ 'Month' | translate }}</p>
+      
+      <div class="room-select">
+        <label>
+          <input type="checkbox" [(ngModel)]="room.selected" />
+          {{ 'Select Room' | translate }}
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <ng-template #noBedrooms>
+    <p>{{ 'No bedrooms available in this listing.' | translate }}</p>
+  </ng-template>
+
+<!-- ------------- -->
+ <br><hr /><br>
+<h3>{{ 'Where you’ll be' | translate }}</h3>
+<div id="map" style="height: 400px;"></div>
+
+ <!-- <br><hr /><br>
+<h3>Meet your host</h3>
+<div class="host-section">
+  <div class="host-card">
+    <img [src]="listing.host.photoUrl" alt="Host photo" />
+    <h4>{{ listing.host.name }}</h4>
+    <p>{{ listing.host.reviews }}<br />Reviews</p>
+    <p>{{ listing.host.rating }}<br />Rating</p>
+    <p>{{ listing.host.monthsHosting }}<br />Month hosting</p>
+  </div>
+
+  <div class="host-details">
+    <h4>Host Details</h4>
+    <p>Response rate: {{ listing.host.responseRate }}%</p>
+    <p>Responds {{ listing.host.responseTime }}</p>
+    <p>Lives in {{ listing.host.location }}</p>
+    <p>Speaks {{ listing.host.languages.join(', ') }}</p>
+    <button class="message-button">Message Host</button>
+  </div>
+</div> -->
+
+
+
+</div>
