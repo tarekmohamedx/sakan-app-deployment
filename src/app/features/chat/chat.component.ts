@@ -36,32 +36,26 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     const userId = prompt("Enter your user ID to load your chats:");
-    // console.log(`User ID entered: ${userId}`);
-
-    if (userId) {
-      this.currentUserId = userId;
-      this.getChatsByUserId(userId);
-    } else {
+    if (!userId) {
       alert("User ID is required!");
       return;
     }
-  
+
+    this.currentUserId = userId;
+    this.getChatsByUserId(userId);
+    
     // Start SignalR connection
-    await this.chatHubService.startConnection(userId);
-  
+    this.chatHubService.startConnection(userId);
+
     // Subscribe to connection status
-    this.chatHubService.connectionStatus$.subscribe(
-      (connected) => {
-        this.isConnected = connected;
-        console.log('Connection status:', connected);
-      }
-    );
-  
+    this.chatHubService.connectionStatus$.subscribe(connected => {
+      this.isConnected = connected;
+      console.log('Connection status:', connected);
+    });
+
     // Listen for incoming messages
     this.chatHubService.message$.subscribe((message: MessageDto) => {
       if (message.chatId === this.selectedChat?.chatId) {
-        console.log('selected chat:', this.selectedChat);
-        console.log('incoming message chatId:', message.chatId);
         this.messages.push(message);
       }
     });
@@ -74,7 +68,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   async sendMessage() {
     if (!this.newMessage.trim() || !this.selectedChat) return;
-  
+
     const messageDto: MessageDto = {
       senderID: this.currentUserId,
       receiverID: this.selectedChat.receiverID,
@@ -82,22 +76,41 @@ export class ChatComponent implements OnInit, OnDestroy {
       chatId: this.selectedChat.chatId,
       timestamp: new Date()
     };
-  
-    try {
-      await this.chatHubService.sendMessage(messageDto);
-      this.messages.push(messageDto);
 
+    try {
+      // Try to send via SignalR
+      await this.chatHubService.sendMessage(messageDto);
+      
+      // Add to local messages immediately (optimistic UI)
+      this.messages.push(messageDto);
+      this.newMessage = '';
+    } catch (signalrError) {
+      console.warn('SignalR failed, using HTTP fallback');
+      
+      // Fallback to HTTP API
       this.chatService.sendMessage(messageDto).subscribe({
-        next: (res) => {
-          console.log('Message saved:', res);
+        next: (serverMessage) => {
+          // Replace optimistic message with server version
+          const index = this.messages.findIndex(m => 
+            m.timestamp === messageDto.timestamp && 
+            m.content === messageDto.content
+          );
+          
+          if (index !== -1) {
+            this.messages[index] = serverMessage;
+          } else {
+            this.messages.push(serverMessage);
+          }
         },
-        error: (err) => {
-          console.error('Error saving message:', err);
+        error: (httpError) => {
+          console.error('HTTP send failed:', httpError);
+          // Optionally remove optimistic message on error
+          this.messages = this.messages.filter(m => 
+            m.timestamp !== messageDto.timestamp || 
+            m.content !== messageDto.content
+          );
         }
       });
-      this.newMessage = '';
-    } catch (error) {
-      console.error('Error sending message:', error);
     }
   }
 
