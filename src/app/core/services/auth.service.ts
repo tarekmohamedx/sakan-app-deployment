@@ -22,9 +22,28 @@ export class AuthService {
       register
     );
   }
+  initiateGoogleLogin() {
+    // Store current route for redirect back after login
+    localStorage.setItem('preAuthRoute', window.location.pathname);
+
+    // Redirect to Google auth endpoint
+    window.location.href = `${environment.googleAuthUrl}?returnUrl=${environment.googleCallbackUrl}`;
+  }
+
+  handleGoogleCallback() {
+    // This would be called after returning from Google
+    const returnUrl = localStorage.getItem('preAuthRoute') || '/';
+    localStorage.removeItem('preAuthRoute');
+    return returnUrl;
+  }
   Login(login: Login): Observable<any> {
     return this.httpclient.post<any>(`${environment.apiurlauth}/Login`, login);
   }
+  externalLogin() {
+    // This backend endpoint should initiate Google login (e.g. /signin-google)
+    window.location.href = `${environment.apiurlauth}/externallogin/google`;
+  }
+
   getuserdata(): {
     name: string;
     email: string;
@@ -51,5 +70,21 @@ export class AuthService {
       };
     }
     return null;
+  }
+
+
+  //jwt
+  getToken(): string | null {
+    return sessionStorage.getItem('token');
+  }
+
+  getUserIdFromToken(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    const decoded = jwtDecode(token) as { [key: string]: any };
+    const userId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+
+    return userId;
   }
 }

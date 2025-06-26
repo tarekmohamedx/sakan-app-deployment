@@ -5,6 +5,7 @@ import { ChatService } from './services/chat.service';
 import { MessageDto } from '../../core/models/messageDto';
 import { ChatHubService } from './services/chat-hub.service';
 import { ChatDto } from '../../core/models/chatDto';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-chat',
@@ -16,7 +17,8 @@ import { ChatDto } from '../../core/models/chatDto';
 export class ChatComponent implements OnInit, OnDestroy {
   constructor(
     private chatService: ChatService,
-    private chatHubService: ChatHubService
+    private chatHubService: ChatHubService,
+    private authService: AuthService
   ) {}
 
   chats: ChatDto[] = [];
@@ -40,6 +42,9 @@ export class ChatComponent implements OnInit, OnDestroy {
       alert("User ID is required!");
       return;
     }
+
+    console.log("id from token: " + this.authService.getUserIdFromToken());
+    
 
     this.currentUserId = userId;
     this.getChatsByUserId(userId);

@@ -4,17 +4,22 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../core/services/auth.service';
 import { Router } from '@angular/router';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatDialogModule, MatFormFieldModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
-  model!: Login;
-  apiError: string | null = null;
+  model = {
+    email: '',
+    password: '',
+  };
+  apiError: string = '';
   constructor(private loginservice: AuthService, private router: Router) {}
 
   onSubmit(registerForm: any) {
@@ -35,5 +40,10 @@ export class LoginComponent {
         },
       });
     }
+  }
+  externalLogin() {
+    this.loginservice.initiateGoogleLogin();
+
+    this.router.navigateByUrl('hometest');
   }
 }
