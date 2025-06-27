@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from "./header/header.component";
 import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
@@ -16,6 +16,15 @@ import { CommonModule } from '@angular/common';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  
+  constructor(private router: Router) { 
+
+    
+    
+  }
+  ngOnInit(): void {
+    this.router.navigateByUrl('hometest'); 
+  }
   title = 'sakan-app';
 }

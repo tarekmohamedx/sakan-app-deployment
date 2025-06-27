@@ -1,27 +1,14 @@
-import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, withFetch } from '@angular/common/http';
 import { routes } from './app.routes';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideClientHydration } from '@angular/platform-browser';
+import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
-import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { FlatpickrModule } from 'angularx-flatpickr';
-
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { LOCALE_ID } from '@angular/core';
-import { registerLocaleData } from '@angular/common';
-import localeAr from '@angular/common/locales/ar';
-
-registerLocaleData(localeAr);
-
-// i18n Loader Factory
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
+// Material Dialog Configuration
+import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { AuthService } from './core/services/auth.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -29,22 +16,23 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(),
     provideHttpClient(withFetch()),
-    provideAnimationsAsync(),
-    { provide: LOCALE_ID, useValue: 'ar' },
+    provideAnimations(),
 
-    importProvidersFrom(
-      HttpClientModule,
-      FormsModule,
-      CommonModule,
-      FlatpickrModule,
-      TranslateModule.forRoot({
-        defaultLanguage: 'en',
-        loader: {
-          provide: TranslateLoader,
-          useFactory: HttpLoaderFactory,
-          deps: [HttpClient]
-        }
-      })
-    )
-  ]
+    // Material Default Configurations
+    {
+      provide: MAT_DIALOG_DEFAULT_OPTIONS,
+      useValue: {
+        hasBackdrop: true,
+        disableClose: true,
+        minWidth: '400px',
+        panelClass: 'custom-dialog-container',
+      },
+    },
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { appearance: 'outline' },
+    },
+
+    AuthService,
+  ],
 };

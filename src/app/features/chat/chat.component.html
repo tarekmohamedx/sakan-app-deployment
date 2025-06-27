@@ -1,0 +1,73 @@
+<div class="message-content">
+  <strong>{{ message.senderID === currentUserId ? 'You' : message.senderID }}:</strong>
+  {{ message.content }}
+</div>
+<div class="chat-wrapper">
+  <div class="chat-container">
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h2>Messages</h2>
+      </div>
+      <div class="chat-list">
+        <div *ngFor="let chat of chats" 
+        [class.active]="selectedChat?.chatId === chat.chatId"
+             class="chat-item"
+             (click)="selectChat(chat)">
+          <div class="chat-item-content">
+            <i class="fas fa-home"></i>
+            <div class="chat-item-details">
+              <h3>{{chat.name}}</h3>
+              <p>With user: {{ getOtherParticipant(chat) }}</p>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-main">
+      <div *ngIf="selectedChat" class="chat-header">
+        <h2>{{selectedChat.name}}</h2>
+        <button 
+        class="approve-btn"
+        title="Approve Rent">
+        Approve
+      </button>
+      </div>
+      
+      <div *ngIf="!selectedChat" class="no-chat-selected">
+        <h3>Select a conversation to start messaging</h3>
+      </div>
+
+      <div *ngIf="selectedChat" class="chat-messages">
+        <div *ngFor="let message of messages" 
+     [ngClass]="{
+       'message': true,
+       'message-sent': message.senderID === currentUserId,
+       'message-received': message.senderID !== currentUserId
+     }">
+
+  <div class="message-content">
+    <strong>{{ message.senderID === currentUserId ? 'You' : 'Other' }}:</strong>
+    {{ message.content }}
+  </div>
+  
+  <!-- الوقت بتنسيق AM/PM -->
+  <div class="message-time">
+    {{ message.timestamp | date:'hh:mm a' }}
+  </div>
+  </div>
+  </div>
+
+      <div *ngIf="selectedChat" class="chat-input">
+        <input type="text" 
+               [(ngModel)]="newMessage" 
+               placeholder="Type your message..."
+               (keyup.enter)="sendMessage()">
+        <button (click)="sendMessage()">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

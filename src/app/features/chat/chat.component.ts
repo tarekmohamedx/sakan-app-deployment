@@ -1,0 +1,200 @@
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ChatService } from './services/chat.service';
+import { MessageDto } from '../../core/models/messageDto';
+import { ChatHubService } from './services/chat-hub.service';
+import { ChatDto } from '../../core/models/chatDto';
+import { AuthService } from '../../core/services/auth.service';
+
+@Component({
+  selector: 'app-chat',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './chat.component.html',
+  styleUrls: ['./chat.component.css']
+})
+export class ChatComponent implements OnInit, OnDestroy {
+  constructor(
+    private chatService: ChatService,
+    private chatHubService: ChatHubService,
+    private authService: AuthService
+  ) {}
+
+  chats: ChatDto[] = [];
+
+  selectedChat: any = null;
+  messages: MessageDto[] = [];
+  newMessage: string = '';
+  isConnected: boolean = false;
+  currentUserId: any;
+
+  message: MessageDto = {
+    senderID: '',
+    receiverID: '',
+    content: '',
+    chatId: 0
+  };
+
+  async ngOnInit() {
+    
+
+    this.currentUserId = this.authService.getUserIdFromToken()?.toString().trim();
+    console.log('CurrentUserId', this.currentUserId, typeof this.currentUserId);
+    this.chatHubService.message$.subscribe((message: MessageDto) => {
+      console.log('Received message sender:', message.senderID, typeof message.senderID);
+    });
+    
+    this.getChatsByUserId(this.currentUserId);
+    
+    // Start SignalR connection
+    this.chatHubService.startConnection(this.currentUserId);
+
+    // Subscribe to connection status
+    this.chatHubService.connectionStatus$.subscribe(connected => {
+      this.isConnected = connected;
+      console.log('Connection status:', connected);
+    });
+
+    // Listen for incoming messages
+    this.chatHubService.message$.subscribe((message: MessageDto) => {
+      if (message.chatId === this.selectedChat?.chatId) {
+        const exists = this.messages.some(m =>
+          m.timestamp === message.timestamp &&
+          m.content === message.content &&
+          m.senderID === message.senderID
+        );
+        if (!exists) {
+          this.messages.push(message);
+        }
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    // Stop SignalR connection
+    this.chatHubService.stopConnection();
+  }
+
+  async sendMessage() {
+    if (!this.newMessage.trim() || !this.selectedChat) return;
+  
+    const messageDto: MessageDto = {
+      senderID: this.currentUserId,
+      receiverID: this.selectedChat.receiverID,
+      content: this.newMessage,
+      chatId: +this.selectedChat.chatId,
+      timestamp: new Date()
+    };
+  
+    try {
+      // ⛳️ أضف الرسالة مباشرةً للـ messages
+      this.messages.push({
+        ...messageDto,
+        senderID: this.currentUserId.toString().trim(),
+        receiverID: this.selectedChat.receiverID.toString().trim()
+      });
+  
+      this.newMessage = '';
+  
+      // Send via SignalR
+      await this.chatHubService.sendMessage(messageDto);
+  
+    } catch (signalrError) {
+      console.warn('SignalR failed, using HTTP fallback');
+  
+      this.chatService.sendMessage(messageDto).subscribe({
+        next: (serverMessage) => {
+          const index = this.messages.findIndex(m =>
+            m.timestamp === messageDto.timestamp &&
+            m.content === messageDto.content
+          );
+  
+          if (index !== -1) {
+            this.messages[index] = serverMessage;
+          } else {
+            this.messages.push(serverMessage);
+          }
+        },
+        error: (httpError) => {
+          console.error('HTTP send failed:', httpError);
+          this.messages = this.messages.filter(m =>
+            m.timestamp !== messageDto.timestamp ||
+            m.content !== messageDto.content
+          );
+        }
+      });
+    }
+  }
+
+  async selectChat(chat: any) {
+    if (!chat?.chatId) {
+      console.error('Invalid chat object: missing chatId');
+      return;
+    }
+  
+    let receiverID = '';
+  
+    if (chat.lastMessage) {
+      receiverID =
+        chat.lastMessage.senderID === this.currentUserId
+          ? chat.lastMessage.receiverID
+          : chat.lastMessage.senderID;
+    } else {
+      receiverID = prompt('Enter receiver ID for this chat:') || '';
+    }
+  
+    this.selectedChat = {
+      ...chat,
+      receiverID
+    };
+  
+    await this.loadChatHistory(chat.chatId);
+  }
+
+  private async loadChatHistory(chatId: number) {
+    try {
+      const history = await this.chatService.getChatHistory(chatId).toPromise();
+  
+      this.messages = (history || []).map((message: any) => ({
+        ...message,
+        senderID: message.senderID?.toString().trim() || message.senderId?.toString().trim() || '',
+        receiverID: message.receiverID?.toString().trim() || message.receiverId?.toString().trim() || '',
+        timestamp: new Date(message.timestamp)
+      }));
+
+      console.log(this.messages, 'Chat history loaded:', this.messages);
+      
+    } catch (error) {
+      console.error('Error loading chat history:', error);
+      this.messages = [];
+    }
+  }
+
+  getChatsByUserId(userId: string) {
+    this.chatService.getUserChats(userId).subscribe({
+      next: (chats) => {
+        if (!chats || !Array.isArray(chats)) {
+          console.error('Invalid chats response', chats);
+          return;
+        }
+  
+        this.chats = chats;
+        console.log('Loaded chats:', this.chats);
+      },
+      error: (err) => {
+        console.error('Error fetching user chats:', err);
+      }
+    });
+  }
+
+  getOtherParticipant(chat: ChatDto): string {
+    if (!chat.lastMessage) return 'Unknown';
+    
+    return chat.lastMessage.senderID === this.currentUserId
+      ? chat.lastMessage.receiverID
+      : chat.lastMessage.senderID;
+  }
+
+
+}
