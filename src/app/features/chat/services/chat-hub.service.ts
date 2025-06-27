@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { Subject } from 'rxjs';
-import { MessageDto } from '../../../core/models/messageDto';
+import { MessageDto, MessageModel } from '../../../core/models/messageDto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatHubService {
   private hubConnection!: signalR.HubConnection;
-  private messageSubject = new Subject<MessageDto>();
+  private messageSubject = new Subject<MessageModel>();
   private connectionStatusSubject = new Subject<boolean>();
   private connectionPromise: Promise<void> | null = null;
 
@@ -58,10 +58,11 @@ export class ChatHubService {
       .withAutomaticReconnect() // Add automatic reconnect
       .build();
 
-    this.hubConnection.on('ReceiveMessage', (messageDto: MessageDto) => {
-      console.log('Received message:', messageDto);
-      this.messageSubject.next(messageDto);
-    });
+      this.hubConnection.on('ReceiveMessage', (message: MessageModel) => {
+        message.timestamp = new Date(message.timestamp);
+        console.log('Received message:', message);
+        this.messageSubject.next(message);
+      });
 
     // Start connection but don't wait for it here
     this.ensureConnection();

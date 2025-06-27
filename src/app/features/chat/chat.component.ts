@@ -27,7 +27,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   messages: MessageDto[] = [];
   newMessage: string = '';
   isConnected: boolean = false;
-  currentUserId: string = 'user1';
+  currentUserId: any;
 
   message: MessageDto = {
     senderID: '',
@@ -37,20 +37,15 @@ export class ChatComponent implements OnInit, OnDestroy {
   };
 
   async ngOnInit() {
-    const userId = prompt("Enter your user ID to load your chats:");
-    if (!userId) {
-      alert("User ID is required!");
-      return;
-    }
-
-    console.log("id from token: " + this.authService.getUserIdFromToken());
     
 
-    this.currentUserId = userId;
-    this.getChatsByUserId(userId);
+    this.currentUserId = this.authService.getUserIdFromToken();
+    console.log("id from token:", this.currentUserId);
+    
+    this.getChatsByUserId(this.currentUserId);
     
     // Start SignalR connection
-    this.chatHubService.startConnection(userId);
+    this.chatHubService.startConnection(this.currentUserId);
 
     // Subscribe to connection status
     this.chatHubService.connectionStatus$.subscribe(connected => {
@@ -78,7 +73,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       senderID: this.currentUserId,
       receiverID: this.selectedChat.receiverID,
       content: this.newMessage,
-      chatId: this.selectedChat.chatId,
+      chatId: +this.selectedChat.chatId,
       timestamp: new Date()
     };
 
@@ -146,9 +141,13 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   private async loadChatHistory(chatId: number) {
     try {
-    
       const history = await this.chatService.getChatHistory(chatId).toPromise();
-      this.messages = history || [];
+  
+      // 👇 لازم تحول الـ timestamp هنا
+      this.messages = (history || []).map((message: any) => ({
+        ...message,
+        timestamp: new Date(message.timestamp)
+      }));
     } catch (error) {
       console.error('Error loading chat history:', error);
       this.messages = [];
