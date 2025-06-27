@@ -6,6 +6,8 @@ import { MessageDto } from '../../core/models/messageDto';
 import { ChatHubService } from './services/chat-hub.service';
 import { ChatDto } from '../../core/models/chatDto';
 import { AuthService } from '../../core/services/auth.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ChatConfirmationModalComponent } from './components/chat-confirmation-modal/chat-confirmation-modal.component';
 
 @Component({
   selector: 'app-chat',
@@ -18,7 +20,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   constructor(
     private chatService: ChatService,
     private chatHubService: ChatHubService,
-    private authService: AuthService
+    private authService: AuthService,
+    private dialog:MatDialog
   ) {}
 
   chats: ChatDto[] = [];
@@ -39,6 +42,14 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     
+    //dialog
+    const dialogRef = this.dialog.open(ChatConfirmationModalComponent);
+    const confirmed = await dialogRef.afterClosed().toPromise();
+    if (!confirmed) {
+      console.log('Chat confirmation cancelled');
+      return;
+    }
+
 
     this.currentUserId = this.authService.getUserIdFromToken()?.toString().trim();
     console.log('CurrentUserId', this.currentUserId, typeof this.currentUserId);
