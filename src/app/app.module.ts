@@ -22,18 +22,17 @@ registerLocaleData(localeAr);
 
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    ListingDetailsComponent,
-    RoomDetailsComponent
-  ],
+  declarations: [],
   imports: [
     BrowserModule,
     FormsModule,
     FlatpickrModule,
     HttpClientModule,
     CommonModule,
-     TranslateModule.forRoot({
+    AppComponent,
+    ListingDetailsComponent,
+    RoomDetailsComponent,
+    TranslateModule.forRoot({
       defaultLanguage: 'en',
       loader: {
         provide: TranslateLoader,
@@ -44,6 +43,5 @@ registerLocaleData(localeAr);
     AppRoutingModule,
   ],
   providers: [{ provide: LOCALE_ID, useValue: 'ar' }],
-  bootstrap: [AppComponent]
 })
 export class AppModule {}

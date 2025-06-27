@@ -1,12 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RoomDetailsService } from '../../Services/room-details.service';
 import { RoomDetailsDto } from '../../../../core/models/room-details.model';
 import { BookingRequestDto, ListingDetailsDto } from '../../../../core/models/listing-details.model';
 import { ListingDetailsService } from '../../../listings/services/listing-details.service';
 import * as L from 'leaflet';
+import { TranslateModule } from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
+  standalone: true,
+  imports: [CommonModule, TranslateModule, FormsModule, RouterModule ],
   selector: 'app-room-details',
   templateUrl: './room-details.component.html',
   styleUrl: './room-details.component.css'

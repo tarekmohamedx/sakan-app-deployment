@@ -94,7 +94,7 @@
         <div class="text-center mt-3">
           <button *ngIf="!requestSent" (click)="sendBookingRequest()" class="book-now">{{ 'Send Booking Request' | translate }}</button>
 
-          <button *ngIf="requestSent" [routerLink]="['/chat', hostId]" class="book-now">{{ 'Chat with Host' | translate }}</button>
+          <a *ngIf="requestSent" [routerLink]="['/chat', hostId]" class="book-now">{{ 'Chat with Host' | translate }}</a>
         </div>
 
 

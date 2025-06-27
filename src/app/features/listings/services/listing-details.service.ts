@@ -20,19 +20,10 @@ export class ListingDetailsService {
   }
 
   createRequest(dto: BookingRequestDto): Observable<{ requestId: number, hostId: string }> {
-  return this.http.post<{ requestId: number, hostId: string }>(
-    `${this.baseUrl}/ListingDetails/request`,
-    dto // ✅ plain object, no wrapping
-  );
-}
-// getListing(id: number) {
-//   const lang = localStorage.getItem('lang') || 'en';
-//   return this.http.get(`/api/listings/${id}?lang=${lang}`);
-// }
-
-
-
-
+    return this.http.post<{ requestId: number, hostId: string }>(
+      `${this.baseUrl}/ListingDetails/request`,dto 
+    );
+  }
 
   getCurrentUserId(): string {
     return 'bdb1afd1-897a-46ef-8773-ff28354135b5'; // Replace with real auth logic

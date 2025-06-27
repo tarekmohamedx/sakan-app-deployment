@@ -1,13 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ListingDetailsService } from '../../services/listing-details.service';
 import { BookingRequestDto, ListingDetailsDto } from '../../../../core/models/listing-details.model';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import * as L from 'leaflet';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslationService } from '../../../../core/services/translation.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
+  standalone: true,
+  imports: [CommonModule, TranslateModule, FormsModule, RouterModule ],
   selector: 'app-listing-details',
   templateUrl: './listing-details.component.html',
   styleUrls: ['./listing-details.component.css']
