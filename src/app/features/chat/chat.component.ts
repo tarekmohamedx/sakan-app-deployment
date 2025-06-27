@@ -28,6 +28,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   newMessage: string = '';
   isConnected: boolean = false;
   currentUserId: any;
+  listingTitle: string = 'Default Listing Title';
 
   message: MessageDto = {
     senderID: '',
@@ -88,7 +89,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     };
   
     try {
-      // ⛳️ أضف الرسالة مباشرةً للـ messages
       this.messages.push({
         ...messageDto,
         senderID: this.currentUserId.toString().trim(),
@@ -195,6 +195,26 @@ export class ChatComponent implements OnInit, OnDestroy {
       ? chat.lastMessage.receiverID
       : chat.lastMessage.senderID;
   }
+
+  getLatestMessage(chat: ChatDto): string {
+    if (!chat.lastMessage) return 'Unknown';
+    
+    return chat.lastMessage.content || 'No messages yet';
+  }
+
+  getListingTitle(chat: ChatDto): string {
+    if (!chat.lastMessage) return 'Unknown';
+    
+    return chat.ListingTitle || 'No messages yet';
+  }
+
+  getUserName(chat: ChatDto): string {
+    if (!chat.userName) return 'Unknown';
+    
+    return chat.userName || 'No messages yet';
+  }
+
+
 
 
 }

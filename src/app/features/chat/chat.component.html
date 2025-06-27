@@ -16,9 +16,8 @@
           <div class="chat-item-content">
             <i class="fas fa-home"></i>
             <div class="chat-item-details">
-              <h3>{{chat.name}}</h3>
-              <p>With user: {{ getOtherParticipant(chat) }}</p>
-
+              <h5>{{getUserName(chat)}}</h5>
+              <p class="lead">{{ getLatestMessage(chat) }}</p>
             </div>
           </div>
         </div>
@@ -27,7 +26,7 @@
 
     <div class="chat-main">
       <div *ngIf="selectedChat" class="chat-header">
-        <h2>{{selectedChat.name}}</h2>
+        <h2>{{listingTitle}} - Tarek Mohamed</h2>
         <button 
         class="approve-btn"
         title="Approve Rent">
@@ -41,14 +40,15 @@
 
       <div *ngIf="selectedChat" class="chat-messages">
         <div *ngFor="let message of messages" 
-     [ngClass]="{
-       'message': true,
-       'message-sent': message.senderID === currentUserId,
-       'message-received': message.senderID !== currentUserId
-     }">
+        [ngClass]="{
+          'message': true,
+          'message-sent': message.senderID?.trim()?.toLowerCase() === currentUserId?.trim().toLowerCase(),
+          'message-received': message.senderID?.trim()?.toLowerCase() !== currentUserId?.trim().toLowerCase()
+        }">
 
   <div class="message-content">
-    <strong>{{ message.senderID === currentUserId ? 'You' : 'Other' }}:</strong>
+    <strong>{{ message.senderID?.trim()?.toLowerCase() === currentUserId?.trim().toLowerCase() ? 'You' : 'Other' }}:</strong>
+
     {{ message.content }}
   </div>
   
