@@ -41,20 +41,23 @@
 
       <div *ngIf="selectedChat" class="chat-messages">
         <div *ngFor="let message of messages" 
-        [ngClass]="{
-          'message': true,
-          'message-sent': message.senderID === currentUserId,
-          'message-received': message.senderID !== currentUserId
-        }">
-     <div class="message-content">
-       <strong>{{ message.senderID === currentUserId ? 'You' : 'Other' }}:</strong>
-       {{ message.content }}
-     </div>
-     <div class="message-time">
-      {{ message.timestamp | date:'yyyy-MM-dd HH:mm:ss zzz' }}
-     </div>
-   </div>
-      </div>
+     [ngClass]="{
+       'message': true,
+       'message-sent': message.senderID === currentUserId,
+       'message-received': message.senderID !== currentUserId
+     }">
+
+  <div class="message-content">
+    <strong>{{ message.senderID === currentUserId ? 'You' : 'Other' }}:</strong>
+    {{ message.content }}
+  </div>
+  
+  <!-- الوقت بتنسيق AM/PM -->
+  <div class="message-time">
+    {{ message.timestamp | date:'hh:mm a' }}
+  </div>
+  </div>
+  </div>
 
       <div *ngIf="selectedChat" class="chat-input">
         <input type="text" 

@@ -39,8 +39,11 @@ export class ChatComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     
 
-    this.currentUserId = this.authService.getUserIdFromToken();
-    console.log("id from token:", this.currentUserId);
+    this.currentUserId = this.authService.getUserIdFromToken()?.toString().trim();
+    console.log('CurrentUserId', this.currentUserId, typeof this.currentUserId);
+    this.chatHubService.message$.subscribe((message: MessageDto) => {
+      console.log('Received message sender:', message.senderID, typeof message.senderID);
+    });
     
     this.getChatsByUserId(this.currentUserId);
     
@@ -56,7 +59,14 @@ export class ChatComponent implements OnInit, OnDestroy {
     // Listen for incoming messages
     this.chatHubService.message$.subscribe((message: MessageDto) => {
       if (message.chatId === this.selectedChat?.chatId) {
-        this.messages.push(message);
+        const exists = this.messages.some(m =>
+          m.timestamp === message.timestamp &&
+          m.content === message.content &&
+          m.senderID === message.senderID
+        );
+        if (!exists) {
+          this.messages.push(message);
+        }
       }
     });
   }
@@ -68,7 +78,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   async sendMessage() {
     if (!this.newMessage.trim() || !this.selectedChat) return;
-
+  
     const messageDto: MessageDto = {
       senderID: this.currentUserId,
       receiverID: this.selectedChat.receiverID,
@@ -76,26 +86,30 @@ export class ChatComponent implements OnInit, OnDestroy {
       chatId: +this.selectedChat.chatId,
       timestamp: new Date()
     };
-
+  
     try {
-      // Try to send via SignalR
-      await this.chatHubService.sendMessage(messageDto);
-      
-      // Add to local messages immediately (optimistic UI)
-      this.messages.push(messageDto);
+      // ⛳️ أضف الرسالة مباشرةً للـ messages
+      this.messages.push({
+        ...messageDto,
+        senderID: this.currentUserId.toString().trim(),
+        receiverID: this.selectedChat.receiverID.toString().trim()
+      });
+  
       this.newMessage = '';
+  
+      // Send via SignalR
+      await this.chatHubService.sendMessage(messageDto);
+  
     } catch (signalrError) {
       console.warn('SignalR failed, using HTTP fallback');
-      
-      // Fallback to HTTP API
+  
       this.chatService.sendMessage(messageDto).subscribe({
         next: (serverMessage) => {
-          // Replace optimistic message with server version
-          const index = this.messages.findIndex(m => 
-            m.timestamp === messageDto.timestamp && 
+          const index = this.messages.findIndex(m =>
+            m.timestamp === messageDto.timestamp &&
             m.content === messageDto.content
           );
-          
+  
           if (index !== -1) {
             this.messages[index] = serverMessage;
           } else {
@@ -104,9 +118,8 @@ export class ChatComponent implements OnInit, OnDestroy {
         },
         error: (httpError) => {
           console.error('HTTP send failed:', httpError);
-          // Optionally remove optimistic message on error
-          this.messages = this.messages.filter(m => 
-            m.timestamp !== messageDto.timestamp || 
+          this.messages = this.messages.filter(m =>
+            m.timestamp !== messageDto.timestamp ||
             m.content !== messageDto.content
           );
         }
@@ -143,11 +156,15 @@ export class ChatComponent implements OnInit, OnDestroy {
     try {
       const history = await this.chatService.getChatHistory(chatId).toPromise();
   
-      // 👇 لازم تحول الـ timestamp هنا
       this.messages = (history || []).map((message: any) => ({
         ...message,
+        senderID: message.senderID?.toString().trim() || message.senderId?.toString().trim() || '',
+        receiverID: message.receiverID?.toString().trim() || message.receiverId?.toString().trim() || '',
         timestamp: new Date(message.timestamp)
       }));
+
+      console.log(this.messages, 'Chat history loaded:', this.messages);
+      
     } catch (error) {
       console.error('Error loading chat history:', error);
       this.messages = [];
