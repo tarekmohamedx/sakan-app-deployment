@@ -1,14 +1,27 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection, LOCALE_ID } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { routes } from './app.routes';
-import { provideClientHydration } from '@angular/platform-browser';
 import { provideHttpClient, withFetch } from '@angular/common/http';
+import { routes } from './app.routes';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideClientHydration } from '@angular/platform-browser';
 
-// Material Dialog Configuration
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { CommonModule, registerLocaleData } from '@angular/common';
+import localeAr from '@angular/common/locales/ar';
+import { FlatpickrModule } from 'angularx-flatpickr';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { AuthService } from './core/services/auth.service';
+
+registerLocaleData(localeAr);
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,9 +29,26 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(),
     provideHttpClient(withFetch()),
-    provideAnimations(),
+    provideAnimations(), // ✅ pick either provideAnimations() or provideAnimationsAsync()
+    { provide: LOCALE_ID, useValue: 'ar' },
 
-    // Material Default Configurations
+    // ✅ Imported Angular modules (required for standalone)
+    importProvidersFrom(
+      HttpClientModule,
+      FormsModule,
+      CommonModule,
+      FlatpickrModule,
+      TranslateModule.forRoot({
+        defaultLanguage: 'en',
+        loader: {
+          provide: TranslateLoader,
+          useFactory: HttpLoaderFactory,
+          deps: [HttpClient]
+        }
+      })
+    ),
+
+    // ✅ Angular Material default configurations
     {
       provide: MAT_DIALOG_DEFAULT_OPTIONS,
       useValue: {
@@ -33,6 +63,7 @@ export const appConfig: ApplicationConfig = {
       useValue: { appearance: 'outline' },
     },
 
+    // ✅ Core services
     AuthService,
   ],
 };
