@@ -89,7 +89,14 @@
         <div class="text-center mt-3">
           <button *ngIf="!requestSent" (click)="sendBookingRequest()" class="book-now">{{ 'Send Booking Request' | translate }}</button>
 
-          <a *ngIf="requestSent" [routerLink]="['/chat', hostId]" class="book-now">{{ 'Chat with Host' | translate }}</a>
+          <!-- <a *ngIf="requestSent" [routerLink]="['/chat', hostId]" class="book-now">{{ 'Chat with Host' | translate }}</a> -->
+          <a 
+          *ngIf="requestSent" 
+          [routerLink]="['/chat']" 
+          [queryParams]="{ hostId: hostId, listingId: listing.id}"
+          class="book-now">
+          {{ 'Chat with Host' | translate }}
+        </a>
         </div>
       <p class="notice">{{ 'When you book this apartment, your reservation will be confirmed instantly' | translate }}</p>
     </div>
