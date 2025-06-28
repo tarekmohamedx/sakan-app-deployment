@@ -1,12 +1,13 @@
 import { Routes } from '@angular/router';
-import { RegisterComponent } from './register/register.component';
-import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from '../app/features/auth/components/register/register.component';
+import { LoginComponent } from '../app/features/auth/components/login/login.component';
 import { HometestComponent } from './hometest/hometest.component';
 import { ListingDetailsComponent } from './features/listings/pages/listing-details/listing-details.component';
 import { RoomDetailsComponent } from './features/rooms/pages/room-details/room-details.component';
 import { NotfoundComponent } from './shared/components/notfound/notfound.component';
 import { ChatComponent } from './features/chat/chat.component';
 import { CallbackComponent } from './callback/callback.component';
+import { AddApartmentComponent } from './features/listings/components/add-apartment/add-apartment.component';
 
 export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
@@ -17,4 +18,5 @@ export const routes: Routes = [
   { path: 'chat', component: ChatComponent },
   { path: '**', component: NotfoundComponent },
   { path: 'signin-google', component: CallbackComponent },
+  {path:'add-apartment',component:AddApartmentComponent}
 ];

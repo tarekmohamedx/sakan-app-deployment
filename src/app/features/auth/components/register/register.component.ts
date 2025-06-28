@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Register } from '../core/models/register';
-import { AuthService } from '../core/services/auth.service';
+import { Register } from '../../../../core/models/register';
+import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';

@@ -1,0 +1,24 @@
+<form [formGroup]="listingForm">
+    <!-- Title, Desc, Price -->
+    <input formControlName="title" />
+    <textarea formControlName="description"></textarea>
+    <input formControlName="pricePerMonth" type="number" />
+  
+    <!-- Governorate Dropdown -->
+    <select formControlName="governorate">
+      <option *ngFor="let gov of governorates" [value]="gov">{{ gov }}</option>
+    </select>
+  
+    <!-- Map: You can use leaflet or AGM -->
+    <app-map-selector (coordsSelected)="setCoords($event)"></app-map-selector>
+  
+    <!-- Add Room Button -->
+    <button type="button" (click)="openAddRoomDialog()">➕ Add Room</button>
+  
+    <!-- Image Upload -->
+    <input type="file" (change)="onPhotoUpload($event)" multiple />
+  
+    <!-- Submit -->
+    <button (click)="submitListing()">Submit</button>
+  </form>
+  

@@ -1,0 +1,15 @@
+<form [formGroup]="roomForm">
+    <input formControlName="name" />
+    <input formControlName="type" />
+    <input formControlName="pricePerNight" type="number" />
+    <input formControlName="maxGuests" type="number" />
+    <input type="checkbox" formControlName="isBookableAsWhole" />
+  
+    <input type="file" (change)="onRoomPhotosUpload($event)" multiple />
+  
+    <!-- Add Bed -->
+    <button type="button" (click)="openAddBedDialog()">➕ Add Bed</button>
+  
+    <button (click)="saveRoom()">Save Room</button>
+  </form>
+  

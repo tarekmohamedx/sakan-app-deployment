@@ -5,7 +5,7 @@ import { ChatService } from './services/chat.service';
 import { MessageDto } from '../../core/models/messageDto';
 import { ChatHubService } from './services/chat-hub.service';
 import { ChatDto } from '../../core/models/chatDto';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService } from '../auth/services/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ChatConfirmationModalComponent } from './components/chat-confirmation-modal/chat-confirmation-modal.component';
 import { ActivatedRoute } from '@angular/router';
@@ -16,15 +16,15 @@ import { firstValueFrom } from 'rxjs';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './chat.component.html',
-  styleUrls: ['./chat.component.css']
+  styleUrls: ['./chat.component.css'],
 })
 export class ChatComponent implements OnInit, OnDestroy {
   constructor(
     private chatService: ChatService,
     private chatHubService: ChatHubService,
     private authService: AuthService,
-    private dialog:MatDialog,
-    private route: ActivatedRoute,
+    private dialog: MatDialog,
+    private route: ActivatedRoute
   ) {}
 
   chats: ChatDto[] = [];
@@ -38,12 +38,11 @@ export class ChatComponent implements OnInit, OnDestroy {
   HostID: string = 'host-123';
   ListingID: string = '4';
 
-
   message: MessageDto = {
     senderID: '',
     receiverID: '',
     content: '',
-    chatId: 0
+    chatId: 0,
   };
 
   async ngOnInit() {
@@ -54,38 +53,45 @@ export class ChatComponent implements OnInit, OnDestroy {
       console.log('Chat confirmation cancelled');
       return;
     }
-  
-    this.currentUserId = this.authService.getUserIdFromToken()?.toString().trim();
+
+    this.currentUserId = this.authService
+      .getUserIdFromToken()
+      ?.toString()
+      .trim();
     this.chatHubService.startConnection(this.currentUserId);
-  
-    this.chatHubService.connectionStatus$.subscribe(connected => {
+
+    this.chatHubService.connectionStatus$.subscribe((connected) => {
       this.isConnected = connected;
     });
-  
+
     this.chatHubService.message$.subscribe((message: MessageDto) => {
       if (message.chatId === this.selectedChat?.chatId) {
-        const exists = this.messages.some(m =>
-          m.timestamp === message.timestamp &&
-          m.content === message.content &&
-          m.senderID === message.senderID
+        const exists = this.messages.some(
+          (m) =>
+            m.timestamp === message.timestamp &&
+            m.content === message.content &&
+            m.senderID === message.senderID
         );
         if (!exists) {
           this.messages.push(message);
         }
       }
     });
-  
+
     // Get chats
     this.chatService.getUserChats(this.currentUserId).subscribe({
       next: async (chats) => {
         this.chats = chats;
-  
+
         this.route.queryParams.subscribe(async (params) => {
           const hostId = params['hostId'];
           const listingId = params['listingId'];
-        
-          this.currentUserId = this.authService.getUserIdFromToken()?.toString().trim();
-        
+
+          this.currentUserId = this.authService
+            .getUserIdFromToken()
+            ?.toString()
+            .trim();
+
           if (hostId && listingId) {
             try {
               const chat = await this.chatService.createChatIfNotExists(
@@ -93,11 +99,11 @@ export class ChatComponent implements OnInit, OnDestroy {
                 hostId,
                 +listingId
               );
-          
+
               if (chat) {
                 this.selectedChat = {
                   ...chat,
-                  receiverID: hostId
+                  receiverID: hostId,
                 };
                 await this.loadChatHistory(chat.chatId);
               }
@@ -105,14 +111,14 @@ export class ChatComponent implements OnInit, OnDestroy {
               console.error('Error creating chat:', error);
             }
           }
-        
+
           this.getChatsByUserId(this.currentUserId);
           this.chatHubService.startConnection(this.currentUserId);
         });
       },
-      error: err => {
+      error: (err) => {
         console.error('Error fetching chats', err);
-      }
+      },
     });
   }
 
@@ -123,37 +129,37 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   async sendMessage() {
     if (!this.newMessage.trim() || !this.selectedChat) return;
-  
+
     const messageDto: MessageDto = {
       senderID: this.currentUserId,
       receiverID: this.selectedChat.receiverID,
       content: this.newMessage,
       chatId: +this.selectedChat.chatId,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
-  
+
     try {
       this.messages.push({
         ...messageDto,
         senderID: this.currentUserId.toString().trim(),
-        receiverID: this.selectedChat.receiverID.toString().trim()
+        receiverID: this.selectedChat.receiverID.toString().trim(),
       });
-  
+
       this.newMessage = '';
-  
+
       // Send via SignalR
       await this.chatHubService.sendMessage(messageDto);
-  
     } catch (signalrError) {
       console.warn('SignalR failed, using HTTP fallback');
-  
+
       this.chatService.sendMessage(messageDto).subscribe({
         next: (serverMessage) => {
-          const index = this.messages.findIndex(m =>
-            m.timestamp === messageDto.timestamp &&
-            m.content === messageDto.content
+          const index = this.messages.findIndex(
+            (m) =>
+              m.timestamp === messageDto.timestamp &&
+              m.content === messageDto.content
           );
-  
+
           if (index !== -1) {
             this.messages[index] = serverMessage;
           } else {
@@ -162,11 +168,12 @@ export class ChatComponent implements OnInit, OnDestroy {
         },
         error: (httpError) => {
           console.error('HTTP send failed:', httpError);
-          this.messages = this.messages.filter(m =>
-            m.timestamp !== messageDto.timestamp ||
-            m.content !== messageDto.content
+          this.messages = this.messages.filter(
+            (m) =>
+              m.timestamp !== messageDto.timestamp ||
+              m.content !== messageDto.content
           );
-        }
+        },
       });
     }
   }
@@ -176,9 +183,9 @@ export class ChatComponent implements OnInit, OnDestroy {
       console.error('Invalid chat object: missing chatId');
       return;
     }
-  
+
     let receiverID = '';
-  
+
     if (chat.lastMessage) {
       receiverID =
         chat.lastMessage.senderID === this.currentUserId
@@ -187,28 +194,33 @@ export class ChatComponent implements OnInit, OnDestroy {
     } else {
       receiverID = prompt('Enter receiver ID for this chat:') || '';
     }
-  
+
     this.selectedChat = {
       ...chat,
-      receiverID
+      receiverID,
     };
-  
+
     await this.loadChatHistory(chat.chatId);
   }
 
   private async loadChatHistory(chatId: number) {
     try {
       const history = await this.chatService.getChatHistory(chatId).toPromise();
-  
+
       this.messages = (history || []).map((message: any) => ({
         ...message,
-        senderID: message.senderID?.toString().trim() || message.senderId?.toString().trim() || '',
-        receiverID: message.receiverID?.toString().trim() || message.receiverId?.toString().trim() || '',
-        timestamp: new Date(message.timestamp)
+        senderID:
+          message.senderID?.toString().trim() ||
+          message.senderId?.toString().trim() ||
+          '',
+        receiverID:
+          message.receiverID?.toString().trim() ||
+          message.receiverId?.toString().trim() ||
+          '',
+        timestamp: new Date(message.timestamp),
       }));
 
       console.log(this.messages, 'Chat history loaded:', this.messages);
-      
     } catch (error) {
       console.error('Error loading chat history:', error);
       this.messages = [];
@@ -222,19 +234,19 @@ export class ChatComponent implements OnInit, OnDestroy {
           console.error('Invalid chats response', chats);
           return;
         }
-  
+
         this.chats = chats;
         console.log('Loaded chats:', this.chats);
       },
       error: (err) => {
         console.error('Error fetching user chats:', err);
-      }
+      },
     });
   }
 
   getOtherParticipant(chat: ChatDto): string {
     if (!chat.lastMessage) return 'Unknown';
-    
+
     return chat.lastMessage.senderID === this.currentUserId
       ? chat.lastMessage.receiverID
       : chat.lastMessage.senderID;
@@ -242,23 +254,19 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   getLatestMessage(chat: ChatDto): string {
     if (!chat.lastMessage) return 'Unknown';
-    
+
     return chat.lastMessage.content || 'No messages yet';
   }
 
   getListingTitle(chat: ChatDto): string {
     if (!chat.lastMessage) return 'Unknown';
-    
+
     return chat.ListingTitle || 'No messages yet';
   }
 
   getUserName(chat: ChatDto): string {
     if (!chat.userName) return 'Unknown';
-    
+
     return chat.userName || 'No messages yet';
   }
-
-
-
-
 }

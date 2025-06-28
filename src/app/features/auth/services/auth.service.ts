@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Register } from '../models/register';
+import { Register } from '../../../core/models/register';
 import { Observable } from 'rxjs';
 import { env } from 'process';
-import { environment } from '../../environments/environment';
-import { Login } from '../models/Login';
+import { environment } from '../../../environments/environment';
+import { Login } from '../../../core/models/Login';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
-import { Jwtpayloadd } from '../models/Jwtpayload';
+import { Jwtpayloadd } from '../../../core/models/Jwtpayload';
 
 @Injectable({
   providedIn: 'root',
@@ -72,7 +72,6 @@ export class AuthService {
     return null;
   }
 
-
   //jwt
   getToken(): string | null {
     return sessionStorage.getItem('token');
@@ -83,7 +82,10 @@ export class AuthService {
     if (!token) return null;
 
     const decoded = jwtDecode(token) as { [key: string]: any };
-    const userId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+    const userId =
+      decoded[
+        'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'
+      ];
 
     return userId;
   }
