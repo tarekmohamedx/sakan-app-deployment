@@ -79,6 +79,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     .btn-icon {
       font-size: 0.9rem !important;
       margin-right: 0.25rem !important;
+      cursor: pointer ;
     }
     
     .dialog-content {
@@ -111,6 +112,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
       display: flex !important;
       align-items: center !important;
       gap: 0.5rem !important;
+      cursor: pointer;
     }
     
     .cancel-btn:hover {
@@ -132,6 +134,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
       display: flex !important;
       align-items: center !important;
       gap: 0.5rem !important;
+      cursor: pointer;
     }
     
     .start-btn:hover {

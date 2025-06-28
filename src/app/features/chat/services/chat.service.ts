@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
+import { UserChatSummary } from '../../../core/models/messageDto';
 
 @Injectable({
   providedIn: 'root'
@@ -29,4 +30,10 @@ export class ChatService {
   createChat(listingId: number): Observable<any> {
     return this.http.post(`${this.baseUrl}/create`, { listingId });
   }
+
+  createChatIfNotExists(senderId: string, receiverId: string, listingId: number): Promise<UserChatSummary> {
+    const body = { senderId, receiverId, listingId };
+    return firstValueFrom(this.http.post<UserChatSummary>(`${this.baseUrl}/CreateChatIfNotExists`, body));
+  }
+
 }
