@@ -7,14 +7,19 @@ import { RoomDetailsComponent } from './features/rooms/pages/room-details/room-d
 import { NotfoundComponent } from './shared/components/notfound/notfound.component';
 import { ChatComponent } from './features/chat/chat.component';
 import { CallbackComponent } from './callback/callback.component';
+import { HostListingsComponent } from './features/host/host-listings/host-listings.component';
+import { EditHostListingComponent } from './features/host/edit-host-listings/edit-host-listings.component';
+
 
 export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'hometest', component: HometestComponent },
   { path: 'listing/:id', component:ListingDetailsComponent},
   { path: 'room/:id', component:RoomDetailsComponent},
+  { path: 'host/listings', component: HostListingsComponent },
+  { path: 'host/editlisting/:id', component: EditHostListingComponent },
   { path: 'chat', component: ChatComponent },
-  { path: '**', component: NotfoundComponent },
   { path: 'signin-google', component: CallbackComponent },
+  { path: 'hometest', component: HometestComponent },
+  { path: '**', component: NotfoundComponent },
 ];

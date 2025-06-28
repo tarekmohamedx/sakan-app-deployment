@@ -1,0 +1,38 @@
+.form-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 2.5rem 2rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #e0e7ef 100%);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    border-radius: 16px;
+    border: 1px solid #e3e8ee;
+}
+
+h2 {
+    margin-bottom: 2rem;
+    text-align: center;
+    font-size: 2rem;
+    color: #2d3748;
+    letter-spacing: 1px;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    margin-top: 6px;
+    border: 1px solid #bfc9d9;
+    border-radius: 6px;
+    background: #f7fafc;
+    font-size: 1rem;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+input:focus, textarea:focus {
+    border-color: #3182ce;
+    box-shadow: 0 0 0 2px rgba(49,130,206,0.15);
+    outline: none;
+}
