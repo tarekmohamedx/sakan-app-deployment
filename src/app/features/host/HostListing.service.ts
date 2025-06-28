@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -10,23 +10,40 @@ export class HostListingService {
 
   constructor(private http: HttpClient) {}
 
-  // Get all listings for the current host
-  getMyListings(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/my`);
+  // Helper method to set Authorization header
+  private getAuthHeaders(): HttpHeaders {
+    const token = sessionStorage.getItem('token');
+    console.log("MY TOKEN", token);
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
   }
 
-  // Get a specific listing by ID (for edit)
+  // Get all listings for the current host
+  getMyListings(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/my`, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
+  // Get a specific listing by ID
   getListingById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${id}`);
+    return this.http.get<any>(`${this.apiUrl}/${id}`, {
+      headers: this.getAuthHeaders()
+    });
   }
 
   // Update a listing
   updateListing(id: number, data: any): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${id}`, data);
+    return this.http.put<void>(`${this.apiUrl}/${id}`, data, {
+      headers: this.getAuthHeaders()
+    });
   }
 
   // Delete a listing
   deleteListing(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, {
+      headers: this.getAuthHeaders()
+    });
   }
 }
