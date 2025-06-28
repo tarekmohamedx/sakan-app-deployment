@@ -19,12 +19,18 @@ export class HostListingService {
     });
   }
 
-  // Get all listings for the current host
-  getMyListings(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/my`, {
-      headers: this.getAuthHeaders()
-    });
-  }
+  // // Get all listings for the current host
+  // getMyListings(): Observable<any[]> {
+  //   return this.http.get<any[]>(`${this.apiUrl}/my`, {
+  //     headers: this.getAuthHeaders()
+  //   });
+  // }
+
+    getMyListings(page = 1, pageSize = 5): Observable<any> {
+      return this.http.get<any>(`${this.apiUrl}/my?page=${page}&pageSize=${pageSize}`, {
+        headers: this.getAuthHeaders()
+      });
+    }
 
   // Get a specific listing by ID
   getListingById(id: number): Observable<any> {

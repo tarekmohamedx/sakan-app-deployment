@@ -1,38 +1,40 @@
 .form-container {
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 2.5rem 2rem;
-    background: linear-gradient(135deg, #f8fafc 0%, #e0e7ef 100%);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-    border-radius: 16px;
-    border: 1px solid #e3e8ee;
+    max-width: 650px;
+    margin: 48px auto;
+    padding: 3rem 2.5rem;
+    background: linear-gradient(120deg, #f0f4f8 0%, #d9e2ec 100%);
+    box-shadow: 0 10px 32px rgba(0,0,0,0.13);
+    border-radius: 20px;
+    border: 1.5px solid #cfd8e3;
 }
 
 h2 {
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
     text-align: center;
-    font-size: 2rem;
-    color: #2d3748;
-    letter-spacing: 1px;
+    font-size: 2.2rem;
+    color: #24324d;
+    letter-spacing: 1.2px;
+    font-weight: 700;
 }
 
 .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 input, textarea {
     width: 100%;
-    padding: 12px;
-    margin-top: 6px;
-    border: 1px solid #bfc9d9;
-    border-radius: 6px;
-    background: #f7fafc;
-    font-size: 1rem;
+    padding: 14px;
+    margin-top: 8px;
+    border: 1.5px solid #b0b9c9;
+    border-radius: 8px;
+    background: #f9fbfd;
+    font-size: 1.05rem;
     transition: border 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
 }
 
 input:focus, textarea:focus {
-    border-color: #3182ce;
-    box-shadow: 0 0 0 2px rgba(49,130,206,0.15);
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.13);
     outline: none;
 }
