@@ -7,8 +7,8 @@ import { RoomDetailsComponent } from './features/rooms/pages/room-details/room-d
 import { NotfoundComponent } from './shared/components/notfound/notfound.component';
 import { ChatComponent } from './features/chat/chat.component';
 import { CallbackComponent } from './callback/callback.component';
-import { HostListingsComponent } from './features/host/host-listings/host-listings.component';
-import { EditHostListingComponent } from './features/host/edit-host-listings/edit-host-listings.component';
+import { HostListingsComponent } from './host/host-listings/host-listings.component';
+import { EditHostListingComponent } from './host/edit-host-listings/edit-host-listings.component';
 // import { HostLayoutComponent } from './features/host/host-layout/host-layout.component';
 
 import { HostLayoutComponent } from './host/host-layout/host-layout.component';
@@ -28,17 +28,5 @@ export const routes: Routes = [
   { path: 'signin-google', component: CallbackComponent },
   { path: 'hometest', component: HometestComponent },
   { path: 'host/editlisting/:id', component: EditHostListingComponent },
-  // { path: 'host/listings', component: HostListingsComponent },
-  //  {
-  //   path: 'host',
-  //   component: HostLayoutComponent,
-  //   children: [
-  //     { path: 'listings', component: HostListingsComponent },
-  //     // { path: 'dashboard', component: HostDashboardComponent },
-  //     // { path: 'requests', component: HostRequestsComponent },
-  //     // { path: 'chat', component: HostChatComponent },
-  //     // { path: 'rules', component: HostRulesComponent }
-  //   ]
-  // },
   { path: '**', component: NotfoundComponent },
 ];
