@@ -8,6 +8,7 @@ import { NotfoundComponent } from './shared/components/notfound/notfound.compone
 import { ChatComponent } from './features/chat/chat.component';
 import { CallbackComponent } from './callback/callback.component';
 import { HostLayoutComponent } from './host/host-layout/host-layout.component';
+import { DashboardComponent } from './host/dashboard/dashboard.component';
 
 export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
@@ -16,7 +17,9 @@ export const routes: Routes = [
   { path: 'listing/:id', component:ListingDetailsComponent},
   { path: 'room/:id', component:RoomDetailsComponent},
   { path: 'chat', component: ChatComponent },
-  { path: 'host', component: HostLayoutComponent },
+  { path: 'host', component: HostLayoutComponent, children: [
+    { path: 'dashboard', component: DashboardComponent }
+  ]},
   { path: '**', component: NotfoundComponent },
   { path: 'signin-google', component: CallbackComponent },
 ];
