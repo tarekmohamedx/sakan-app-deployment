@@ -7,6 +7,7 @@ import { RoomDetailsComponent } from './features/rooms/pages/room-details/room-d
 import { NotfoundComponent } from './shared/components/notfound/notfound.component';
 import { ChatComponent } from './features/chat/chat.component';
 import { CallbackComponent } from './callback/callback.component';
+import { HostLayoutComponent } from './host/host-layout/host-layout.component';
 
 export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
@@ -15,6 +16,7 @@ export const routes: Routes = [
   { path: 'listing/:id', component:ListingDetailsComponent},
   { path: 'room/:id', component:RoomDetailsComponent},
   { path: 'chat', component: ChatComponent },
+  { path: 'host', component: HostLayoutComponent },
   { path: '**', component: NotfoundComponent },
   { path: 'signin-google', component: CallbackComponent },
 ];
