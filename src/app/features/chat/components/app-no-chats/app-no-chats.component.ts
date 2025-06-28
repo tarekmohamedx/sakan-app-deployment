@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { Router } from '@angular/router';
+import { MatDialogRef } from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-no-chats',
@@ -10,237 +13,191 @@ import { MatIconModule } from '@angular/material/icon';
   template: `
     <div class="no-chats-container">
       <div class="no-chats-card">
-        <div class="icon-wrapper">
+        <div class="icon-section">
           <mat-icon class="chat-icon">chat_bubble_outline</mat-icon>
         </div>
-        
-        <div class="content">
+
+        <div class="content-section">
           <h2 class="primary-message">You don't have any conversations yet</h2>
-          <p class="secondary-message">Start by discovering listings or sending a new request.</p>
-        </div>
-        
-        <div class="actions">
-          <button 
-            mat-raised-button 
-            class="primary-button"
-            (click)="onDiscoverListings()"
-          >
-            <mat-icon>explore</mat-icon>
-            Discover Listings
-          </button>
-          
-          <button 
-            mat-stroked-button 
-            class="secondary-button"
-            (click)="onSendRequest()"
-          >
-            <mat-icon>send</mat-icon>
-            Send Request
-          </button>
+          <p class="secondary-message">
+            Start by discovering listings or go back home.
+          </p>
+
+          <div class="actions">
+            <button
+              mat-stroked-button
+              class="secondary-button"
+              (click)="onGoHome()"
+            >
+              <mat-icon>home</mat-icon>
+              Go Home
+            </button>
+
+            <button
+              mat-raised-button
+              class="primary-button"
+              (click)="onDiscoverListings()"
+            >
+              <mat-icon>explore</mat-icon>
+              Discover Listings
+            </button>
+          </div>
         </div>
       </div>
     </div>
   `,
-  styles: [`
-    .no-chats-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-      background: linear-gradient(135deg, #f6fafd 0%, #e3eaf6 50%, #f9f9fb 100%);
-    }
+  styles: [
+    `
+      .no-chats-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+        background: linear-gradient(
+          135deg,
+          #f6fafd 0%,
+          #e3eaf6 50%,
+          #f9f9fb 100%
+        );
+      }
 
-    .no-chats-card {
-      max-width: 420px;
-      width: 100%;
-      background: linear-gradient(145deg, #ffffff 0%, #f9f9fb 100%);
-      border-radius: 18px;
-      padding: 48px 32px;
-      text-align: center;
-      box-shadow: 
-        0 4px 20px rgba(9, 28, 70, 0.08),
-        0 1px 3px rgba(9, 28, 70, 0.06);
-      border: 1px solid rgba(230, 236, 245, 0.6);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .no-chats-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 
-        0 8px 32px rgba(9, 28, 70, 0.12),
-        0 2px 6px rgba(9, 28, 70, 0.08);
-    }
-
-    .icon-wrapper {
-      margin-bottom: 24px;
-    }
-
-    .chat-icon {
-      font-size: 64px;
-      width: 64px;
-      height: 64px;
-      color: #7b8794;
-      opacity: 0.8;
-      transition: all 0.3s ease;
-    }
-
-    .content {
-      margin-bottom: 32px;
-    }
-
-    .primary-message {
-      font-size: 24px;
-      font-weight: 600;
-      color: #091c46;
-      margin: 0 0 12px 0;
-      line-height: 1.3;
-      letter-spacing: -0.02em;
-    }
-
-    .secondary-message {
-      font-size: 16px;
-      color: #7b8794;
-      margin: 0;
-      line-height: 1.5;
-      font-weight: 400;
-    }
-
-    .actions {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .primary-button {
-      background: linear-gradient(135deg, #31456e 0%, #5a7ba8 50%, #a2c7f3 100%) !important;
-      color: white !important;
-      border: none !important;
-      border-radius: 12px !important;
-      padding: 12px 28px !important;
-      font-size: 15px !important;
-      font-weight: 500 !important;
-      text-transform: none !important;
-      letter-spacing: 0.02em !important;
-      min-width: 200px;
-      height: 44px;
-      box-shadow: 
-        0 2px 8px rgba(49, 69, 110, 0.3),
-        0 1px 3px rgba(49, 69, 110, 0.2) !important;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    }
-
-    .primary-button:hover {
-      background: linear-gradient(135deg, #2a3d61 0%, #4a6b96 50%, #92b8e8 100%) !important;
-      transform: translateY(-1px);
-      box-shadow: 
-        0 4px 16px rgba(49, 69, 110, 0.4),
-        0 2px 6px rgba(49, 69, 110, 0.25) !important;
-    }
-
-    .primary-button mat-icon {
-      margin-right: 8px;
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
-    }
-
-    .secondary-button {
-      border: 2px solid #e6ecf5 !important;
-      color: #2d3748 !important;
-      background: transparent !important;
-      border-radius: 12px !important;
-      padding: 10px 28px !important;
-      font-size: 15px !important;
-      font-weight: 500 !important;
-      text-transform: none !important;
-      letter-spacing: 0.02em !important;
-      min-width: 200px;
-      height: 44px;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    }
-
-    .secondary-button:hover {
-      border-color: #31456e !important;
-      color: #31456e !important;
-      background: rgba(49, 69, 110, 0.04) !important;
-      transform: translateY(-1px);
-      box-shadow: 0 2px 8px rgba(49, 69, 110, 0.15) !important;
-    }
-
-    .secondary-button mat-icon {
-      margin-right: 8px;
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
-    }
-
-    /* Responsive design */
-    @media (max-width: 480px) {
       .no-chats-card {
-        padding: 36px 24px;
-        margin: 16px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        background: linear-gradient(145deg, #ffffff 0%, #f9f9fb 100%);
+        border-radius: 18px;
+        padding: 32px 40px;
+        max-width: 720px;
+        width: 100%;
+        box-shadow: 0 4px 20px rgba(9, 28, 70, 0.08),
+          0 1px 3px rgba(9, 28, 70, 0.06);
+        border: 1px solid rgba(230, 236, 245, 0.6);
+        gap: 32px;
       }
-      
+
+      .icon-section {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f5f8fa;
+        border-radius: 12px;
+        padding: 16px;
+        height: 80px;
+        width: 80px;
+        flex-shrink: 0;
+      }
+
+      .chat-icon {
+        font-size: 48px;
+        color: #7b8794;
+      }
+
+      .content-section {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .actions {
+        display: flex;
+        flex-direction: row;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
       .primary-message {
-        font-size: 22px;
+        font-size: 24px;
+        font-weight: 600;
+        color: #091c46;
+        margin: 0 0 12px 0;
       }
-      
+
       .secondary-message {
-        font-size: 15px;
+        font-size: 16px;
+        color: #7b8794;
+        margin-bottom: 24px;
       }
-      
-      .primary-button,
+
+      .primary-button {
+        background: linear-gradient(
+          135deg,
+          #31456e 0%,
+          #a2c7f3 100%
+        ) !important;
+        color: white !important;
+        border-radius: 12px !important;
+        padding: 10px 24px !important;
+        font-weight: 500;
+        text-transform: none;
+        box-shadow: 0 2px 8px rgba(49, 69, 110, 0.3);
+      }
+
+      .primary-button:hover {
+        background: linear-gradient(
+          135deg,
+          #2a3d61 0%,
+          #92b8e8 100%
+        ) !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 16px rgba(49, 69, 110, 0.4);
+      }
+
       .secondary-button {
-        min-width: 180px;
-        font-size: 14px !important;
+        border: 2px solid #e6ecf5 !important;
+        color: #2d3748 !important;
+        border-radius: 12px !important;
+        padding: 10px 24px !important;
+        font-weight: 500;
+        text-transform: none;
       }
-    }
 
-    /* Animation for icon */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
+      .secondary-button:hover {
+        border-color: #31456e !important;
+        color: #31456e !important;
+        background: rgba(49, 69, 110, 0.04);
+        transform: translateY(-1px);
       }
-      to {
-        opacity: 1;
-        transform: translateY(0);
+
+      .primary-button mat-icon,
+      .secondary-button mat-icon {
+        margin-right: 8px;
       }
-    }
 
-    .no-chats-card {
-      animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+      @media (max-width: 768px) {
+        .no-chats-card {
+          flex-direction: column;
+          text-align: center;
+          padding: 24px;
+        }
 
-    .chat-icon {
-      animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
-    }
-
-    .primary-message {
-      animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
-    }
-
-    .secondary-message {
-      animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s both;
-    }
-
-    .actions {
-      animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.5s both;
-    }
-  `]
+        .actions {
+          justify-content: center;
+        }
+      }
+    `,
+  ],
 })
 export class NoChatsComponent {
+  constructor(
+    private router: Router,
+    private dialogRef: MatDialogRef<NoChatsComponent>
+  ) {}
   onDiscoverListings(): void {
-    // Handle discover listings action
     console.log('Discover Listings clicked');
-    // Add your navigation/action logic here
+    this.router.navigate(['/listings']);
+    this.close(false);
   }
 
-  onSendRequest(): void {
-    // Handle send request action
-    console.log('Send Request clicked');
-    // Add your navigation/action logic here
+  onGoHome(): void {
+    console.log('Go Home clicked');
+    this.router.navigate(['/']);
+    this.close(false);
   }
+  close(result: boolean) {
+    this.dialogRef.close(result);
+  }
+  
 }
