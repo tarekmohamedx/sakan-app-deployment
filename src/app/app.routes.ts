@@ -9,8 +9,10 @@ import { ChatComponent } from './features/chat/chat.component';
 import { CallbackComponent } from './callback/callback.component';
 import { HostListingsComponent } from './features/host/host-listings/host-listings.component';
 import { EditHostListingComponent } from './features/host/edit-host-listings/edit-host-listings.component';
-import { HostLayoutComponent } from './features/host/host-layout/host-layout.component';
+// import { HostLayoutComponent } from './features/host/host-layout/host-layout.component';
 
+import { HostLayoutComponent } from './host/host-layout/host-layout.component';
+import { DashboardComponent } from './host/dashboard/dashboard.component';
 
 export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
@@ -18,20 +20,25 @@ export const routes: Routes = [
   { path: 'listing/:id', component:ListingDetailsComponent},
   { path: 'room/:id', component:RoomDetailsComponent},
   { path: 'chat', component: ChatComponent },
+  { path: 'host', component: HostLayoutComponent, children: [
+    { path: 'dashboard', component: DashboardComponent },
+    { path: 'listings', component: HostListingsComponent },
+  ]},
+  { path: '**', component: NotfoundComponent },
   { path: 'signin-google', component: CallbackComponent },
   { path: 'hometest', component: HometestComponent },
   { path: 'host/editlisting/:id', component: EditHostListingComponent },
   // { path: 'host/listings', component: HostListingsComponent },
-   {
-    path: 'host',
-    component: HostLayoutComponent,
-    children: [
-      { path: 'listings', component: HostListingsComponent },
-      // { path: 'dashboard', component: HostDashboardComponent },
-      // { path: 'requests', component: HostRequestsComponent },
-      // { path: 'chat', component: HostChatComponent },
-      // { path: 'rules', component: HostRulesComponent }
-    ]
-  },
+  //  {
+  //   path: 'host',
+  //   component: HostLayoutComponent,
+  //   children: [
+  //     { path: 'listings', component: HostListingsComponent },
+  //     // { path: 'dashboard', component: HostDashboardComponent },
+  //     // { path: 'requests', component: HostRequestsComponent },
+  //     // { path: 'chat', component: HostChatComponent },
+  //     // { path: 'rules', component: HostRulesComponent }
+  //   ]
+  // },
   { path: '**', component: NotfoundComponent },
 ];
