@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
     
   }
   ngOnInit(): void {
-    this.router.navigateByUrl('hometest'); 
+    //this.router.navigateByUrl('hometest'); 
   }
   title = 'sakan-app';
 }
