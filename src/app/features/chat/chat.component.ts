@@ -6,6 +6,11 @@ import { MessageDto } from '../../core/models/messageDto';
 import { ChatHubService } from './services/chat-hub.service';
 import { ChatDto } from '../../core/models/chatDto';
 import { AuthService } from '../../core/services/auth.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ChatConfirmationModalComponent } from './components/chat-confirmation-modal/chat-confirmation-modal.component';
+import { ActivatedRoute } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
+import { NoChatsComponent } from './components/app-no-chats/app-no-chats.component';
 
 @Component({
   selector: 'app-chat',
@@ -18,7 +23,9 @@ export class ChatComponent implements OnInit, OnDestroy {
   constructor(
     private chatService: ChatService,
     private chatHubService: ChatHubService,
-    private authService: AuthService
+    private authService: AuthService,
+    private dialog:MatDialog,
+    private route: ActivatedRoute,
   ) {}
 
   chats: ChatDto[] = [];
@@ -29,6 +36,9 @@ export class ChatComponent implements OnInit, OnDestroy {
   isConnected: boolean = false;
   currentUserId: any;
   listingTitle: string = 'Default Listing Title';
+  HostID: string = 'host-123';
+  ListingID: string = '4';
+
 
   message: MessageDto = {
     senderID: '',
@@ -38,26 +48,27 @@ export class ChatComponent implements OnInit, OnDestroy {
   };
 
   async ngOnInit() {
-    
-
+    // Dialog
+    // const dialogRef = this.dialog.open(ChatConfirmationModalComponent);
+    // const confirmed = await dialogRef.afterClosed().toPromise();
+    // if (!confirmed) {
+    //   console.log('Chat confirmation cancelled');
+    //   return;
+    // }
+    // const dialogRef = this.dialog.open(NoChatsComponent);
+    // const confirmed = await dialogRef.afterClosed().toPromise();
+    // if (!confirmed) {
+    //   console.log('No chats confirmation cancelled');
+    //   return;
+    // }
+  
     this.currentUserId = this.authService.getUserIdFromToken()?.toString().trim();
-    console.log('CurrentUserId', this.currentUserId, typeof this.currentUserId);
-    this.chatHubService.message$.subscribe((message: MessageDto) => {
-      console.log('Received message sender:', message.senderID, typeof message.senderID);
-    });
-    
-    this.getChatsByUserId(this.currentUserId);
-    
-    // Start SignalR connection
     this.chatHubService.startConnection(this.currentUserId);
-
-    // Subscribe to connection status
+  
     this.chatHubService.connectionStatus$.subscribe(connected => {
       this.isConnected = connected;
-      console.log('Connection status:', connected);
     });
-
-    // Listen for incoming messages
+  
     this.chatHubService.message$.subscribe((message: MessageDto) => {
       if (message.chatId === this.selectedChat?.chatId) {
         const exists = this.messages.some(m =>
@@ -68,6 +79,51 @@ export class ChatComponent implements OnInit, OnDestroy {
         if (!exists) {
           this.messages.push(message);
         }
+      }
+    });
+  
+    // Get chats
+    this.chatService.getUserChats(this.currentUserId).subscribe({
+      next: async (chats) => {
+        this.chats = chats;
+        if(chats.length === 0 && !this.route.snapshot.queryParams['hostId'] && !this.route.snapshot.queryParams['listingId']) {
+          console.warn('No chats found for user:', this.currentUserId);
+           this.DisplayNoChatsDialog();
+        }
+  
+        this.route.queryParams.subscribe(async (params) => {
+          const hostId = params['hostId'];
+          const listingId = params['listingId'];
+        
+          this.currentUserId = this.authService.getUserIdFromToken()?.toString().trim();
+        
+          if (hostId && listingId) { 
+            try {
+              const chat = await this.chatService.createChatIfNotExists(
+                this.currentUserId,
+                hostId,
+                +listingId
+              );
+          
+              if (chat) {
+                this.DisplayConfirmationDialog();
+                this.selectedChat = {
+                  ...chat,
+                  receiverID: hostId
+                };
+                await this.loadChatHistory(chat.chatId);
+              }
+            } catch (error) {
+              console.error('Error creating chat:', error);
+            }
+          }
+        
+          this.getChatsByUserId(this.currentUserId);
+          this.chatHubService.startConnection(this.currentUserId);
+        });
+      },
+      error: err => {
+        console.error('Error fetching chats', err);
       }
     });
   }
@@ -150,6 +206,24 @@ export class ChatComponent implements OnInit, OnDestroy {
     };
   
     await this.loadChatHistory(chat.chatId);
+  }
+
+  async DisplayNoChatsDialog(){
+    const dialogRef = this.dialog.open(NoChatsComponent);
+    const confirmed = await dialogRef.afterClosed().toPromise();
+    if (!confirmed) {
+      console.log('No chats confirmation cancelled');
+      return;
+    }
+  }
+
+  async DisplayConfirmationDialog() {
+    const dialogRef = this.dialog.open(ChatConfirmationModalComponent);
+    const confirmed = await dialogRef.afterClosed().toPromise();
+    if (!confirmed) {
+      console.log('Chat confirmation cancelled');
+      return;
+    }
   }
 
   private async loadChatHistory(chatId: number) {
