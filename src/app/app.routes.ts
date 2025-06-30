@@ -23,10 +23,10 @@ export const routes: Routes = [
   { path: 'host', component: HostLayoutComponent, children: [
     { path: 'dashboard', component: DashboardComponent },
     { path: 'listings', component: HostListingsComponent },
+    { path: 'editlisting/:id', component: EditHostListingComponent },
   ]},
   { path: '**', component: NotfoundComponent },
   { path: 'signin-google', component: CallbackComponent },
   { path: 'hometest', component: HometestComponent },
-  { path: 'host/editlisting/:id', component: EditHostListingComponent },
   { path: '**', component: NotfoundComponent },
 ];
