@@ -134,6 +134,16 @@
   font-size: 1rem;
 }
 
+.status-active {
+  color: green;
+  font-weight: 600;
+}
+
+.status-inactive {
+  color: #c62828;
+  font-weight: 600;
+}
+
 @media (max-width: 900px) {
   .host-dashboard-container {
     padding: 16px 4px;

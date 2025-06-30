@@ -13,6 +13,8 @@ import { EditHostListingComponent } from './host/edit-host-listings/edit-host-li
 
 import { HostLayoutComponent } from './host/host-layout/host-layout.component';
 import { DashboardComponent } from './host/dashboard/dashboard.component';
+import { HostRoomsComponent } from './host/host-rooms/host-rooms.component';
+// import { HostRoomsComponent } from './host/host-rooms/host-rooms.component';
 
 export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
@@ -24,6 +26,7 @@ export const routes: Routes = [
     { path: 'dashboard', component: DashboardComponent },
     { path: 'listings', component: HostListingsComponent },
     { path: 'editlisting/:id', component: EditHostListingComponent },
+    { path: 'listings/:listingId/rooms', component: HostRoomsComponent },
   ]},
   { path: '**', component: NotfoundComponent },
   { path: 'signin-google', component: CallbackComponent },
