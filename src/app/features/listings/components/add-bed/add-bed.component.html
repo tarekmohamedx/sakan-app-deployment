@@ -1,0 +1,11 @@
+<form [formGroup]="bedForm">
+    <input formControlName="label" />
+    <input formControlName="type" />
+    <input formControlName="price" type="number" />
+    <input type="checkbox" formControlName="isAvailable" />
+  
+    <input type="file" (change)="onBedPhotosUpload($event)" multiple />
+  
+    <button (click)="saveBed()">Save Bed</button>
+  </form>
+  

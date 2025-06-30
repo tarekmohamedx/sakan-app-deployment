@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { Login } from '../core/models/Login';
+import { Login } from '../../../../core/models/Login';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../core/services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
