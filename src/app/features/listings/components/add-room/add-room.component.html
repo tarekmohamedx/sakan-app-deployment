@@ -1,15 +1,80 @@
-<form [formGroup]="roomForm">
-    <input formControlName="name" />
-    <input formControlName="type" />
-    <input formControlName="pricePerNight" type="number" />
-    <input formControlName="maxGuests" type="number" />
-    <input type="checkbox" formControlName="isBookableAsWhole" />
-  
-    <input type="file" (change)="onRoomPhotosUpload($event)" multiple />
-  
-    <!-- Add Bed -->
-    <button type="button" (click)="openAddBedDialog()">➕ Add Bed</button>
-  
-    <button (click)="saveRoom()">Save Room</button>
+<button type="button" class="cancel-room-btn" (click)="closeDialog()">
+  ❌ Cancel
+</button>
+
+<div class="room-form-container">
+  <div class="room-form-header">
+    <h3>
+      <span class="room-icon">🛏️</span> Add Room Details
+    </h3>
+    <p>Please fill out the room details below.</p>
+  </div>
+
+  <form [formGroup]="roomForm">
+    <!-- Room Name and Type -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="roomName" class="required">Room Name</label>
+        <input type="text" id="roomName" formControlName="name" placeholder="e.g. Deluxe Room" />
+      </div>
+
+      <div class="form-group">
+        <label for="roomType" class="required">Room Type</label>
+        <input type="text" id="roomType" formControlName="type" placeholder="e.g. Single, Double" />
+      </div>
+    </div>
+
+    <!-- Price and Max Guests -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="price" class="required">Price Per Night</label>
+        <input type="number" id="price" formControlName="pricePerNight" placeholder="Enter price" />
+      </div>
+
+      <div class="form-group">
+        <label for="guests" class="required">Max Guests</label>
+        <input type="number" id="guests" formControlName="maxGuests" placeholder="e.g. 2" />
+      </div>
+    </div>
+
+    <!-- Checkbox: Bookable as whole -->
+    <div class="form-row single-column">
+      <div class="form-group">
+        <div class="checkbox-wrapper">
+          <input type="checkbox" id="isWhole" formControlName="isBookableAsWhole" />
+          <label for="isWhole" class="checkbox-label">Bookable as Whole</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- File Upload -->
+    <div class="form-row single-column file-upload-section">
+      <div class="form-group">
+        <label>Upload Room Photos</label>
+        <div class="file-upload-wrapper">
+          <input type="file" multiple (change)="onRoomPhotosUpload($event)" />
+          <div class="upload-content">
+            <div class="upload-icon">📷</div>
+            <p class="upload-text">Click or drag to <strong>upload room photos</strong> (JPG/PNG)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="roomPhotos.length > 0" class="preview-area">
+      <h4>Uploaded Photos:</h4>
+      <ul>
+        <li *ngFor="let photo of roomPhotos">{{ photo.name }}</li>
+      </ul>
+    </div>
+    <!-- Actions -->
+    <div class="form-actions">
+      <button type="button" class="add-bed-btn" (click)="openAddBedDialog()">
+        <span class="plus-icon">➕</span> Add Bed
+      </button>
+
+      <button type="button" class="save-room-btn" (click)="saveRoom()">
+        Save Room
+      </button>
+    </div>
   </form>
-  
+</div>

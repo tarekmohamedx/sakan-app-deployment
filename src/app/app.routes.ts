@@ -11,6 +11,7 @@ import { HostLayoutComponent } from './host/host-layout/host-layout.component';
 import { DashboardComponent } from './host/dashboard/dashboard.component';
 import { HostListingsComponent } from './host/host-listings/host-listings.component';
 import { EditHostListingComponent } from './host/edit-host-listings/edit-host-listings.component';
+import { AddApartmentComponent } from './features/listings/components/add-apartment/add-apartment.component';
 
 export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
@@ -21,6 +22,7 @@ export const routes: Routes = [
   { path: 'host', component: HostLayoutComponent, children: [
     { path: 'dashboard', component: DashboardComponent },
     { path: 'listings', component: HostListingsComponent },
+    {path:'addapartment' , component:AddApartmentComponent},
     { path: 'editlisting/:id', component: EditHostListingComponent },
   ]},
   { path: '**', component: NotfoundComponent },
