@@ -380,3 +380,20 @@
 .bed-form-container:focus-within {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
+
+
+
+.Bed-dialog-scrollable {
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: 8px; /* space for scrollbar */
+}
+
+/* Optional: Fix dialog footer */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
