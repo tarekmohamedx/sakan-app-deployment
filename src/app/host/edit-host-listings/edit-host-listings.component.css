@@ -137,7 +137,7 @@ input[type="file"] {
 }
 
 .submit-btn {
-  width: 100%;
+  width: 80%;
   font-weight: bold;
   padding: 1rem 0;
   font-size: 1.3rem;
