@@ -5,7 +5,7 @@ import { ChatService } from './services/chat.service';
 import { MessageDto } from '../../core/models/messageDto';
 import { ChatHubService } from './services/chat-hub.service';
 import { ChatDto } from '../../core/models/chatDto';
-import { AuthService } from '../auth/services/auth.service';
+import { AuthService } from '../auth/services/auth.service'; 
 import { MatDialog } from '@angular/material/dialog';
 import { ChatConfirmationModalComponent } from './components/chat-confirmation-modal/chat-confirmation-modal.component';
 import { ActivatedRoute } from '@angular/router';
@@ -60,8 +60,11 @@ export class ChatComponent implements OnInit, OnDestroy {
     //   console.log('No chats confirmation cancelled');
     //   return;
     // }
-  
-    this.currentUserId = this.authService.getUserIdFromToken()?.toString().trim();
+
+    this.currentUserId = this.authService
+      .getUserIdFromToken()
+      ?.toString()
+      .trim();
     this.chatHubService.startConnection(this.currentUserId);
 
     this.chatHubService.connectionStatus$.subscribe((connected) => {
@@ -86,18 +89,25 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatService.getUserChats(this.currentUserId).subscribe({
       next: async (chats) => {
         this.chats = chats;
-        if(chats.length === 0 && !this.route.snapshot.queryParams['hostId'] && !this.route.snapshot.queryParams['listingId']) {
+        if (
+          chats.length === 0 &&
+          !this.route.snapshot.queryParams['hostId'] &&
+          !this.route.snapshot.queryParams['listingId']
+        ) {
           console.warn('No chats found for user:', this.currentUserId);
-           this.DisplayNoChatsDialog();
+          this.DisplayNoChatsDialog();
         }
-  
+
         this.route.queryParams.subscribe(async (params) => {
           const hostId = params['hostId'];
           const listingId = params['listingId'];
-        
-          this.currentUserId = this.authService.getUserIdFromToken()?.toString().trim();
-        
-          if (hostId && listingId) { 
+
+          this.currentUserId = this.authService
+            .getUserIdFromToken()
+            ?.toString()
+            .trim();
+
+          if (hostId && listingId) {
             try {
               const chat = await this.chatService.createChatIfNotExists(
                 this.currentUserId,
@@ -209,7 +219,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     await this.loadChatHistory(chat.chatId);
   }
 
-  async DisplayNoChatsDialog(){
+  async DisplayNoChatsDialog() {
     const dialogRef = this.dialog.open(NoChatsComponent);
     const confirmed = await dialogRef.afterClosed().toPromise();
     if (!confirmed) {

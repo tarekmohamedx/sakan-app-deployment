@@ -1,17 +1,24 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { BedDTO } from '../../../../core/models/BedDTO';
 import { RoomDTO } from '../../../../core/models/RoomDTO';
 import { BedDialogComponent } from '../add-bed/add-bed.component'; // adjust path if needed
 import Swal from 'sweetalert2';
 import { from } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'roomdialog',
   templateUrl: './add-room.component.html',
-  imports: [ReactiveFormsModule],
-  standalone:true,
+  imports: [ReactiveFormsModule, CommonModule],
+  standalone: true,
   styleUrls: ['./add-room.component.css'],
 })
 export class RoomDialogComponent {
@@ -33,6 +40,9 @@ export class RoomDialogComponent {
     });
   }
 
+  closeDialog(): void {
+    this.dialogRef.close(); // closes without returning data
+  }
   // 📸 Room photo validation (type + size)
   onRoomPhotosUpload(event: Event): void {
     const files = (event.target as HTMLInputElement).files;
