@@ -159,9 +159,11 @@ export class RoomDetailsComponent implements OnInit {
     return this.room.beds?.filter(b => b.isAvailable).every(b => b.selected);
   }
 
-  get selectedBedIds(): number[] {
-    return this.room.beds?.filter(b => b.selected).map(b => b.id) || [];
-  }
+get selectedBedIds(): number[] {
+  return this.room.beds
+    ?.filter(b => b.selected && b.id !== null)
+    .map(b => b.id as number) || [];
+}
 
   get selectedBedsCount(): number {
     return this.room?.beds.filter(b => b.selected).length || 0;

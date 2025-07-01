@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditHostListingComponent } from './edit-host-listings.component';
+import { HostMyReviewsComponent } from './host-my-reviews.component';
 
-describe('EditHostListingComponent', () => {
-  let component: EditHostListingComponent;
-  let fixture: ComponentFixture<EditHostListingComponent>;
+describe('HostMyReviewsComponent', () => {
+  let component: HostMyReviewsComponent;
+  let fixture: ComponentFixture<HostMyReviewsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EditHostListingComponent]
+      imports: [HostMyReviewsComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(EditHostListingComponent);
+    fixture = TestBed.createComponent(HostMyReviewsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

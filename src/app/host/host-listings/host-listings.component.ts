@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HostListingService } from '../HostListing.service';
+import { HostListingService } from '../services/HostListing.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -79,4 +79,9 @@ export class HostListingsComponent implements OnInit {
       });
     }
   }
+
+  goToRooms(listingId: number): void {
+    this.router.navigate(['/host/listings', listingId, 'rooms']);
+  }
+
 }

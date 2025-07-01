@@ -1,7 +1,7 @@
 import { ListingDetailsDto } from './listing-details.model';
 
 export interface BedDto {
-  id: number;
+  id: number | null;
   label: string;
   type: string;
   price: number;
@@ -24,4 +24,18 @@ export interface RoomDetailsDto {
     latitude: number;
     longitude: number;
   };
+}
+
+export interface HostRoomDto {
+  id: number;
+  listingId: number;
+  name: string;
+  type: string;
+  pricePerNight: number;
+  maxGuests: number;
+  isBookableAsWhole: boolean;
+  isActive: boolean;
+  photoUrls: string[];
+  listingTitle: string;
+  beds: BedDto[];
 }

@@ -24,17 +24,29 @@
             <th>Location</th>
             <th>Image</th>
             <th>Max Guests</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let listing of listings">
+            
             <td data-label="Listing Name">{{ listing.title }}</td>
+
             <td class="location" data-label="Location">{{ listing.location }}</td>
+            
             <td data-label="Image">
               <img [src]="listing.previewImage" class="preview-img" alt="listing image" />
             </td>
+            
             <td data-label="Max Guests">{{ listing.maxGuests }}</td>
+            
+            <td data-label="Status">
+              <span [ngClass]="listing.isActive ? 'status-active' : 'status-inactive'">
+                  {{ listing.isActive ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+            
             <td data-label="Actions">
               <button class="action-button" (click)="viewListing(listing.id)" title="View Listing">
                 <span class="icon-view">
@@ -62,6 +74,13 @@
                   </svg>
                 </span>
               </button>
+
+              <button class="action-button edit" (click)="goToRooms(listing.id)" title="Manage Rooms">
+                <span class="icon-room">
+                  🛏️
+                </span>
+              </button>
+
             </td>
           </tr>
         </tbody>

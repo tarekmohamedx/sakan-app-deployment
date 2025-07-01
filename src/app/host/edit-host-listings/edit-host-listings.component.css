@@ -39,4 +39,27 @@ input:focus, textarea:focus {
     outline: none;
 }
 
+.preview-img {
+  width: 120px;
+  height: auto;
+  border-radius: 8px;
+  margin-right: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+input[type="file"] {
+  display: none;
+}
+.upload-label {
+  display: inline-block;
+  padding: 6px 14px;
+  background-color: #1976d2;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+
+
 

@@ -89,4 +89,17 @@ export class AuthService {
 
     return userId;
   }
+
+  getRoleFromToken(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    const decoded = jwtDecode(token) as { [key: string]: any };
+    const role =
+      decoded[
+        'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+      ];
+
+    return role;
+  }
 }

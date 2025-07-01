@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {jwtDecode} from 'jwt-decode';
+import { HostBooking } from '../../core/models/HostBooking';
 
 interface MyJwtPayload {
   nameid: string;
@@ -77,5 +78,12 @@ private getHostIdFromToken(): string | null {
       headers: this.getAuthHeaders()
     });
   }
+
+  getHostBookings(): Observable<HostBooking[]> {
+  const hostId = this.getHostIdFromToken(); // or get from backend auth
+  const headers = this.getAuthHeaders();
+  return this.http.get<HostBooking[]>(`https://localhost:7188/api/HostBooking/host/bookings?hostId=${hostId}`, { headers });
+}
+
 
 }

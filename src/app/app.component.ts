@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from "./header/header.component";
 import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
+import { AuthService } from './features/auth/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -17,12 +18,18 @@ import { CommonModule } from '@angular/common';
   styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
-  
-  constructor(private router: Router) { 
+  role = '';
+  constructor(
+    private router: Router,
+    private authService : AuthService
+  ) { 
  
   }
   ngOnInit(): void {
-    // this.router.navigateByUrl('hometest'); 
+    // this.router.navigate(['/home']);
+    console.log('Role', this.authService.getuserdata()?.role);
+    this.role = this.authService.getuserdata()?.role || '';
+    
   }
   title = 'sakan-app';
 }

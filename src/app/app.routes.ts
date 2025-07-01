@@ -11,19 +11,31 @@ import { HostLayoutComponent } from './host/host-layout/host-layout.component';
 import { DashboardComponent } from './host/dashboard/dashboard.component';
 import { HostListingsComponent } from './host/host-listings/host-listings.component';
 import { EditHostListingComponent } from './host/edit-host-listings/edit-host-listings.component';
+import { HostRoomsComponent } from './host/host-rooms/host-rooms.component';
+import path from 'path';
 import { AddApartmentComponent } from './features/listings/components/add-apartment/add-apartment.component';
+import { HostBookingComponent } from './host/host-booking/host-booking.component';
+import { HostUserReviewsComponent } from './host/host-user-reviews/host-user-reviews.component';
+import { HostMyReviewsComponent } from './host/host-my-reviews/host-my-reviews.component';
 
 export const routes: Routes = [
+  {path  : '', redirectTo: 'host', pathMatch: 'full' },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   { path: 'listing/:id', component:ListingDetailsComponent},
   { path: 'room/:id', component:RoomDetailsComponent},
   { path: 'chat', component: ChatComponent },
   { path: 'host', component: HostLayoutComponent, children: [
+    {path : '', redirectTo: 'dashboard', pathMatch: 'full' },
     { path: 'dashboard', component: DashboardComponent },
     { path: 'listings', component: HostListingsComponent },
     {path:'addapartment' , component:AddApartmentComponent},
     { path: 'editlisting/:id', component: EditHostListingComponent },
+    { path: 'listings/:listingId/rooms', component: HostRoomsComponent },
+    { path: 'chat', component: ChatComponent },
+    { path: 'booking', component: HostBookingComponent },
+    { path: 'reviews', component: HostUserReviewsComponent },
+    { path: 'myReviews', component: HostMyReviewsComponent },
   ]},
   { path: '**', component: NotfoundComponent },
   { path: 'signin-google', component: CallbackComponent },

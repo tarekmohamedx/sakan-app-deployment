@@ -31,18 +31,21 @@
       <input formControlName="district" class="form-control" />
     </div>
 
-    <!-- <div class="form-group">
+    <div class="form-group">
       <label>Existing Photos</label>
       <div class="photo-preview-list">
-        <img *ngFor="let photo of listingForm.value.photoUrls" [src]="photo" class="preview-img" />
+        <div *ngFor="let photo of listingForm.value.photoUrls; let i = index">
+          <img [src]="photo" class="preview-img" />
+          <button type="button" (click)="removePhoto(i)">🗑️</button>
+        </div>
       </div>
     </div>
 
-    <div class="form-group">
-      <label>New Photo URLs (comma-separated)</label>
-      <textarea class="form-control" [(ngModel)]="photoInput"></textarea>
-      <button type="button" class="btn btn-secondary mt-2" (click)="updatePhotoUrls()">Update Photos</button>
-    </div> -->
+
+    <label for="fileInput" class="upload-label">Upload Photo</label>
+    <input type="file" id="fileInput" (change)="onFileSelected($event)" accept="image/*" />
+
+
 
     <div class="form-group">
       <label>
