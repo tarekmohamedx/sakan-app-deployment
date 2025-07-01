@@ -6,7 +6,7 @@ import { HostDashboardDTO } from '../models/host-dashboard.model';
 @Injectable({
     providedIn: 'root'
 })
-export class HostDashboardService {
+export class HostService {
     private readonly apiUrl = 'https://localhost:7188/api';
 
     constructor(private http: HttpClient) {}
