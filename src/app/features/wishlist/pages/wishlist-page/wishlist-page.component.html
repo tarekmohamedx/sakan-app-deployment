@@ -1,0 +1,21 @@
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-6">My Wishlist</h1>
+
+  <ng-container *ngIf="wishlistItems$ | async as listings">
+    <div *ngIf="listings.length > 0; else emptyWishlist" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      
+      <!-- نستخدم نفس مكون بطاقة العرض ولكن مع تعديل بسيط -->
+      <app-listing-card 
+        *ngFor="let listing of listings"
+        [listing]="listing"
+        [isFavorite]="true"          
+        [showRemoveButton]="true"
+        (removed)="handleRemoveFromWishlist($event)">
+      </app-listing-card>
+
+    </div>
+    <ng-template #emptyWishlist>
+      <p>Your wishlist is empty. Start exploring to find your perfect space!</p>
+    </ng-template>
+  </ng-container>
+</div>

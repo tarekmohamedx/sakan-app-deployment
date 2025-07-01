@@ -1,0 +1,126 @@
+<!-- ======================================================= -->
+<!--      1. قسم البطل (Hero Section) مع شريط البحث          -->
+<!-- ======================================================= -->
+<section class="relative h-[550px] flex items-center justify-center text-center">
+    <!-- صورة الخلفية -->
+    <div class="absolute inset-0">
+        <img src="https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg" alt="Cozy living room" class="w-full h-full object-cover">
+        <!-- طبقة داكنة فوق الصورة لتحسين وضوح النص -->
+        <div class="absolute inset-0 bg-black opacity-30"></div>
+    </div>
+
+    <!-- المحتوى فوق الصورة -->
+    <div class="relative z-10">
+        <h1 class="text-4xl md:text-5xl font-bold mb-2  text-white">Find Your Perfect Space</h1>
+        <p class="text-lg md:text-xl mb-8  text-white">Hassle-Free Renting Starts Here</p>
+
+        <!-- استخدام شريط البحث المشترك -->
+        <app-search-bar (searchTriggered)="onSearch($event)"></app-search-bar>
+    </div>
+</section>
+
+
+<!-- ======================================================= -->
+<!--      2. قسم الوجهات المميزة (Featured Destinations)       -->
+<!-- ======================================================= -->
+<section class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h2 class="text-3xl font-bold text-gray-800 mb-6">Featured Destinations</h2>
+    
+    <!-- شبكة عرض الوجهات -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+        <!-- استخدام *ngFor لعرض الوجهات -->
+        <div *ngFor="let dest of featuredDestinations" 
+             (click)="onDestinationClick(dest.name)"
+             class="group cursor-pointer">
+            <div class="overflow-hidden rounded-xl">
+                <img [src]="dest.image" alt="{{ dest.name }}" class="w-full h-40 object-cover transform group-hover:scale-110 transition-transform duration-300">
+            </div>
+            <p class="mt-2 font-semibold text-gray-700">{{ dest.name }}</p>
+        </div>
+    </div>
+</section>
+
+
+<!-- ======================================================= -->
+<!--      3. قسم "مساحات في أفضل المدن" (Carousel)           -->
+<!-- ======================================================= -->
+<section class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-3xl font-bold text-gray-800">Spaces in Top Cities</h2>
+        <!-- يمكنكِ إضافة أزرار تحكم للـ Carousel هنا -->
+    </div>
+    
+    <!-- هنا ستضعين مكون الـ Carousel -->
+    <!-- سأستخدم *ngIf و *ngFor كمثال، ولكن يجب استبدالهما بمكتبة مثل ngx-owl-carousel-o -->
+    <div *ngIf="highestRatedListings$ | async as listings" class="flex space-x-4 overflow-x-auto pb-4">
+        <div *ngFor="let listing of listings" class="flex-shrink-0 w-80">
+            <app-listing-card 
+            [listing]="listing"
+            [isFavorite]="isListingInFavorites(listing.id)"
+            (favoriteToggle)="handleFavoriteToggle($event)">
+            </app-listing-card>
+        </div>
+    </div>
+</section>
+
+
+<!-- ======================================================= -->
+<!--      4. قسم الدعوة للمضيفين (CTA for Hosts)             -->
+<!-- ======================================================= -->
+<section class="bg-gray-100 py-16 mt-8">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold text-gray-800">Become a Host</h2>
+        <p class="text-lg text-gray-600 mt-2 mb-6 max-w-2xl mx-auto">
+            Join our community of hosts, reach thousands of students, and earn money on your own terms.
+        </p>
+        <a href="#" class="bg-brand-primary text-white font-bold py-3 px-8 rounded-lg text-lg hover:bg-brand-800 transition-colors">
+            Start Hosting
+        </a>
+    </div>
+</section>
+
+<section class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-3xl font-bold text-gray-800">Just Added</h2>
+        <!-- يمكنكِ إضافة رابط "عرض الكل" هنا -->
+        <a routerLink="/listings" [queryParams]="{ sortBy: 'createdAt_desc' }" class="text-brand-primary font-semibold hover:underline">
+            View all
+        </a>
+    </div>
+    
+    <!-- Carousel لعرض أحدث الوحدات -->
+    <div *ngIf="newestListings$ | async as listings" class="flex space-x-4 overflow-x-auto pb-4 -mx-4 px-4">
+        <!-- استخدام scroll-snap لتحسين تجربة التمرير على الموبايل -->
+        <div *ngFor="let listing of listings" class="flex-shrink-0 w-80 snap-center">
+            <app-listing-card 
+            [listing]="listing"
+            [isFavorite]="isListingInFavorites(listing.id)"
+            (favoriteToggle)="handleFavoriteToggle($event)">
+            </app-listing-card>
+        </div>
+    </div>
+</section>
+
+
+<!-- ======================================================= -->
+<!--      قسم "أفضل الأسعار" (Most Affordable)              -->
+<!-- ======================================================= -->
+<section class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-3xl font-bold text-gray-800">Great Deals</h2>
+        <a routerLink="/listings" [queryParams]="{ sortBy: 'price_asc' }" class="text-brand-primary font-semibold hover:underline">
+            View all
+        </a>
+    </div>
+    
+    <!-- Carousel لعرض أرخص الوحدات -->
+    <div *ngIf="mostAffordableListings$ | async as listings" class="flex space-x-4 overflow-x-auto pb-4 -mx-4 px-4">
+        <div *ngFor="let listing of listings" class="flex-shrink-0 w-80 snap-center">
+            <app-listing-card 
+            [listing]="listing"
+            [isFavorite]="isListingInFavorites(listing.id)"
+            (favoriteToggle)="handleFavoriteToggle($event)">
+            </app-listing-card>
+        </div>
+    </div>
+</section>
