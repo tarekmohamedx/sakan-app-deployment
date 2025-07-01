@@ -50,7 +50,7 @@
           </div>
           <div class="stat-info">
             <h3 class="stat-title">Total Requests</h3>
-            <p class="stat-value">{{ stats.requestedCount }}</p>
+            <p class="stat-value">{{ stats.todaysRequestsCount }}</p>
           </div>
         </div>
         <p class="stat-description">Booking requests received</p>
@@ -67,7 +67,7 @@
           </div>
           <div class="stat-info">
             <h3 class="stat-title">Active Listings</h3>
-            <p class="stat-value">{{ stats.activeListings }}</p>
+            <p class="stat-value">{{ stats.activeListingsCount }}</p>
           </div>
         </div>
         <p class="stat-description">Currently available properties</p>
@@ -84,7 +84,7 @@
           </div>
           <div class="stat-info">
             <h3 class="stat-title">Approved Listings</h3>
-            <p class="stat-value">{{ stats.approvedListings }}</p>
+            <p class="stat-value">{{ stats.approvedListingsCount }}</p>
           </div>
         </div>
         <p class="stat-description">Verified and approved properties</p>
@@ -118,7 +118,7 @@
           </div>
           <div class="stat-info">
             <h3 class="stat-title">This Month's Revenue</h3>
-            <p class="stat-value">{{ formatCurrency(stats.thisMonthRevenue) }}</p>
+            <p class="stat-value">{{ formatCurrency(stats.monthlyRevenue) }}</p>
           </div>
         </div>
         <p class="stat-description">Total earnings this month</p>
@@ -140,6 +140,22 @@
         <p class="stat-description">Guest satisfaction rating</p>
       </div>
 
+      <!-- Total Bookings Card -->
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon approved-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M8 6H21M8 12H21M8 18H21M3 6h.01M3 12h.01M3 18h.01" />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <h3 class="stat-title">Total Bookings</h3>
+              <p class="stat-value">{{ stats.totalBookings }}</p>
+            </div>
+          </div>
+          <p class="stat-description">All-time booking count</p>
+        </div>
+
     </div>
 
     <!-- Recent Booking Requests -->
@@ -150,7 +166,7 @@
       </div>
 
       <div class="requests-table-container">
-        <table class="requests-table" *ngIf="stats.recentBookingRequests.length > 0; else noRequests">
+        <table class="requests-table" *ngIf="stats.recentRequests.length > 0; else noRequests">
           <thead>
             <tr>
               <th>Guest</th>
@@ -163,18 +179,18 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let request of stats.recentBookingRequests" class="request-row">
+            <tr *ngFor="let request of formattedRecentRequests" class="request-row">
               <td class="guest-name">{{ request.guestName }}</td>
               <td class="property-name">{{ request.propertyName }}</td>
-              <td class="check-date">{{ formatDate(request.checkIn) }}</td>
-              <td class="check-date">{{ formatDate(request.checkOut) }}</td>
+              <td class="check-date">{{ request.checkIn }}</td>
+              <td class="check-date">{{ request.checkOut }}</td>
               <td class="guest-count">{{ request.guests }}</td>
               <td class="status-cell">
                 <span class="status-badge" [ngClass]="getStatusClass(request.status)">
                   {{ request.status | titlecase }}
                 </span>
               </td>
-              <td class="request-date">{{ formatDateTime(request.requestDate) }}</td>
+              <td class="request-date">{{ request.checkIn }}</td>
             </tr>
           </tbody>
         </table>
@@ -193,6 +209,37 @@
         </ng-template>
       </div>
     </div>
+
+    <!-- Latest Review Section -->
+<div class="recent-requests-section" *ngIf="stats.latestReview">
+  <div class="section-header">
+    <h2 class="section-title">Latest Guest Review</h2>
+    <span class="section-subtitle">From: {{ stats.latestReview.reviewerName }}</span>
+  </div>
+
+  <div class="requests-table-container">
+    <table class="requests-table">
+      <thead>
+        <tr>
+          <th>Reviewer</th>
+          <th>Listing</th>
+          <th>Rating</th>
+          <th>Comment</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="guest-name">{{ stats.latestReview.reviewerName }}</td>
+          <td class="property-name">{{ stats.latestReview.listingTitle }}</td>
+          <td class="guest-count">{{ stats.latestReview.rating }}/5</td>
+          <td class="check-date">{{ stats.latestReview.comment }}</td>
+          <td class="request-date">{{ stats.latestReview.createdAt | date: 'MMM d, y' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
   </div>
 </div>

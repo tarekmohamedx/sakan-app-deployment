@@ -13,8 +13,11 @@ import { HostDashboardDTO } from '../../core/models/host-dashboard.model';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-      refreshData() {
-        console.log('Refresh Data');
+     async refreshData() {
+         const hostId = await this.authService.getUserIdFromToken();
+        if (hostId) {
+          this.loadDashboardData(hostId);
+        }
       }
   stats: HostDashboardDTO = {
     todaysRequestsCount: 0,
@@ -66,4 +69,50 @@ export class DashboardComponent implements OnInit {
       this.isLoading = false;
     }
   }
+
+  get formattedRecentRequests() {
+    return this.stats.recentRequests.map(req => ({
+      guestName: req.guestName,
+      propertyName: req.listingTitle, // from your DTO
+      checkIn: req.fromDate,
+      checkOut: req.toDate,
+      guests: '-',
+      status: 'pending',
+      requestDate: req.fromDate
+    }));
+  }
+
+  getStatusClass(status: string): string {
+    switch (status) {
+      case 'approved': return 'status-approved';
+      case 'declined': return 'status-declined';
+      case 'pending': return 'status-pending';
+      default: return 'status-pending';
+    }
+  }
+
+  formatCurrency(amount: number): string {
+    return new Intl.NumberFormat('ar-EG', {
+      style: 'currency',
+      currency: 'EGP'
+    }).format(amount);
+  }
+
+  formatDate(date: Date): string {
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric'
+    }).format(date);
+  }
+
+  formatDateTime(date: Date): string {
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit'
+    }).format(date);
+  }
+
+
 }
