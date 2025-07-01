@@ -1,0 +1,90 @@
+<button type="button" class="cancel-room-btn" (click)="closeDialog()">
+  ❌ Cancel
+</button>
+
+<div class="bed-form-container">
+  <!-- Header -->
+  <div class="bed-form-header">
+    <div class="bed-icon">🛏️</div>
+    <div class="header-text">
+      <h4>Add Bed</h4>
+      <span>Fill in bed details below</span>
+    </div>
+  </div>
+
+  <!-- Form Start -->
+  <form [formGroup]="bedForm">
+    <!-- Two-Column Fields -->
+    <div class="form-grid">
+      <!-- Bed Label -->
+      <div class="form-field">
+        <label for="label" class="required">Bed Label</label>
+        <input
+          type="text"
+          id="label"
+          formControlName="label"
+          placeholder="e.g. Queen Bed"
+        />
+      </div>
+
+      <!-- Bed Type -->
+      <div class="form-field">
+        <label for="type" class="required">Bed Type</label>
+        <input
+          type="text"
+          id="type"
+          formControlName="type"
+          placeholder="e.g. Single, Double"
+        />
+      </div>
+    </div>
+
+    <!-- Price Field -->
+    <div class="form-grid single-column">
+      <div class="form-field">
+        <label for="price" class="required">Bed Price</label>
+        <input
+          type="number"
+          id="price"
+          formControlName="price"
+          placeholder="e.g. 100"
+        />
+      </div>
+    </div>
+
+    <!-- Checkbox: Is Available -->
+    <div class="checkbox-field">
+      <div class="checkbox-container">
+        <input type="checkbox" id="isAvailable" formControlName="isAvailable" />
+      </div>
+      <label for="isAvailable" class="checkbox-label">Is Available</label>
+    </div>
+
+    <!-- File Upload -->
+    <div class="file-upload-field">
+      <div class="upload-area">
+        <input type="file" (change)="onBedPhotosUpload($event)" multiple />
+        <div class="upload-content">
+          <div class="upload-icon">📷</div>
+          <p class="upload-text">
+            Upload <span class="highlight">bed photos</span> (JPG or PNG)
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="bedPhotos.length > 0" class="preview-area">
+      <h4>Uploaded Photos:</h4>
+      <ul>
+        <li *ngFor="let photo of bedPhotos">{{ photo.name }}</li>
+      </ul>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="form-actions">
+      <button type="button" class="save-bed-btn" (click)="saveBed()">
+        <span class="save-icon">💾</span> Save Bed
+      </button>
+    </div>
+  </form>
+</div>

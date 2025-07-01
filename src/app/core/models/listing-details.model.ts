@@ -37,7 +37,7 @@ export interface BookingRequestDto {
   guestId: string;
   listingId?: number;
   roomId?: number;
-  bedId?: number;
+  bedId?: number | null;
   fromDate: string; // ISO format
   toDate: string;
 }

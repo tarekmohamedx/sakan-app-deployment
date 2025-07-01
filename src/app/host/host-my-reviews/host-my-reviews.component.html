@@ -1,0 +1,318 @@
+<div class="host-dashboard-container enhanced">
+    <h1 class="dashboard-title">My Reviews</h1>
+
+    <div class="table-container">
+        <table class="listing-table" *ngIf="reviews.length > 0; else noReviews">
+            <thead>
+                <tr>
+                    <th>Guest Name</th>
+                    <th>Rating</th>
+                    <th>Comment</th>
+                    <th>Reviewed At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let review of reviews">
+                    <td>{{ review.guestName }}</td>
+                    <td>
+                        <span *ngIf="review.rating; else noRating" class="star-rating">
+                            <ng-container *ngFor="let star of [].constructor(review.rating)">
+                                ★
+                            </ng-container>
+                            <ng-container *ngFor="let star of [].constructor(5 - review.rating)">
+                                <span class="star-empty">★</span>
+                            </ng-container>
+                            ({{ review.rating }})
+                        </span>
+                        <ng-template #noRating>—</ng-template>
+                    </td>
+                    <td>{{ review.comment || '—' }}</td>
+                    <td>{{ review.createdAt | date:'yyyy/MM/dd, h:mm a':'en-US' }}</td>
+                    <td>
+                        <button class="action-button edit" (click)="openReviewModal(review)">
+                            <span class="icon">✏️</span> Review
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <ng-template #noReviews>
+            <p class="dashboard-subtitle">
+                No guest reviews found yet.
+            </p>
+        </ng-template>
+    </div>
+</div>
+
+<!-- ⭐ Review Modal -->
+<div class="modal-overlay" *ngIf="selectedReview">
+    <div class="modal-content enhanced-modal">
+        <button class="modal-close" (click)="closeModal()" aria-label="Close">&times;</button>
+        <h2>
+            Review Guest: <span class="highlight">{{ selectedReview.guestName }}</span>
+        </h2>
+        <form (ngSubmit)="submitReview()">
+            <div class="form-group">
+                <label>Rating:</label>
+                <select [(ngModel)]="reviewForm.rating" name="rating" required>
+                    <option [ngValue]="null" disabled>Select</option>
+                    <option *ngFor="let r of [1, 2, 3, 4, 5]" [value]="r">{{ r }}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Comment:</label>
+                <textarea [(ngModel)]="reviewForm.comment" name="comment" rows="3"></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="action-button save">
+                    <span class="icon">💾</span> Save
+                </button>
+                <button type="button" class="action-button cancel" (click)="closeModal()">
+                    <span class="icon">✖</span> Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.host-dashboard-container.enhanced {
+    max-width: 1300px;
+    margin: 48px auto;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-radius: 18px;
+    box-shadow: 0 6px 32px rgba(0,0,0,0.10);
+    padding: 40px 36px;
+    border: 1px solid #e2e8f0;
+}
+.dashboard-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 28px;
+    color: #2d3748;
+    letter-spacing: 1px;
+    text-align: center;
+}
+.table-container {
+    overflow-x: auto;
+}
+.listing-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.listing-table thead tr {
+    background: #f3f4f6;
+}
+.listing-table th,
+.listing-table td {
+    padding: 14px 18px;
+    text-align: left;
+    font-weight: 600;
+    color: #374151;
+}
+.listing-table th {
+    font-weight: 700;
+    background: #f1f5f9;
+    border-bottom: 2px solid #e2e8f0;
+}
+.listing-table tbody tr {
+    border-bottom: 1px solid #e2e8f0;
+    transition: background 0.2s;
+}
+.listing-table tbody tr:hover {
+    background: #f9fafb;
+}
+.listing-table td {
+    font-weight: 400;
+}
+.star-rating {
+    color: #f6ad55;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+.star-empty {
+    color: #e2e8f0;
+}
+.dashboard-subtitle {
+    color: #a0aec0;
+    font-size: 1.15rem;
+    text-align: center;
+    margin: 36px 0;
+    font-style: italic;
+}
+.action-button.edit {
+    background: linear-gradient(90deg, #4299e1 0%, #3182ce 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 7px 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    box-shadow: 0 2px 6px rgba(49,130,206,0.08);
+    transition: background 0.2s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.action-button.edit:hover {
+    background: linear-gradient(90deg, #3182ce 0%, #2b6cb0 100%);
+    transform: translateY(-2px) scale(1.03);
+}
+.icon {
+    font-size: 1.1em;
+    vertical-align: middle;
+}
+/* Modal Enhancements */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(45,55,72,0.38);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.2s;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+.modal-content.enhanced-modal {
+    background: #fff;
+    border-radius: 14px;
+    padding: 38px 32px 28px 32px;
+    min-width: 360px;
+    max-width: 98vw;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.20);
+    position: relative;
+    animation: modalPop 0.22s;
+}
+@keyframes modalPop {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+.modal-content h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 22px;
+    color: #2d3748;
+    text-align: center;
+}
+.modal-content .highlight {
+    color: #3182ce;
+    font-weight: 700;
+}
+.modal-close {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #a0aec0;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.modal-close:hover {
+    color: #e53e3e;
+}
+.form-group {
+    margin-bottom: 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.form-group label {
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 6px;
+}
+.form-group select,
+.form-group textarea {
+    padding: 8px 14px;
+    border-radius: 7px;
+    border: 1px solid #cbd5e1;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    background: #f8fafc;
+    transition: border 0.2s;
+}
+.form-group select:focus,
+.form-group textarea:focus {
+    border: 1.5px solid #3182ce;
+    outline: none;
+}
+.form-group textarea {
+    min-height: 70px;
+    resize: vertical;
+}
+.form-actions {
+    display: flex;
+    gap: 14px;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+.action-button.save {
+    background: linear-gradient(90deg, #38a169 0%, #48bb78 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 22px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(56,161,105,0.08);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s, transform 0.1s;
+}
+.action-button.save:hover {
+    background: linear-gradient(90deg, #2f855a 0%, #38a169 100%);
+    transform: translateY(-2px) scale(1.03);
+}
+.action-button.cancel {
+    background: linear-gradient(90deg, #e53e3e 0%, #f56565 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 22px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s, transform 0.1s;
+}
+.action-button.cancel:hover {
+    background: linear-gradient(90deg, #c53030 0%, #e53e3e 100%);
+    transform: translateY(-2px) scale(1.03);
+}
+@media (max-width: 600px) {
+    .host-dashboard-container.enhanced {
+        padding: 18px 4vw;
+    }
+    .modal-content.enhanced-modal {
+        padding: 18px 6vw 18px 6vw;
+        min-width: unset;
+    }
+    .listing-table th, .listing-table td {
+        padding: 8px 6px;
+        font-size: 0.97rem;
+    }
+}
+</style>

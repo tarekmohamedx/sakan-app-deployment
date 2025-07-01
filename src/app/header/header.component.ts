@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { AuthService } from '../core/services/auth.service';
+import { AuthService } from '../features/auth/services/auth.service';
 import { MatDialog } from '@angular/material/dialog';
-import { LoginComponent } from '../login/login.component';
+import { LoginComponent } from '../features/auth/components/login/login.component';
 
 @Component({
   selector: 'app-header',

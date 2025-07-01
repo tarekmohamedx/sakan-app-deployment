@@ -1,0 +1,45 @@
+
+
+<div class="booking-table-container">
+    <div class="booking-table-title">Bookings Overview</div>
+    <table class="booking-table">
+        <thead>
+            <tr>
+                <th>Guest</th>
+                <th>Email</th>
+                <th>Listing</th>
+                <th>Room</th>
+                <th>Bed</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Price</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let booking of bookings">
+                <td>{{ booking.guestName }}</td>
+                <td>{{ booking.guestEmail }}</td>
+                <td>{{ booking.listingTitle }}</td>
+                <td>{{ booking.roomName }}</td>
+                <td>{{ booking.bedLabel }}</td>
+                <td>{{ booking.fromDate | date:'yyyy-MM-dd' }}</td>
+                <td>{{ booking.toDate | date:'yyyy-MM-dd' }}</td>
+                <td>
+                    <span style="font-weight:700; color:#1976d2;">
+                        ${{ booking.price }}
+                    </span>
+                </td>
+                <td>
+                    <span [ngClass]="{
+                        'status-paid': booking.paymentStatus === 'Paid',
+                        'status-pending': booking.paymentStatus === 'Pending',
+                        'status-cancelled': booking.paymentStatus === 'Cancelled'
+                    }">
+                        {{ booking.paymentStatus }}
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
