@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
  
   }
   ngOnInit(): void {
-    //  this.router.navigateByUrl('hometest'); 
+    // this.router.navigate(['/home']);
   }
   title = 'sakan-app';
 }

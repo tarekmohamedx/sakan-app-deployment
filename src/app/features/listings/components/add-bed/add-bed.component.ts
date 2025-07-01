@@ -8,12 +8,13 @@ import {
 import { MatDialogRef } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { BedDTO } from '../../../../core/models/BedDTO';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'beddialog',
   templateUrl: './add-bed.component.html',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule , CommonModule],
   styleUrls: ['./add-bed.component.css'],
 })
 export class BedDialogComponent {
@@ -80,5 +81,8 @@ export class BedDialogComponent {
     };
 
     this.dialogRef.close(bed);
+  }
+  closeDialog(): void {
+    this.dialogRef.close(); // closes without returning data
   }
 }

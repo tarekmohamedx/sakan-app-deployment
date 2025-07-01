@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -13,11 +12,12 @@ import { CreateListingDTO } from '../../../../core/models/CreateListingDTO';
 import { CreatelistingserviceService } from '../../services/createlistingservice.service';
 import { RoomDialogComponent } from '../add-room/add-room.component';
 import { MapSelectorComponent } from '../../../../shared/map-selector/map-selector.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-add-apartment',
   standalone: true,
-  imports: [MapSelectorComponent, ReactiveFormsModule],
+  imports: [MapSelectorComponent, ReactiveFormsModule, CommonModule],
   templateUrl: './add-apartment.component.html',
   styleUrl: './add-apartment.component.css',
 })
@@ -56,6 +56,8 @@ export class AddApartmentComponent {
   listingPhotos: File[] = [];
   rooms: RoomDTO[] = [];
 
+  @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
+
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
@@ -74,12 +76,31 @@ export class AddApartmentComponent {
     });
   }
 
+  triggerFileUpload(): void {
+    this.fileInputRef.nativeElement.click();
+  }
+
+  cancelForm(): void {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'This will reset the entire form.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, reset it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.listingForm.reset();
+        this.rooms = [];
+        this.listingPhotos = [];
+        Swal.fire('Reset!', 'The form has been cleared.', 'success');
+      }
+    });
+  }
+
   onPhotoUpload(event: Event): void {
     const files = (event.target as HTMLInputElement).files;
     const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
     const maxSize = 5 * 1024 * 1024;
-
-    this.listingPhotos = [];
 
     if (files) {
       for (let i = 0; i < files.length; i++) {
@@ -99,7 +120,14 @@ export class AddApartmentComponent {
           continue;
         }
 
-        this.listingPhotos.push(file);
+        // Only add if not already in the array (optional)
+        if (
+          !this.listingPhotos.some(
+            (p) => p.name === file.name && p.size === file.size
+          )
+        ) {
+          this.listingPhotos.push(file);
+        }
       }
     }
   }
