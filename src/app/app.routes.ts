@@ -11,14 +11,17 @@ import { HostLayoutComponent } from './host/host-layout/host-layout.component';
 import { DashboardComponent } from './host/dashboard/dashboard.component';
 import { HostListingsComponent } from './host/host-listings/host-listings.component';
 import { EditHostListingComponent } from './host/edit-host-listings/edit-host-listings.component';
+import path from 'path';
 
 export const routes: Routes = [
+  {path  : '', redirectTo: 'host', pathMatch: 'full' },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   { path: 'listing/:id', component:ListingDetailsComponent},
   { path: 'room/:id', component:RoomDetailsComponent},
   { path: 'chat', component: ChatComponent },
   { path: 'host', component: HostLayoutComponent, children: [
+    {path : '', redirectTo: 'dashboard', pathMatch: 'full' },
     { path: 'dashboard', component: DashboardComponent },
     { path: 'listings', component: HostListingsComponent },
     { path: 'editlisting/:id', component: EditHostListingComponent },
