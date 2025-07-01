@@ -14,6 +14,9 @@ import { EditHostListingComponent } from './host/edit-host-listings/edit-host-li
 import { HostRoomsComponent } from './host/host-rooms/host-rooms.component';
 import path from 'path';
 import { AddApartmentComponent } from './features/listings/components/add-apartment/add-apartment.component';
+import { HostBookingComponent } from './host/host-booking/host-booking.component';
+import { HostUserReviewsComponent } from './host/host-user-reviews/host-user-reviews.component';
+import { HostMyReviewsComponent } from './host/host-my-reviews/host-my-reviews.component';
 
 export const routes: Routes = [
   {path  : '', redirectTo: 'host', pathMatch: 'full' },
@@ -30,6 +33,9 @@ export const routes: Routes = [
     { path: 'editlisting/:id', component: EditHostListingComponent },
     { path: 'listings/:listingId/rooms', component: HostRoomsComponent },
     { path: 'chat', component: ChatComponent },
+    { path: 'booking', component: HostBookingComponent },
+    { path: 'reviews', component: HostUserReviewsComponent },
+    { path: 'myReviews', component: HostMyReviewsComponent },
   ]},
   { path: '**', component: NotfoundComponent },
   { path: 'signin-google', component: CallbackComponent },
