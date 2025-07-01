@@ -3,7 +3,7 @@ import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Router } from 'express';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService } from '../../features/auth/services/auth.service';
 import { Subscription } from 'rxjs';
 
 @Component({

@@ -11,11 +11,11 @@
 @tailwind utilities;
 @import 'ngx-toastr/toastr.css';
 
-body {
-  direction: rtl;
+/* body {
+  /* direction: rtl;
   text-align: right;
   font-family: 'Tajawal', 'Segoe UI', sans-serif;
-}
+} */
 
 .custom-toastr {
   padding: 16px;

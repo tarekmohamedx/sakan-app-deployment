@@ -12,8 +12,8 @@ import { Amenity } from '../../../core/models/amenity.model';
 })
 export class ListingsService {
  // الرابط الأساسي للـ API يتم قراءته من ملفات البيئة
-  private apiUrl = `${environment.apiurlauth}/listings`;
-private apiUrl2 = `${environment.apiurlauth}`;
+  private apiUrl = `${environment.apiurllistings}`;
+private apiUrl2 = `${environment.apiurlAmenities}`;
   constructor(private http: HttpClient) { }
 
   /**
@@ -102,6 +102,6 @@ private apiUrl2 = `${environment.apiurlauth}`;
 
   getAllAmenities(): Observable<Amenity[]> {
     // نقوم بعمل طلب GET بسيط للـ endpoint الخاص بالـ amenities
-    return this.http.get<Amenity[]>(`${this.apiUrl2}/amenities`);
+    return this.http.get<Amenity[]>(`${this.apiUrl2}`);
   }
 }
