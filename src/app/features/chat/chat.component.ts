@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from './services/chat.service';
@@ -20,6 +20,8 @@ import { NoChatsComponent } from './components/app-no-chats/app-no-chats.compone
   styleUrls: ['./chat.component.css'],
 })
 export class ChatComponent implements OnInit, OnDestroy {
+  @ViewChild('scrollAnchor') private scrollAnchor!: ElementRef;
+
   constructor(
     private chatService: ChatService,
     private chatHubService: ChatHubService,
@@ -28,8 +30,17 @@ export class ChatComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute
   ) {}
 
-  chats: ChatDto[] = [];
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
 
+  scrollToBottom(): void {
+    if (this.scrollAnchor) {
+      this.scrollAnchor.nativeElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  chats: ChatDto[] = [];
   selectedChat: any = null;
   messages: MessageDto[] = [];
   newMessage: string = '';
@@ -47,20 +58,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   };
 
   async ngOnInit() {
-    // Dialog
-    // const dialogRef = this.dialog.open(ChatConfirmationModalComponent);
-    // const confirmed = await dialogRef.afterClosed().toPromise();
-    // if (!confirmed) {
-    //   console.log('Chat confirmation cancelled');
-    //   return;
-    // }
-    // const dialogRef = this.dialog.open(NoChatsComponent);
-    // const confirmed = await dialogRef.afterClosed().toPromise();
-    // if (!confirmed) {
-    //   console.log('No chats confirmation cancelled');
-    //   return;
-    // }
-
     this.currentUserId = this.authService
       .getUserIdFromToken()
       ?.toString()

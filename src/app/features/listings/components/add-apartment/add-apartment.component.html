@@ -51,6 +51,13 @@
           <span class="plus-icon">➕</span> Add Room
         </button>
       </div>
+      <div *ngIf="rooms.length > 0" class="room-list-preview">
+        <h4>Added Rooms:</h4>
+        <ul>
+          <li *ngFor="let room of rooms">{{ room.name }} - {{ room.type }}</li>
+        </ul>
+      </div>
+      
 
      <!-- File Upload -->
 <div class="form-section file-upload-section">
