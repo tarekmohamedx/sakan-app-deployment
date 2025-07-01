@@ -1,0 +1,118 @@
+.booking-table-container {
+    max-width: 1300px;
+    margin: 40px auto;
+    padding: 40px 32px;
+}
+
+.booking-table-title {
+    font-size: 2.3em;
+    font-weight: 800;
+    color: #1a237e;
+    margin-bottom: 28px;
+    letter-spacing: 1.5px;
+    text-align: left;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    text-shadow: 0 2px 8px #e3f2fd;
+}
+
+.booking-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #fff;
+    box-shadow: 0 4px 18px rgba(25, 118, 210, 0.09);
+    border-radius: 16px;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+}
+
+.booking-table th, .booking-table td {
+    padding: 18px 22px;
+    text-align: left;
+}
+
+.booking-table thead {
+    background: #e3eafc;;
+    color: #1a237e;
+}
+
+.booking-table th {
+    font-weight: 800;
+    letter-spacing: 1px;
+    font-size: 1.13em;
+    border-bottom: 2.5px solid #e3eaf2;
+    text-shadow: 0 1px 4px #1565c033;
+}
+
+.booking-table tbody tr {
+    border-bottom: 1.5px solid #e3eaf2;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.booking-table tbody tr:hover {
+    background:rgba(221, 217, 217, 0.2);
+    box-shadow: 0 2px 12px #90caf933;
+}
+
+.booking-table td {
+    color: #222;
+    font-size: 1.05em;
+    vertical-align: middle;
+}
+
+.booking-table td:last-child {
+    font-weight: 600;
+}
+
+.status-paid {
+    color: #388e3c;
+    background: linear-gradient(90deg, #e8f5e9 60%, #c8e6c9 100%);
+    padding: 7px 18px;
+    border-radius: 16px;
+    font-size: 1em;
+    display: inline-block;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    box-shadow: 0 1px 4px #388e3c22;
+}
+
+.status-pending {
+    color: #fbc02d;
+    background: linear-gradient(90deg, #fffde7 60%, #fff9c4 100%);
+    padding: 7px 18px;
+    border-radius: 16px;
+    font-size: 1em;
+    display: inline-block;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    box-shadow: 0 1px 4px #fbc02d22;
+}
+
+.status-cancelled {
+    color: #d32f2f;
+    background: linear-gradient(90deg, #ffebee 60%, #ffcdd2 100%);
+    padding: 7px 18px;
+    border-radius: 16px;
+    font-size: 1em;
+    display: inline-block;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    box-shadow: 0 1px 4px #d32f2f22;
+}
+
+@media (max-width: 900px) {
+    .booking-table-container {
+        padding: 18px 4px;
+    }
+    .booking-table th, .booking-table td {
+        padding: 10px 6px;
+        font-size: 0.97em;
+    }
+    .booking-table-title {
+        font-size: 1.3em;
+    }
+    .booking-table {
+        font-size: 0.97em;
+    }
+}

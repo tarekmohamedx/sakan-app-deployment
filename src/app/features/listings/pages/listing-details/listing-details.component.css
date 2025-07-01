@@ -1,0 +1,398 @@
+.listing-container {
+  padding: 2.5rem 1.5rem;
+  max-width: 1100px;
+  margin: 2rem auto;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(120deg, #f6fafd 60%, #e3eaf6 100%);
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(60, 120, 200, 0.08);
+}
+
+.gallery {
+  display: flex;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.main-photo {
+  width: 65%;
+  height: 370px;
+  object-fit: cover;
+  border-radius: 16px;
+  min-width: 260px;
+  box-shadow: 0 4px 18px rgba(80, 120, 180, 0.13);
+  border: 2px solid #e3eaf6;
+}
+
+.thumbs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.7rem;
+  width: 30%;
+  min-width: 160px;
+}
+
+.thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1.5px solid #e3eaf6;
+  transition: transform 0.18s;
+}
+.thumb:hover {
+  transform: scale(1.04);
+  box-shadow: 0 2px 8px rgba(80, 120, 180, 0.13);
+}
+
+.details-layout {
+  display: flex;
+  gap: 2.5rem;
+  margin-top: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.description {
+  flex: 2;
+  font-size: 1.08rem;
+  color: #2d3748;
+  line-height: 1.7;
+}
+
+/* ------------------------------------------- booking styles ------------------------------------------- */
+
+.booking-card {
+  background: linear-gradient(120deg, #f9f9fb 80%, #e6ecf5 100%);
+  border-radius: 18px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 4px 18px rgba(80, 120, 180, 0.10);
+  width: 100%;
+  max-width: 370px;
+  border: 1.5px solid #e3eaf6;
+}
+
+.booking-card h2 {
+  margin-bottom: 1.4rem;
+  font-size: 1.7rem;
+  font-weight: bold;
+  color: #091c46;
+  letter-spacing: 0.01em;
+}
+
+.booking-dates {
+  display: flex;
+  gap: 1.2rem;
+  margin-bottom: 1.2rem;
+}
+
+
+.guests {
+  margin: 1.2rem 0;
+}
+
+.guest-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: 0.3rem;
+}
+
+.guest-controls button {
+  width: 34px;
+  height: 34px;
+  font-size: 1.2rem;
+  background: linear-gradient(120deg, #e6ecf5 60%, #c9d8ee 100%);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.18s, box-shadow 0.18s;
+  box-shadow: 0 2px 6px rgba(80, 120, 180, 0.07);
+}
+.guest-controls button:hover {
+  background: #091c46;
+  color: #fff;
+}
+
+.small-muted {
+  font-size: 0.9rem;
+  color: #7b8794;
+  margin-bottom: 1.1rem;
+}
+
+.price-breakdown .row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.7rem;
+  font-size: 1.05rem;
+}
+
+.price-breakdown .total {
+  font-weight: bold;
+  border-top: 1.5px solid #dbeafe;
+  padding-top: 0.7rem;
+  color: #041435;
+  font-size: 1.13rem;
+}
+
+.book-now {
+  margin-top: 1.2rem;
+  width: 100%;
+  background: linear-gradient(90deg, #31456e 60%, #a2c7f3 100%);
+  color: white;
+  padding: 0.7rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 14px;
+  font-size: 1.08rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(59,130,246,0.09);
+  transition: background 0.18s, box-shadow 0.18s;
+}
+.book-now:hover {
+  background: linear-gradient(90deg, #072e9ba9 60%, #58709ed8 100%);
+  box-shadow: 0 4px 16px rgba(59,130,246,0.13);
+}
+
+.notice {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-top: 1.2rem;
+  text-align: center;
+}
+
+/* -----------------------------------------  Bedrooms and Amenities Styles ----------------------------------------- */
+
+.room-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.3rem;
+}
+
+.room-card {
+  cursor: pointer;
+  border: 1.5px solid #e3eaf6;
+  border-radius: 16px;
+  width: 290px;
+  overflow: hidden;
+  transition: box-shadow 0.2s, border 0.2s;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(80, 120, 180, 0.07);
+}
+.room-card:hover {
+  box-shadow: 0 8px 24px rgba(59,130,246,0.13);
+  border-color: #0e2350;
+}
+
+.room-card img {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  border-bottom: 1.5px solid #e3eaf6;
+}
+
+.room-card .info {
+  padding: 1.1rem;
+}
+
+.room-card .info h4 {
+  margin: 0 0 0.6rem;
+  font-weight: 700;
+  color: #091c46;
+  font-size: 1.13rem;
+}
+
+.room-select {
+  margin-top: 10px;
+  font-size: 0.95rem;
+}
+
+.room-select input[type="checkbox"] {
+  margin-right: 6px;
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+/* .select-all {
+    text-align: right;
+    margin-top: 10px;
+}
+
+.select-all button {
+    background: linear-gradient(90deg, #007bff 60%, #60a5fa 100%);
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.select-all button:hover {
+    background: #0056b3;
+} */
+
+
+/* ---------------------------------------- calendar styles ---------------------------------------- */
+.calendar-year-selector {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin: 24px 0 20px 0;
+  font-size: 1.18rem;
+  font-weight: 600;
+  justify-content: center;
+  width: 100%;
+  color: #091c46;
+}
+.calendar-year-selector button {
+  background: #e6ecf5;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 16px;
+  font-size: 1.08rem;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+  color: #091c46;
+  font-weight: 500;
+}
+.calendar-year-selector button:hover {
+  background: #091c46;
+  color: #fff;
+}
+
+.months-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 38px;
+}
+
+.month-tile {
+  padding: 16px 0;
+  text-align: center;
+  background-color: #f5f8fa;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.18s;
+  font-size: 1.08rem;
+  letter-spacing: 0.01em;
+  color: #091c46;
+  box-shadow: 0 2px 8px rgba(59,130,246,0.04);
+}
+
+.month-tile.selected {
+  background: linear-gradient(90deg, #112c66 60%, #60a5fa8a 100%);
+  color: #fff;
+  border-color: #60a5fa8a;
+  box-shadow: 0 4px 16px rgba(59,130,246,0.13);
+}
+
+.month-tile.booked {
+  background-color: #e5e7eb;
+  color: #a1a1aa;
+  pointer-events: none;
+  text-decoration: line-through;
+  border-color: #e5e7eb;
+}
+
+.month-tile:not(.selected):hover:not(.booked) {
+  background: #e0e7ef;
+  border-color: #b6c6db;
+  color: #1e40af;
+}
+
+.summary {
+  font-size: 1.08rem;
+  color: #091c46;
+  margin-bottom: 34px;
+  font-style: italic;
+  text-align: center;
+}
+
+/* -----------------------------------------  map styles ----------------------------------------  */
+.map-container {
+  margin: 1rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+hr{
+  width: 80%;
+  margin: auto;
+  border: 3px solid #e3eaf6;
+}
+
+.avatar-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #333;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  font-size: 18px;
+  margin-right: 10px;
+}
+
+.host-summary {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+:root[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+:root[dir="ltr"] {
+  direction: ltr;
+  text-align: left;
+}
+
+
+
+/* .host-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.host-card {
+  flex: 1;
+  max-width: 250px;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.host-card img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 0.5rem;
+}
+
+.host-details {
+  flex: 2;
+}
+
+.message-button {
+  margin-top: 1rem;
+  padding: 0.6rem 1rem;
+  background-color: #84a8c9;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+} */

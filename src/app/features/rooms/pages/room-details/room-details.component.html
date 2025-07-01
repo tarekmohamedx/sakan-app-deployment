@@ -1,0 +1,131 @@
+<div class="room-container">
+
+  <h1>{{ room.name }}</h1>
+
+  <!-- Gallery -->
+  <div class="gallery">
+    <img [src]="room.photos[0]" class="main-photo" alt="Room Image" />
+    <div class="thumbs">
+      <img *ngFor="let photo of room.photos.slice(1, 5)" [src]="photo" class="thumb" alt="Thumbnail" />
+    </div>
+  </div>
+
+  <div class="details-layout">
+    <!-- Left section -->
+    <div class="description">
+      <h3>Description</h3>
+      <p>This room can be booked individually or entirely depending on availability.</p>
+      <!-- Add more room details here if needed -->
+    </div>
+
+    <!-- Right booking card -->
+    <div class="booking-card">
+      <h2>£{{ room.pricePerNight }} / Month</h2>
+
+      <div class="booking-dates">
+       <div *ngIf="monthRanges.length > 0">
+        <label>Booking Ranges:</label>
+        <ul>
+          <li *ngFor="let r of monthRanges">
+            {{ r.start }} → {{ r.end }}
+          </li>
+        </ul>
+      </div>
+      </div>
+      <div class="guests">
+        <label>👤 Guests</label>
+        <div class="guest-controls">
+          <button (click)="decreaseGuests()" [disabled]="guests <= 1">−</button>
+          <span>{{ guests }}</span>
+          <button (click)="increaseGuests()">+</button>
+        </div>
+      </div>
+
+      <p class="small-muted">You can book the entire room or select individual beds below.</p>
+
+      <div class="price-breakdown">
+        <div class="row">
+          <span>🛏 Bed price</span>
+          <span>£{{ selectedBedsPrice.toFixed(2) }}</span>
+        </div>
+        <div class="row">
+          <span>Number of beds booked</span>
+          <span>{{ selectedBedsCount }}</span>
+        </div>
+        <div class="row total">
+          <span>Total cost</span>
+          <span>£{{ totalCost.toFixed(2) }}</span>
+        </div>
+      </div>
+
+      <div class="text-center mt-3">
+          <button *ngIf="!requestSent" (click)="sendBookingRequest()" class="book-now">Send Booking Request</button>
+
+          <button *ngIf="requestSent" [routerLink]="['/chat', hostId]" class="book-now">Chat with Host</button>
+        </div>
+    </div>
+  </div>
+
+  <br><hr /><br>
+  <!-- Calendar Section -->
+    <h3 style="text-align: center;">Select check-in month</h3>
+    <div class="calendar-year-selector">
+    <button (click)="previousYear()">&#8592;</button>
+    <strong>{{ currentYear }}</strong>
+    <button (click)="nextYear()">&#8594;</button>
+    </div>
+
+    <div class="months-grid">
+    <div *ngFor="let m of monthsShort; let i = index"
+        (click)="selectMonth(i + 1)"
+        class="month-tile"
+        [class.selected]="isMonthSelected(i + 1)"
+        [class.booked]="isMonthBooked(currentYear, i + 1)"
+        [attr.aria-pressed]="isMonthSelected(i + 1)"
+        role="button">
+    {{ m }}
+    </div>
+
+    </div>
+
+    <div *ngIf="selectedMonths.length" class="summary">
+    <p>You selected {{ selectedMonths.length }} month(s): {{ selectedMonths }}</p>
+    <p>{{ moveIn }} → {{ moveOut }}</p>
+    </div>
+
+    <br><hr /><br>
+
+  <h3 class="mt-4 mb-2">🛏 Beds</h3>
+<div class="bed-grid">
+  <div class="bed-card" *ngFor="let bed of room.beds">
+    <img *ngIf="bed.bedPhotos?.length" [src]="bed.bedPhotos[0]" alt="Bed Image" />
+    <div class="info">
+      <h4>{{ bed.label }}</h4>
+      <p>Type: {{ bed.type }}</p>
+      <p>£{{ bed.price }} / Month</p>
+      <p>Status: {{ bed.isAvailable ? 'Available' : 'Occupied' }}</p>
+
+    <div class="bed-select" *ngIf="bed.isAvailable">
+      <label>
+        <input type="checkbox" [(ngModel)]="bed.selected" class="check"/>
+        <span class="custom-checkbox"></span>
+        Select Bed
+      </label>
+    </div>
+    <span *ngIf="!bed.isAvailable" class="bed-unavailable">Not Available</span>
+    </div>
+  </div>
+</div>
+
+<!-- Select All Option -->
+<div class="select-all">
+  <button (click)="toggleSelectAllBeds()">
+    {{ areAllBedsSelected() ? 'Remove All' : 'Select All' }}
+  </button>
+</div>
+
+
+     <br><hr /><br>
+    <h3>Where you’ll be</h3>
+    <div id="map" style="height: 400px;"></div>
+</div>

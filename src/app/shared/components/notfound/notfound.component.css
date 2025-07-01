@@ -1,0 +1,52 @@
+.not-found-container {
+    text-align: center;
+    padding: 60px 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: radial-gradient(circle at center, #202020, #121212);
+    color: #ffffff;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  h1 {
+    font-size: 100px;
+    margin: 0;
+    color: #ff6f61;
+  }
+  
+  .message {
+    font-size: 22px;
+    margin: 20px 0;
+    color: #ccc;
+  }
+  
+  .astronaut {
+    width: 250px;
+    margin: 20px 0;
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .btn-home {
+    background-color: #ff6f61;
+    color: white;
+    padding: 12px 24px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .btn-home:hover {
+    background-color: #e55a4f;
+  }
+  
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0px); }
+  }
+  

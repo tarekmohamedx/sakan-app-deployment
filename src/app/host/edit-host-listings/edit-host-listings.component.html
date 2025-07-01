@@ -1,0 +1,64 @@
+<div class="form-container">
+  <h2>Edit Listing</h2>
+  <form [formGroup]="listingForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label>Title</label>
+      <input formControlName="title" class="form-control" />
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea formControlName="description" class="form-control"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Price Per Month</label>
+      <input type="number" formControlName="pricePerMonth" class="form-control" />
+    </div>
+
+    <div class="form-group">
+      <label>Max Guests</label>
+      <input type="number" formControlName="maxGuests" class="form-control" min="0"/>
+    </div>
+
+    <div class="form-group">
+      <label>Governorate</label>
+      <input formControlName="governorate" class="form-control" />
+    </div>
+
+    <div class="form-group">
+      <label>District</label>
+      <input formControlName="district" class="form-control" />
+    </div>
+
+    <div class="form-group">
+      <label>Existing Photos</label>
+      <div class="photo-preview-list">
+        <div *ngFor="let photo of listingForm.value.photoUrls; let i = index">
+          <img [src]="photo" class="preview-img" />
+          <button type="button" (click)="removePhoto(i)">🗑️</button>
+        </div>
+      </div>
+    </div>
+
+
+    <label for="fileInput" class="upload-label">Upload Photo</label>
+    <input type="file" id="fileInput" (change)="onFileSelected($event)" accept="image/*" />
+
+
+
+    <div class="form-group">
+      <label>
+        <input type="checkbox" formControlName="isBookableAsWhole" /> Bookable as Whole
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>
+        <input type="checkbox" formControlName="isActive" /> Is Active
+      </label>
+    </div>
+
+    <button type="submit" class="btn btn-success custom-update-btn">Update</button>
+  </form>
+</div>

@@ -1,0 +1,153 @@
+<!-- {{ model | json }} -->
+<div class="register-container">
+  <form
+    class="register-form"
+    #registerForm="ngForm"
+    (ngSubmit)="onSubmit(registerForm)"
+  >
+    <h2>Register</h2>
+
+    <!-- Error display from server -->
+    <div *ngIf="errors" class="alert alert-danger">
+      {{ errors }}
+    </div>
+
+    <!-- Name -->
+    <div class="form-group">
+      <label for="username">Name</label>
+      <input
+        id="username"
+        type="text"
+        name="username"
+        required
+        [(ngModel)]="model.username"
+        #username="ngModel"
+        placeholder="Enter your name"
+      />
+      <div
+        class="text-danger"
+        *ngIf="username.invalid && (username.dirty || username.touched)"
+      >
+        Name is required.
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        id="email"
+        type="email"
+        name="email"
+        required
+        email
+        [(ngModel)]="model.email"
+        #email="ngModel"
+        placeholder="Enter your email"
+      />
+      <div
+        class="text-danger"
+        *ngIf="email.invalid && (email.dirty || email.touched)"
+      >
+        Valid email is required.
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        id="password"
+        type="password"
+        name="password"
+        required
+        pattern="^(?=.*\d).{4,}$"
+        minlength="4"
+        [(ngModel)]="model.password"
+        #password="ngModel"
+        placeholder="Enter your password"
+      />
+      <div
+        class="text-danger"
+        *ngIf="password.errors && (password.dirty || password.touched)"
+      >
+        <div *ngIf="password.errors['required']">Password is required.</div>
+        <div *ngIf="password.errors['pattern']">
+          Password must contain at least one digit and be at least 4 characters.
+        </div>
+        <div *ngIf="password.errors['minlength']">
+          Password must be at least 4 characters.
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirm Password -->
+    <div class="form-group">
+      <label for="confirmPassword">Confirm Password</label>
+      <input
+        id="confirmPassword"
+        type="password"
+        name="confirmPassword"
+        required
+        [(ngModel)]="model.confirmpassword"
+        #confirmPassword="ngModel"
+        placeholder="Confirm your password"
+      />
+      <div
+        class="text-danger"
+        *ngIf="
+          confirmPassword.invalid &&
+          (confirmPassword.dirty || confirmPassword.touched)
+        "
+      >
+        Confirm Password is required.
+      </div>
+      <div
+        class="text-danger"
+        *ngIf="
+          model.confirmpassword !== model.password && confirmPassword.touched
+        "
+      >
+        Passwords do not match.
+      </div>
+    </div>
+
+    <!-- Phone Number -->
+    <div class="form-group">
+      <label for="phoneNumber">Mobile Number</label>
+      <input
+        id="phoneNumber"
+        type="text"
+        name="phoneNumber"
+        required
+        [(ngModel)]="model.phoneNumber"
+        #phoneNumber="ngModel"
+        placeholder="Enter your mobile number"
+      />
+      <div
+        class="text-danger"
+        *ngIf="
+          phoneNumber.invalid && (phoneNumber.dirty || phoneNumber.touched)
+        "
+      >
+        Mobile Number is required.
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button
+      type="submit"
+      class="register-btn"
+      [disabled]="
+        registerForm.invalid || model.password !== model.confirmpassword
+      "
+    >
+      Register
+    </button>
+
+    <!-- Login Link -->
+    <div class="login-link">
+      Already have an account? <a routerLink="login">Login</a>
+    </div>
+  </form>
+</div>

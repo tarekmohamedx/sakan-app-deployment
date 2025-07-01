@@ -1,0 +1,245 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">Your Dashboard</h1>
+    <button 
+      class="refresh-button" 
+      (click)="refreshData()" 
+      [disabled]="isLoading"
+      [class.loading]="isLoading">
+      <svg class="refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M3 2v6h6M21 12a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 8"></path>
+        <path d="M21 22v-6h-6M3 12a9 9 0 0 0 9 9 9 9 0 0 0 6-2.3l3 2.3"></path>
+      </svg>
+      {{ isLoading ? 'Loading...' : 'Refresh' }}
+    </button>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="error-message">
+    <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="15" y1="9" x2="9" y2="15"></line>
+      <line x1="9" y1="9" x2="15" y2="15"></line>
+    </svg>
+    {{ error }}
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading && !error" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p class="loading-text">Loading dashboard data...</p>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="!isLoading && !error" class="dashboard-content">
+    
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      
+      <!-- Requested Count Card -->
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-icon requests-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="8.5" cy="7" r="4"></circle>
+              <line x1="20" y1="8" x2="20" y2="14"></line>
+              <line x1="23" y1="11" x2="17" y2="11"></line>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <h3 class="stat-title">Total Requests</h3>
+            <p class="stat-value">{{ stats.todaysRequestsCount }}</p>
+          </div>
+        </div>
+        <p class="stat-description">Booking requests received</p>
+      </div>
+
+      <!-- Active Listings Card -->
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-icon active-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9,22 9,12 15,12 15,22"></polyline>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <h3 class="stat-title">Active Listings</h3>
+            <p class="stat-value">{{ stats.activeListingsCount }}</p>
+          </div>
+        </div>
+        <p class="stat-description">Currently available properties</p>
+      </div>
+
+      <!-- Approved Listings Card -->
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-icon approved-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22,4 12,14.01 9,11.01"></polyline>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <h3 class="stat-title">Approved Listings</h3>
+            <p class="stat-value">{{ stats.approvedListingsCount }}</p>
+          </div>
+        </div>
+        <p class="stat-description">Verified and approved properties</p>
+      </div>
+
+      <!-- Occupancy Rate Card -->
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-icon occupancy-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12,6 12,12 16,14"></polyline>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <h3 class="stat-title">Occupancy Rate</h3>
+            <p class="stat-value">{{ stats.occupancyRate }}%</p>
+          </div>
+        </div>
+        <p class="stat-description">Current booking percentage</p>
+      </div>
+
+      <!-- Revenue Card -->
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-icon revenue-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <line x1="12" y1="1" x2="12" y2="23"></line>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <h3 class="stat-title">This Month's Revenue</h3>
+            <p class="stat-value">{{ formatCurrency(stats.monthlyRevenue) }}</p>
+          </div>
+        </div>
+        <p class="stat-description">Total earnings this month</p>
+      </div>
+
+      <!-- Average Rating Card -->
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-icon rating-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"></polygon>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <h3 class="stat-title">Average Rating</h3>
+            <p class="stat-value">{{ stats.averageRating }}/5.0</p>
+          </div>
+        </div>
+        <p class="stat-description">Guest satisfaction rating</p>
+      </div>
+
+      <!-- Total Bookings Card -->
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon approved-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M8 6H21M8 12H21M8 18H21M3 6h.01M3 12h.01M3 18h.01" />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <h3 class="stat-title">Total Bookings</h3>
+              <p class="stat-value">{{ stats.totalBookings }}</p>
+            </div>
+          </div>
+          <p class="stat-description">All-time booking count</p>
+        </div>
+
+    </div>
+
+    <!-- Recent Booking Requests -->
+    <div class="recent-requests-section">
+      <div class="section-header">
+        <h2 class="section-title">Recent Booking Requests</h2>
+        <span class="section-subtitle">Last 5 requests from today</span>
+      </div>
+
+      <div class="requests-table-container">
+        <table class="requests-table" *ngIf="stats.recentRequests.length > 0; else noRequests">
+          <thead>
+            <tr>
+              <th>Guest</th>
+              <th>Property</th>
+              <th>Check-in</th>
+              <th>Check-out</th>
+              <th>Guests</th>
+              <th>Status</th>
+              <th>Requested</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let request of formattedRecentRequests" class="request-row">
+              <td class="guest-name">{{ request.guestName }}</td>
+              <td class="property-name">{{ request.propertyName }}</td>
+              <td class="check-date">{{ request.checkIn }}</td>
+              <td class="check-date">{{ request.checkOut }}</td>
+              <td class="guest-count">{{ request.guests }}</td>
+              <td class="status-cell">
+                <span class="status-badge" [ngClass]="getStatusClass(request.status)">
+                  {{ request.status | titlecase }}
+                </span>
+              </td>
+              <td class="request-date">{{ request.checkIn }}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <ng-template #noRequests>
+          <div class="no-requests">
+            <svg class="no-requests-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="8.5" cy="7" r="4"></circle>
+              <line x1="20" y1="8" x2="20" y2="14"></line>
+              <line x1="23" y1="11" x2="17" y2="11"></line>
+            </svg>
+            <h3>No Recent Requests</h3>
+            <p>You haven't received any booking requests today.</p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- Latest Review Section -->
+<div class="recent-requests-section" *ngIf="stats.latestReview">
+  <div class="section-header">
+    <h2 class="section-title">Latest Guest Review</h2>
+    <span class="section-subtitle">From: {{ stats.latestReview.reviewerName }}</span>
+  </div>
+
+  <div class="requests-table-container">
+    <table class="requests-table">
+      <thead>
+        <tr>
+          <th>Reviewer</th>
+          <th>Listing</th>
+          <th>Rating</th>
+          <th>Comment</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="guest-name">{{ stats.latestReview.reviewerName }}</td>
+          <td class="property-name">{{ stats.latestReview.listingTitle }}</td>
+          <td class="guest-count">{{ stats.latestReview.rating }}/5</td>
+          <td class="check-date">{{ stats.latestReview.comment }}</td>
+          <td class="request-date">{{ stats.latestReview.createdAt | date: 'MMM d, y' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+  </div>
+</div>
