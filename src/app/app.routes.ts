@@ -27,6 +27,7 @@ export const routes: Routes = [
     { path: 'listings', component: HostListingsComponent },
     {path:'addapartment' , component:AddApartmentComponent},
     { path: 'editlisting/:id', component: EditHostListingComponent },
+    { path: 'chat', component: ChatComponent },
   ]},
   { path: '**', component: NotfoundComponent },
   { path: 'signin-google', component: CallbackComponent },
