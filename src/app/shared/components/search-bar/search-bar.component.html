@@ -1,0 +1,300 @@
+<!-- نربط الفورم الرئيسي هنا -->
+<form [formGroup]="searchForm">
+  <div class="relative max-w-3xl mx-auto my-4" #searchBarContainer>
+    
+    <!-- ================== DESKTOP SEARCH BAR (Airbnb Style) ================== -->
+    <div class="hidden md:flex items-center bg-white rounded-full shadow-lg h-16 divide-x">
+        
+        <!-- 1. Location -->
+        <div class="relative flex-1 h-full">
+        <button type="button" (click)="togglePopover($event, 'location')" class="w-full h-full px-6 text-left hover:bg-gray-100 rounded-l-full flex flex-col justify-center">
+            <span class="text-xs font-bold">Where</span>
+            <!-- تعديل الـ input -->
+            <input 
+                formControlName="governorate" 
+                type="text" 
+                placeholder="Search destinations"
+                autocomplete="off" 
+                class="bg-transparent border-none focus:ring-0 p-0 text-sm outline-none truncate pr-2">
+        </button>
+    
+        <!-- قائمة الإكمال التلقائي -->
+        <div *ngIf="filteredGovernorates.length > 0" class="absolute top-full mt-2 w-full bg-white rounded-xl shadow-lg z-30 max-h-60 overflow-y-auto">
+            <ul>
+                <li *ngFor="let gov of filteredGovernorates" 
+                    (click)="selectGovernorate(gov)"
+                    class="px-4 py-3 cursor-pointer hover:bg-gray-100 text-sm font-medium flex items-center">
+                    <svg class="w-6 h-6 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <span>{{ gov }}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+        
+        <!-- 2. Dates -->
+        <div class="relative flex-1 h-full">
+            <button type="button" (click)="togglePopover($event, 'dates')" class="w-full h-full px-6 text-left hover:bg-gray-100 flex flex-col justify-center">
+                <span class="text-xs font-bold">When</span>
+                <span class="text-sm text-gray-500">{{ selectedDateRange || 'Add dates' }}</span>
+            </button>
+        </div>
+        
+        <!-- 3. Filters & Search -->
+        <div class="relative flex-1 px-2 flex items-center justify-between h-full hover:bg-gray-100 rounded-r-full">
+            <button type="button" (click)="togglePopover($event, 'advanced')" class="flex-grow h-full px-4 text-left flex flex-col justify-center">
+                <span class="text-xs font-bold">Filters</span>
+                <span class="text-sm text-gray-500 truncate">{{ advancedFiltersSummary || 'Price, amenities...' }}</span>
+            </button>
+            <button type="button" (click)="onSearch()" class="bg-brand-primary text-white rounded-full h-12 w-12 flex items-center justify-center font-bold hover:bg-brand-secondary flex-shrink-0 z-10">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </button>
+        </div>
+    </div>
+    
+    <!-- ================== MOBILE SEARCH BUTTON ================== -->
+    <div class="md:hidden p-2">
+      <button type="button" (click)="isMobileFiltersOpen = true" class="w-full flex items-center bg-white rounded-full shadow-md h-14 px-4 text-left">
+        <svg class="h-6 w-6 text-brand-primary mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        <div>
+          <p class="font-bold">Where to?</p>
+          <p class="text-xs text-gray-500">Anywhere • Any week • Add filters</p>
+        </div>
+      </button>
+    </div>
+
+    <!-- ================== POPOVERS FOR DESKTOP ================== -->
+    <!-- Location Popover -->
+    <div *ngIf="activePopover === 'location'" (click)="$event.stopPropagation()" class="absolute top-full mt-2 w-[450px] bg-white rounded-2xl shadow-lg p-4 z-20">
+        <h4 class="font-semibold mb-2">Search by Map</h4>
+        <div class="h-64 w-full rounded-lg overflow-hidden" leaflet [leafletOptions]="mapOptions" (leafletMapReady)="onMapReady($event)"></div>
+    </div>
+    <!-- Dates Popover -->
+    <div *ngIf="activePopover === 'dates'" (click)="$event.stopPropagation()" class="absolute left-1/2 -translate-x-1/2 mt-2 bg-white rounded-3xl shadow-lg p-4 z-20">
+        
+        <input
+    type="button"
+    ngxDaterangepickerMd
+    class="w-full text-center border-gray-300 rounded-lg p-2"
+    
+    [locale]="datePickerOptions"  
+    (datesUpdated)="onDatesSelected($event)" 
+/>
+      </div>
+    <!-- Advanced Filters Popover -->
+    <div *ngIf="activePopover === 'advanced'" (click)="$event.stopPropagation()" class="absolute top-full right-0 mt-2 w-[400px] bg-white rounded-2xl shadow-lg p-6 z-20">
+        <h4 class="font-bold mb-4">Filters</h4>
+        <!-- Price -->
+        <div>
+            <h5 class="font-semibold mb-2">Price Range</h5>
+            <ngx-slider
+              [value]="searchForm.controls['minPrice'].value"
+              [highValue]="searchForm.controls['maxPrice'].value"
+              (valueChange)="searchForm.controls['minPrice'].setValue($event)"
+              (highValueChange)="searchForm.controls['maxPrice'].setValue($event)"
+              [options]="priceSliderOptions">
+            </ngx-slider>
+
+          </div>
+        <!-- Room Type -->
+        <!-- Room Type -->
+        <div>
+          <h5 class="font-semibold mb-2">Room Type</h5>
+          <div class="flex flex-wrap gap-2">
+            <!-- استخدام radio buttons لضمان اختيار واحد فقط -->
+            <label class="flex items-center space-x-2 px-4 py-2 border rounded-full cursor-pointer transition-colors"
+                  [class.bg-brand-primary]="searchForm.get('roomType')?.value === null"
+                  [class.text-white]="searchForm.get('roomType')?.value === null"
+                  [class.border-brand-primary]="searchForm.get('roomType')?.value === null">
+              <input type="radio" formControlName="roomType" [value]="null" class="hidden">
+              <span>Any</span>
+            </label>
+            <label class="flex items-center space-x-2 px-4 py-2 border rounded-full cursor-pointer transition-colors"
+                  [class.bg-brand-primary]="searchForm.get('roomType')?.value === 'Single'"
+                  [class.text-white]="searchForm.get('roomType')?.value === 'Single'"
+                  [class.border-brand-primary]="searchForm.get('roomType')?.value === 'Single'">
+              <input type="radio" formControlName="roomType" value="Single" class="hidden">
+              <span>Single</span>
+            </label>
+            <label class="flex items-center space-x-2 px-4 py-2 border rounded-full cursor-pointer transition-colors"
+                  [class.bg-brand-primary]="searchForm.get('roomType')?.value === 'Double'"
+                  [class.text-white]="searchForm.get('roomType')?.value === 'Double'"
+                  [class.border-brand-primary]="searchForm.get('roomType')?.value === 'Double'">
+              <input type="radio" formControlName="roomType" value="Double" class="hidden">
+              <span>Double</span>
+            </label>
+            <label class="flex items-center space-x-2 px-4 py-2 border rounded-full cursor-pointer transition-colors"
+                  [class.bg-brand-primary]="searchForm.get('roomType')?.value === 'Triple'"
+                  [class.text-white]="searchForm.get('roomType')?.value === 'Triple'"
+                  [class.border-brand-primary]="searchForm.get('roomType')?.value === 'Triple'">
+              <input type="radio" formControlName="roomType" value="Triple" class="hidden">
+              <span>Triple</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <h5 class="font-semibold mb-2">Minimum Rating</h5>
+          <div class="flex items-center justify-start space-x-2">
+              <button type="button" (click)="selectRating(null)" 
+                      [class.bg-brand-primary]="!searchForm.get('minRating')?.value" 
+                      [class.text-white]="!searchForm.get('minRating')?.value"
+                      class="px-4 py-2 border rounded-full text-sm font-medium hover:border-black transition-colors">
+                  Any
+              </button>
+              <button type="button" (click)="selectRating(4)" 
+                      [class.bg-brand-primary]="searchForm.get('minRating')?.value === 4" 
+                      [class.text-white]="searchForm.get('minRating')?.value === 4"
+                      class="px-4 py-2 border rounded-full text-sm font-medium hover:border-black transition-colors flex items-center">
+                  4.0 <svg class="w-4 h-4 ml-1 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+              </button>
+              <button type="button" (click)="selectRating(4.5)" 
+                      [class.bg-brand-primary]="searchForm.get('minRating')?.value === 4.5" 
+                      [class.text-white]="searchForm.get('minRating')?.value === 4.5"
+                      class="px-4 py-2 border rounded-full text-sm font-medium hover:border-black transition-colors flex items-center">
+                  4.5 <svg class="w-4 h-4 ml-1 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+              </button>
+          </div>
+      </div>
+
+        <!-- Amenities -->
+        <div class="mt-4" formGroupName="amenityIds">
+            <h5 class="font-semibold mb-2">Amenities</h5>
+            <div class="grid grid-cols-2 gap-2">
+                <label *ngFor="let amenity of allAmenities" class="flex items-center space-x-2"><input type="checkbox" [formControlName]="amenity.id.toString()" class="h-4 w-4 rounded"><span>{{amenity.name}}</span></label>
+            </div>
+        </div>
+        <div class="flex-shrink-0 mt-2 pt-2 border-t text-right">
+          <button (click)="resetFilters()" class="font-bold underline">Clear all</button>
+        </div>
+    </div>
+
+    <!-- ================== FULL SCREEN MODAL FOR MOBILE ================== -->
+    <div *ngIf="isMobileFiltersOpen" class="fixed inset-0 bg-white z-50 p-4 flex flex-col">
+        <div class="flex-shrink-0 mb-4">
+      <button (click)="isMobileFiltersOpen = false" class="p-2 rounded-full hover:bg-gray-100">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </div>
+<!-- Form Content (Scrollable) -->
+<div class="flex-grow overflow-y-auto space-y-6">
+  <!-- Location -->
+  <div class="p-4 border rounded-lg relative"> <!-- أضفنا relative هنا -->
+  <label for="mobile-location" class="block text-sm font-medium text-gray-700">Where</label>
+  <input 
+      formControlName="governorate" 
+      id="mobile-location" 
+      type="text" 
+      placeholder="Search destinations" 
+      autocomplete="off"
+      class="mt-1 w-full border-0 p-0 focus:ring-0 text-lg outline-none">
+      
+  <!-- قائمة الإكمال التلقائي للجوال -->
+  <div *ngIf="filteredGovernorates.length > 0" class="absolute top-full left-0 right-0 mt-2 mx-4 bg-white rounded-xl shadow-lg z-10 max-h-48 overflow-y-auto border">
+      <ul>
+          <li *ngFor="let gov of filteredGovernorates" 
+              (click)="selectGovernorate(gov)"
+              class="px-4 py-3 cursor-pointer hover:bg-gray-100 text-sm font-medium flex items-center">
+              <svg class="w-6 h-6 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+              <span>{{ gov }}</span>
+          </li>
+      </ul>
+  </div>
+</div>
+  
+  <!-- Dates -->
+  <div class="p-4 border rounded-lg">
+    <label class="block text-sm font-medium text-gray-700">When</label>
+    <div class="flex space-x-4 mt-2">
+      <div class="w-1/2">
+          <label for="mobile-checkin" class="text-xs">Check-in</label>
+          <input formControlName="checkInDate" id="mobile-checkin" type="date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+      </div>
+      <div class="w-1/2">
+          <label for="mobile-checkout" class="text-xs">Check-out</label>
+          <input formControlName="checkOutDate" id="mobile-checkout" type="date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+      </div>
+    </div>
+  </div>
+  
+  <!-- All other filters -->
+  <div class="p-4 border rounded-lg space-y-6">
+    <!-- Price -->
+    <div>
+      <h5 class="font-semibold mb-2">Price Range</h5>
+      <div class="flex items-center space-x-2">
+        <input formControlName="minPrice" type="number" placeholder="Min" class="w-full border-gray-300 rounded-md">
+        <span class="text-gray-500">-</span>
+        <input formControlName="maxPrice" type="number" placeholder="Max" class="w-full border-gray-300 rounded-md">
+      </div>
+    </div>
+
+    <!-- Room Type -->
+    <div>
+      <h5 class="font-semibold mb-2">Room Type</h5>
+      <div class="flex flex-wrap gap-2">
+        <!-- استخدام radio buttons لضمان اختيار واحد فقط -->
+        <label class="flex items-center space-x-2 px-4 py-2 border rounded-full cursor-pointer transition-colors"
+              [class.bg-brand-primary]="searchForm.get('roomType')?.value === null"
+              [class.text-white]="searchForm.get('roomType')?.value === null"
+              [class.border-brand-primary]="searchForm.get('roomType')?.value === null">
+          <input type="radio" formControlName="roomType" [value]="null" class="hidden">
+          <span>Any</span>
+        </label>
+        <label class="flex items-center space-x-2 px-4 py-2 border rounded-full cursor-pointer transition-colors"
+              [class.bg-brand-primary]="searchForm.get('roomType')?.value === 'Single'"
+              [class.text-white]="searchForm.get('roomType')?.value === 'Single'"
+              [class.border-brand-primary]="searchForm.get('roomType')?.value === 'Single'">
+          <input type="radio" formControlName="roomType" value="Single" class="hidden">
+          <span>Single</span>
+        </label>
+        <label class="flex items-center space-x-2 px-4 py-2 border rounded-full cursor-pointer transition-colors"
+              [class.bg-brand-primary]="searchForm.get('roomType')?.value === 'Double'"
+              [class.text-white]="searchForm.get('roomType')?.value === 'Double'"
+              [class.border-brand-primary]="searchForm.get('roomType')?.value === 'Double'">
+          <input type="radio" formControlName="roomType" value="Double" class="hidden">
+          <span>Double</span>
+        </label>
+        <label class="flex items-center space-x-2 px-4 py-2 border rounded-full cursor-pointer transition-colors"
+              [class.bg-brand-primary]="searchForm.get('roomType')?.value === 'Triple'"
+              [class.text-white]="searchForm.get('roomType')?.value === 'Triple'"
+              [class.border-brand-primary]="searchForm.get('roomType')?.value === 'Triple'">
+          <input type="radio" formControlName="roomType" value="Triple" class="hidden">
+          <span>Triple</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Amenities -->
+    <div formGroupName="amenityIds">
+        <h5 class="font-semibold mb-2">Amenities</h5>
+        <div class="grid grid-cols-2 gap-2">
+            <label *ngFor="let amenity of allAmenities" class="flex items-center space-x-2">
+                <input type="checkbox" [formControlName]="amenity.id" class="h-4 w-4 rounded text-brand-primary focus:ring-brand-primary">
+                <span>{{ amenity.name }}</span>
+            </label>
+        </div>
+    </div>
+    <!-- Rating -->
+    <div>
+        <h5 class="font-semibold mb-2">Minimum Rating</h5>
+        <div class="flex items-center justify-start space-x-2">
+            <button (click)="selectRating(null)" [class.bg-brand-primary]="!searchForm.get('minRating')?.value" [class.text-white]="!searchForm.get('minRating')?.value" class="px-4 py-2 border rounded-full text-sm">Any</button>
+            <button (click)="selectRating(4)" [class.bg-brand-primary]="searchForm.get('minRating')?.value === 4" [class.text-white]="searchForm.get('minRating')?.value === 4" class="px-4 py-2 border rounded-full text-sm">4.0+</button>
+            <button (click)="selectRating(4.5)" [class.bg-brand-primary]="searchForm.get('minRating')?.value === 4.5" [class.text-white]="searchForm.get('minRating')?.value === 4.5" class="px-4 py-2 border rounded-full text-sm">4.5+</button>
+        </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+  <div class="flex-shrink-0 mt-4 pt-4 border-t flex justify-end items-center gap-6">
+  <button (click)="resetFilters()" class="font-bold underline">Clear all</button>
+  <button (click)="onSearch()" class="bg-brand-primary text-white rounded-lg py-3 px-8 font-bold hover:bg-brand-800 flex items-center">
+    <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+    Search
+  </button>
+</div>
+    </div>
+
+  </div>
+</form>

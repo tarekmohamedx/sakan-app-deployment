@@ -1,0 +1,177 @@
+<header class="bg-white shadow-md sticky top-0 z-50">
+  <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+    <a routerLink="/home" class="flex items-center space-x-2">
+      <svg width="35" height="28" viewBox="0 0 35 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16.9102 7.65809L5.79071 16.9694V27.0189C5.79071 27.2791 5.89238 27.5287 6.07334 27.7126C6.25431 27.8966 6.49975 28 6.75568 28L13.5141 27.9822C13.7692 27.9809 14.0134 27.877 14.1933 27.6931C14.3732 27.5093 14.4742 27.2605 14.4742 27.0011V21.1323C14.4742 20.8721 14.5759 20.6225 14.7568 20.4385C14.9378 20.2546 15.1833 20.1512 15.4392 20.1512H19.2991C19.555 20.1512 19.8004 20.2546 19.9814 20.4385C20.1624 20.6225 20.264 20.8721 20.264 21.1323V26.9968C20.2636 27.1259 20.2883 27.2538 20.3366 27.3732C20.3849 27.4926 20.4559 27.6011 20.5456 27.6926C20.6352 27.784 20.7417 27.8565 20.859 27.906C20.9763 27.9555 21.102 27.981 21.229 27.981L27.985 28C28.2409 28 28.4863 27.8966 28.6673 27.7126C28.8483 27.5287 28.9499 27.2791 28.9499 27.0189V16.9626L17.8329 7.65809C17.7022 7.55098 17.5394 7.49257 17.3715 7.49257C17.2037 7.49257 17.0409 7.55098 16.9102 7.65809ZM34.4744 13.9868L29.4324 9.76132V1.26805C29.4324 1.0729 29.3562 0.885739 29.2204 0.747745C29.0847 0.609751 28.9006 0.532227 28.7087 0.532227H25.3313C25.1394 0.532227 24.9553 0.609751 24.8196 0.747745C24.6838 0.885739 24.6076 1.0729 24.6076 1.26805V5.72041L19.208 1.20367C18.6898 0.770131 18.0396 0.533093 17.3685 0.533093C16.6974 0.533093 16.0472 0.770131 15.529 1.20367L0.262651 13.9868C0.189367 14.0484 0.128735 14.1241 0.0842211 14.2095C0.0397071 14.2949 0.0121832 14.3884 0.00322188 14.4846C-0.00573942 14.5809 0.00403758 14.6779 0.0319942 14.7703C0.0599509 14.8627 0.105539 14.9486 0.166155 15.0231L1.70407 16.924C1.76452 16.9987 1.83888 17.0606 1.92288 17.1061C2.00688 17.1515 2.09888 17.1797 2.19361 17.189C2.28834 17.1983 2.38394 17.1885 2.47494 17.1602C2.56594 17.1318 2.65055 17.0855 2.72392 17.0239L16.9102 5.14402C17.0409 5.03691 17.2037 4.9785 17.3715 4.9785C17.5394 4.9785 17.7022 5.03691 17.8329 5.14402L32.0197 17.0239C32.093 17.0856 32.1775 17.1319 32.2683 17.1603C32.3592 17.1888 32.4547 17.1987 32.5494 17.1896C32.644 17.1805 32.736 17.1525 32.82 17.1072C32.904 17.062 32.9784 17.0003 33.039 16.9258L34.5769 15.0249C34.6375 14.95 34.6829 14.8637 34.7105 14.7709C34.7381 14.6781 34.7474 14.5807 34.7379 14.4842C34.7284 14.3877 34.7002 14.2941 34.655 14.2088C34.6097 14.1234 34.5484 14.048 34.4744 13.9868Z" fill="#086282"/>
+      </svg>
+      <span class="text-2xl font-bold text-brand-primary tracking-wide">Sakan</span>
+    </a>
+
+<ul class="hidden md:flex items-center space-x-8">
+  
+  <!-- Home Link -->
+  <li>
+    <a routerLink="/home" 
+       routerLinkActive="text-brand-primary font-semibold border-b-2 border-brand-primary" 
+       [routerLinkActiveOptions]="{exact: true}"
+       class="text-gray-600 hover:text-brand-primary pb-1">
+      Home
+    </a>
+  </li>
+
+  <!-- Listings Link -->
+  <li>
+    <a routerLink="/listings" 
+       routerLinkActive="font-semibold border-b-2 border-brand-primary"
+       class="text-gray-600 hover:text-brand-primary pb-1">
+      Listings
+    </a>
+  </li>
+
+  <!-- About Link -->
+  <li>
+    <a routerLink="/about" 
+       routerLinkActive="font-semibold border-b-2 border-brand-primary"
+       class="text-gray-600 hover:text-brand-primary pb-1">
+      About
+    </a>
+  </li>
+
+  <!-- Contact Us Link -->
+  <li>
+    <a routerLink="/contact" 
+       routerLinkActive="font-semibold border-b-2 border-brand-primary"
+       class="text-gray-600 hover:text-brand-primary pb-1">
+      Contact Us
+    </a>
+  </li>
+
+</ul>
+
+    <div class="hidden md:flex items-center space-x-4">
+      <button class="text-brand-primary font-semibold">Become a host</button>
+      <ng-container *ngIf="!isLoggedIn; else userMenu">
+        <button routerLink="login" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">Log In</button>
+        <button routerLink="register" class="px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-secondary">Sign Up</button>
+      </ng-container>
+      <ng-template #userMenu>
+        <div class="relative" #dropdownContainer>
+            <!-- Dropdown menu would go here -->
+             <button (click)="toggleDropdown()" class="flex items-center space-x-2 p-1 rounded-full hover:bg-gray-100 transition-colors">
+        <img class="w-8 h-8 rounded-full object-cover border-2 border-gray-200" 
+             [src]="user?.profilePictureUrl || 'assets/images/default-avatar.png'" 
+             alt="User Avatar">
+        <span class="font-semibold text-sm text-gray-700">{{ user?.name }}</span>
+        <!-- أيقونة سهم صغير -->
+        <svg class="w-4 h-4 text-gray-500 transition-transform" [class.rotate-180]="isDropdownOpen" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+      </button>
+
+      <div *ngIf="isDropdownOpen"
+           class="absolute right-0 mt-2 w-56 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button">
+          
+          <!-- رابط المفضلة (Wishlist) -->
+          <a routerLink="/wishlist" (click)="closeDropdown()" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">
+            <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.5l1.318-1.182a4.5 4.5 0 116.364 6.364L12 21.5l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+            <span>My Wishlist</span>
+          </a>
+
+          <!-- رابط المحادثات (Chat) -->
+          <a routerLink="/chat" (click)="closeDropdown()" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">
+            <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+            <span>Messages</span>
+          </a>
+
+          <!-- فاصل -->
+          <div class="border-t border-gray-100 my-1"></div>
+
+          <!-- زر تسجيل الخروج (Logout) -->
+          <button (click)="logout()" class="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">
+            <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+            <span>Log Out</span>
+          </button>
+
+        </div>
+      </div>
+        </div>
+      </ng-template>
+    </div>
+
+    <div class="md:hidden">
+      <button (click)="isMobileMenuOpen = !isMobileMenuOpen" class="text-gray-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+      </button>
+    </div>
+  </nav>
+    <div *ngIf="isMobileMenuOpen" class="md:hidden bg-white border-t border-gray-100 shadow-md">
+    
+    <!-- روابط التنقل الأساسية -->
+    <ul class="flex flex-col py-4 space-y-2">
+      <li>
+        <a routerLink="/home" (click)="closeAllMenus()" 
+           class="block px-6 py-2 text-gray-700 hover:bg-gray-100">Home</a>
+      </li>
+      <li>
+        <a routerLink="/listings" (click)="closeAllMenus()"
+           class="block px-6 py-2 text-gray-700 hover:bg-gray-100">Listings</a>
+      </li>
+      <li>
+        <a routerLink="/about" (click)="closeAllMenus()"
+           class="block px-6 py-2 text-gray-700 hover:bg-gray-100">About</a>
+      </li>
+      <li>
+        <a routerLink="/contact" (click)="closeAllMenus()"
+           class="block px-6 py-2 text-gray-700 hover:bg-gray-100">Contact Us</a>
+      </li>
+    </ul>
+
+    <!-- فاصل -->
+    <div class="border-t border-gray-200"></div>
+
+    <ng-container *ngIf="!isLoggedIn; else mobileUserMenu">
+      <div class="px-6 py-4 space-y-3">
+        <button  
+                class="w-full py-2 bg-brand-primary text-white font-semibold rounded-lg hover:bg-brand-800">
+          Log In
+        </button>
+        <button  
+                class="w-full py-2 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300">
+          Sign Up
+        </button>
+      </div>
+    </ng-container>
+
+    <ng-template #mobileUserMenu>
+      <ul class="flex flex-col py-4 space-y-2">
+        <!-- رابط المفضلة -->
+        <li>
+          <a routerLink="/wishlist" (click)="closeAllMenus()" 
+             class="block px-6 py-2 text-gray-700 hover:bg-gray-100">My Wishlist</a>
+        </li>
+        <!-- رابط المحادثات -->
+        <li>
+          <a routerLink="/chat" (click)="closeAllMenus()" 
+             class="block px-6 py-2 text-gray-700 hover:bg-gray-100">Messages</a>
+        </li>
+        <!-- رابط الحساب -->
+        <li>
+          <a routerLink="/account" (click)="closeAllMenus()" 
+             class="block px-6 py-2 text-gray-700 hover:bg-gray-100">Account</a>
+        </li>
+        
+        <!-- فاصل -->
+        <div class="border-t border-gray-200 my-2"></div>
+
+        <!-- زر تسجيل الخروج -->
+        <li>
+          <button (click)="logout()" class="w-full text-left px-6 py-2 text-gray-700 hover:bg-gray-100">
+            Log Out
+          </button>
+        </li>
+      </ul>
+    </ng-template>
+
+  </div>
+</header>
