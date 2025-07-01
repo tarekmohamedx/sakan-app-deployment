@@ -9,7 +9,7 @@ import { AuthService } from '../../auth/services/auth.service';
   providedIn: 'root',
 })
 export class CreatelistingserviceService {
-  constructor(private http: HttpClient,private authserice:AuthService) {}
+  constructor(private http: HttpClient, private authserice: AuthService) {}
 
   createListing(dto: CreateListingDTO): Observable<any> {
     const hostId = this.authserice.getuserdata()?.id ?? '';
@@ -22,6 +22,8 @@ export class CreatelistingserviceService {
 
   private buildFormData(dto: CreateListingDTO): FormData {
     const formData = new FormData();
+
+    // Basic listing data
     formData.append('Title', dto.title);
     formData.append('Description', dto.description);
     formData.append('PricePerMonth', dto.pricePerMonth.toString());
@@ -32,11 +34,58 @@ export class CreatelistingserviceService {
     formData.append('Longitude', dto.longitude.toString());
     formData.append('IsBookableAsWhole', dto.isBookableAsWhole.toString());
 
+    // Listing Photos
     dto.listingPhotos.forEach((photo) => {
       formData.append('ListingPhotos', photo);
     });
 
-    formData.append('Rooms', JSON.stringify(dto.rooms));
+    // Rooms
+    dto.rooms.forEach((room, roomIndex) => {
+      formData.append(`Rooms[${roomIndex}].Name`, room.name);
+      formData.append(`Rooms[${roomIndex}].Type`, room.type);
+      formData.append(
+        `Rooms[${roomIndex}].PricePerNight`,
+        room.pricePerNight.toString()
+      );
+      formData.append(
+        `Rooms[${roomIndex}].MaxGuests`,
+        room.maxGuests.toString()
+      );
+      formData.append(
+        `Rooms[${roomIndex}].IsBookableAsWhole`,
+        room.isBookableAsWhole.toString()
+      );
+
+      // Room Photos
+      room.roomPhotos.forEach((photo, photoIndex) => {
+        formData.append(`Rooms[${roomIndex}].RoomPhotos`, photo);
+      });
+
+      // Beds
+      room.beds.forEach((bed, bedIndex) => {
+        formData.append(
+          `Rooms[${roomIndex}].Beds[${bedIndex}].Label`,
+          bed.label
+        );
+        formData.append(`Rooms[${roomIndex}].Beds[${bedIndex}].Type`, bed.type);
+        formData.append(
+          `Rooms[${roomIndex}].Beds[${bedIndex}].Price`,
+          bed.price.toString()
+        );
+        formData.append(
+          `Rooms[${roomIndex}].Beds[${bedIndex}].IsAvailable`,
+          bed.isAvailable.toString()
+        );
+
+        // Bed Photos
+        bed.bedPhotos.forEach((bedPhoto) => {
+          formData.append(
+            `Rooms[${roomIndex}].Beds[${bedIndex}].BedPhotos`,
+            bedPhoto
+          );
+        });
+      });
+    });
 
     return formData;
   }
