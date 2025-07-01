@@ -1,98 +1,100 @@
-<div class="host-dashboard-container modern-shadow">
-    <h1 class="dashboard-title gradient-text">
-        Rooms for Listing #{{ listingId }}
-    </h1>
+<div class="host-dashboard-bg">
+    <div class="host-dashboard-container modern-shadow friendly-theme">
+        <h1 class="dashboard-title gradient-text">
+            Rooms for Listing #{{ listingId }}
+        </h1>
 
-    <div class="table-container">
-        <div class="search-bar-container">
-            <input
-                type="text"
-                class="search-input"
-                placeholder="🔍 Search listings by title..."
-                [(ngModel)]="searchTerm"
-                (input)="onSearch()"
-            />
-            <button class="clear-btn" *ngIf="searchTerm" (click)="searchTerm=''; onSearch()" title="Clear">
-                &times;
+        <div class="table-container">
+            <div class="search-bar-container">
+                <input
+                    type="text"
+                    class="search-input"
+                    placeholder="🔍 Search listings by title..."
+                    [(ngModel)]="searchTerm"
+                    (input)="onSearch()"
+                />
+                <button class="clear-btn" *ngIf="searchTerm" (click)="searchTerm=''; onSearch()" title="Clear">
+                    &times;
+                </button>
+            </div>
+            <table *ngIf="rooms.length > 0; else noRooms" class="listing-table modern-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Price</th>
+                        <th>Guests</th>
+                        <th>Beds number</th>
+                        <th>Bed Details</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let room of rooms">
+                        <tr>
+                            <td data-label="Name">{{ room.name }}</td>
+                            <td data-label="Type">{{ room.type }}</td>
+                            <td data-label="Price">${{ room.pricePerNight }}</td>
+                            <td data-label="Guests">{{ room.maxGuests }}</td>
+                            <td data-label="# Beds">{{ room.beds.length || 0 }}</td>
+                            <td data-label="Bed Details">
+                                <ng-container *ngIf="room.beds && room.beds.length > 0; else noBeds">
+                                    <ul style="margin: 0; padding-left: 16px;">
+                                        <li *ngFor="let bed of room.beds">
+                                            {{ bed.label }} ({{ bed.type }}) - ${{ bed.price }}
+                                        </li>
+                                    </ul>
+                                </ng-container>
+                                <ng-template #noBeds>
+                                    <span>No beds</span>
+                                </ng-template>
+                            </td>
+                            <td data-label="Status">
+                                <span [ngClass]="room.isActive ? 'status-active' : 'status-inactive'">
+                                    {{ room.isActive ? 'Active' : 'Inactive' }}
+                                </span>
+                            </td>
+                            <td data-label="Actions">
+                                <button class="action-button" (click)="viewRoom(room.id)" title="View Listing">
+                                    <span class="icon-view">👁</span>
+                                </button>
+                                <button class="action-button edit" (click)="startEdit(room)" title="Edit Room">
+                                    <span class="icon-edit">✏️</span>
+                                </button>
+                                <button class="action-button delete" (click)="deleteRoom(room.id)" title="Delete Room">
+                                    <span class="icon-delete">🗑️</span>
+                                </button>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+            <ng-template #noRooms>
+                <p class="dashboard-subtitle">
+                    No rooms available for this listing.
+                </p>
+            </ng-template>
+        </div>
+        <div class="pagination-controls">
+            <button class="pagination-btn" (click)="prevPage()" [disabled]="page === 1"
+                [style.opacity]="page === 1 ? 0.5 : 1">
+                <span>&laquo;</span>
+            </button>
+            <span class="pagination-info">
+                <strong>{{ page }}</strong> of <strong>{{ totalPages }}</strong>
+            </span>
+            <button class="pagination-btn" (click)="nextPage()" [disabled]="page * pageSize >= totalCount"
+                [style.opacity]="page * pageSize >= totalCount ? 0.5 : 1">
+                <span>&raquo;</span>
             </button>
         </div>
-        <table *ngIf="rooms.length > 0; else noRooms" class="listing-table modern-table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Price</th>
-                    <th>Guests</th>
-                    <th>Beds number</th>
-                    <th>Bed Details</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <ng-container *ngFor="let room of rooms">
-                    <tr>
-                        <td data-label="Name">{{ room.name }}</td>
-                        <td data-label="Type">{{ room.type }}</td>
-                        <td data-label="Price">${{ room.pricePerNight }}</td>
-                        <td data-label="Guests">{{ room.maxGuests }}</td>
-                        <td data-label="# Beds">{{ room.beds.length || 0 }}</td>
-                        <td data-label="Bed Details">
-                            <ng-container *ngIf="room.beds && room.beds.length > 0; else noBeds">
-                                <ul style="margin: 0; padding-left: 16px;">
-                                <li *ngFor="let bed of room.beds">
-                                    {{ bed.label }} ({{ bed.type }}) - ${{ bed.price }}
-                                </li>
-                                </ul>
-                            </ng-container>
-                            <ng-template #noBeds>
-                                <span>No beds</span>
-                            </ng-template>
-                        </td>
-                        <td data-label="Status">
-                            <span [ngClass]="room.isActive ? 'status-active' : 'status-inactive'">
-                                {{ room.isActive ? 'Active' : 'Inactive' }}
-                            </span>
-                        </td>
-
-                        <td data-label="Actions">
-                            <button class="action-button" (click)="viewRoom(room.id)" title="View Listing">
-                                <span class="icon-view">👁</span>
-                            </button>
-                            <button class="action-button edit" (click)="startEdit(room)" title="Edit Room">
-                                <span class="icon-edit">✏️</span>
-                            </button>
-                            <button class="action-button delete" (click)="deleteRoom(room.id)" title="Delete Room">
-                                <span class="icon-delete">🗑️</span>
-                            </button>
-                        </td>
-                    </tr>
-                </ng-container>
-            </tbody>
-        </table>
-        <ng-template #noRooms>
-            <p class="dashboard-subtitle">
-                No rooms available for this listing.
-            </p>
-        </ng-template>
-    </div>
-    <div class="pagination-controls">
-        <button class="pagination-btn" (click)="prevPage()" [disabled]="page === 1"
-            [style.opacity]="page === 1 ? 0.5 : 1">
-            <span>&laquo;</span>
-        </button>
-        <span class="pagination-info">
-            <strong>{{ page }}</strong> of <strong>{{ totalPages }}</strong>
-        </span>
-        <button class="pagination-btn" (click)="nextPage()" [disabled]="page * pageSize >= totalCount"
-            [style.opacity]="page * pageSize >= totalCount ? 0.5 : 1">
-            <span>&raquo;</span>
-        </button>
     </div>
 </div>
+
 <!-- Edit Room Modal -->
 <div class="modal-overlay" *ngIf="editRoom">
-    <div class="modal-content modern-modal">
+    <div class="modal-content modern-modal friendly-modal">
         <h2 class="gradient-text">
             Edit Room: {{ editForm.name }}
         </h2>
@@ -114,13 +116,40 @@
                 <input type="number" [(ngModel)]="editForm.maxGuests" name="maxGuests" min="1" />
             </div>
 
+            <!-- Room Photos Section -->
+            <div class="form-group mb-3">
+                <label class="form-label fw-bold">Upload Room Photos</label>
+                <input #roomPhotosInput type="file" multiple (change)="onRoomPhotosSelected($event)" />
+                <button type="button" class="btn btn-sm btn-primary mt-2" (click)="uploadRoomPhotos()">Upload Room Photos</button>
+            </div>
+
+            <!-- Display Existing Room Photos -->
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                <div *ngFor="let photo of editForm.photoUrls; let i = index" class="position-relative">
+                    <img [src]="photo" style="width: 80px; height: 80px; object-fit: cover;" class="rounded border" />
+                    <button type="button" class="btn-close position-absolute top-0 end-0" aria-label="Remove" (click)="editForm.photoUrls?.splice(i, 1)"></button>
+                </div>
+            </div>
+
+            <!-- Beds Section -->
+            <div *ngFor="let bed of editForm.beds; let i = index" class="mb-4 p-2 border rounded bed-photo-block">
+                <h5>Bed {{ i + 1 }}</h5>
+                <input type="file" multiple (change)="onBedPhotoFilesChange($event, i)" />
+                <button type="button" class="btn btn-sm btn-secondary mt-2" (click)="uploadBedPhotos(i)">Upload Bed Photos</button>
+                <div class="d-flex flex-wrap gap-2 mt-2">
+                    <div *ngFor="let photo of bed.bedPhotos; let j = index" class="position-relative">
+                        <img [src]="photo" style="width: 80px; height: 80px; object-fit: cover;" class="rounded border" />
+                        <button type="button" class="btn-close position-absolute top-0 end-0" aria-label="Remove" (click)="editForm.beds?.[i]?.bedPhotos?.splice(j, 1)"></button>
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group full-width">
                 <label>Bed Details:</label>
                 <div class="bed-edit-block" *ngFor="let bed of editForm.beds; let i = index">
                     <div class="bed-fields">
                         <input type="hidden" [(ngModel)]="bed.id" name="bedId{{i}}" />
-                        
-                        <label>Lable: </label>
+                        <label>Label: </label>
                         <input
                             type="text"
                             [(ngModel)]="bed.label"
@@ -155,7 +184,9 @@
                             🗑
                         </button>
                     </div>
+                    <hr/>
                 </div>
+                
                 <button type="button" class="add-bed-btn" (click)="addBed()">➕ Add Bed</button>
             </div>
 

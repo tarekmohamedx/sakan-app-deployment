@@ -65,6 +65,7 @@ getRoomsByListingId( listingId: number, page: number, pageSize: number, searchTe
     return this.http.put<void>(`${this.baseUrl}/${roomId}?hostId=${hostId}`, data, {
       headers: this.getAuthHeaders()
     });
+    
   }
 
   deleteRoom(roomId: number): Observable<void> {

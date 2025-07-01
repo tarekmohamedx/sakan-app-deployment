@@ -5,7 +5,7 @@ import { HostListingService } from '../services/HostListing.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-edit-host-listings',
@@ -18,10 +18,8 @@ export class EditHostListingComponent implements OnInit {
   listingForm: FormGroup;
   listingId!: number;
   isLoading = true;
-  newPhotos = '';
-  selectedFile: File | null = null;
-  imagekitPublicKey = 'public_ZEYX4morpV+ppaWWNVeiDJbO1u8=';
-  imagekitUploadUrl = 'https://upload.imagekit.io/api/v1/files/upload';
+  photoUrls: string[] = [];
+  selectedFiles: File[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -52,7 +50,8 @@ export class EditHostListingComponent implements OnInit {
   loadListing(): void {
     this.hostListingService.getListingById(this.listingId).subscribe({
       next: (data) => {
-        this.listingForm.patchValue(data);
+        this.photoUrls = data.photoUrls || [];
+        this.listingForm.patchValue({ ...data, photoUrls: this.photoUrls });
         this.isLoading = false;
       },
       error: () => {
@@ -62,52 +61,46 @@ export class EditHostListingComponent implements OnInit {
     });
   }
 
-  removePhoto(index: number): void {
-    const photos = this.listingForm.value.photoUrls;
-    photos.splice(index, 1);
-    this.listingForm.patchValue({ photoUrls: photos });
-  }
-
-  addPhotosFromUrl(): void {
-    const urls = this.newPhotos.split(',').map(p => p.trim()).filter(p => p);
-    this.listingForm.patchValue({
-      photoUrls: [...this.listingForm.value.photoUrls, ...urls]
-    });
-    this.newPhotos = '';
-  }
-
   onFileSelected(event: any): void {
-  const file = event.target.files[0];
-  const formData = new FormData();
-  formData.append('file', file);
+    this.selectedFiles = Array.from(event.target.files);
+  }
 
-  this.http.post<any>('https://upload.imagekit.io/api/v1/files/upload', formData).subscribe({
-    next: res => {
-      const imageUrl = res.url;
-      this.listingForm.patchValue({
-        photoUrls: [...this.listingForm.value.photoUrls, imageUrl]
-      });
-      this.toastr.success('Photo uploaded!');
-    },
-    error: err => {
-      console.error(err);
-      this.toastr.error('Upload failed');
-    }
-  });
-}
+  uploadSelectedPhotos(): void {
+    if (this.selectedFiles.length === 0) return;
 
+    const formData = new FormData();
+    this.selectedFiles.forEach(file => formData.append('listingPhotos', file));
+
+    this.http.post<string[]>('https://localhost:7188/api/upload/upload', formData).subscribe({
+      next: (urls) => {
+        this.photoUrls.push(...urls);
+        this.listingForm.patchValue({ photoUrls: this.photoUrls });
+        this.toastr.success('Photos uploaded successfully ✅');
+        this.selectedFiles = [];
+      },
+      error: () => this.toastr.error('Failed to upload photos ❌')
+    });
+  }
+
+  removePhoto(index: number): void {
+    this.photoUrls.splice(index, 1);
+    this.listingForm.patchValue({ photoUrls: this.photoUrls });
+  }
 
   onSubmit(): void {
-    if (this.listingForm.valid) {
-      this.hostListingService.updateListing(this.listingId, this.listingForm.value).subscribe({
-        next: () => {
-          this.toastr.success('Listing updated successfully! ✅');
-          this.router.navigate(['/host/listings']);
-        },
-        error: () => this.toastr.error('Failed to update listing ❌', 'Error')
-      });
-    } else {
-      this.toastr.warning('Please fill in all required fields.', 'Form Invalid');
+    if (!this.listingForm.valid) {
+      this.toastr.warning('Please complete the required fields.');
+      return;
     }
+
+    this.listingForm.patchValue({ photoUrls: this.photoUrls });
+
+    this.hostListingService.updateListing(this.listingId, this.listingForm.value).subscribe({
+      next: () => {
+        this.toastr.success('Listing updated ✅');
+        this.router.navigate(['/host/listings']);
+      },
+      error: () => this.toastr.error('Failed to update listing ❌')
+    });
   }
 }

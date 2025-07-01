@@ -10,6 +10,19 @@ export interface BedDto {
   selected?: boolean;
 }
 
+export interface HostRoomDto {
+  id: number;
+  listingId: number;
+  name: string;
+  type: string;
+  pricePerNight: number;
+  maxGuests: number;
+  isBookableAsWhole: boolean;
+  isActive: boolean;
+  photoUrls: string[];
+  listingTitle: string;
+  beds: BedDto[];
+}
 export interface RoomDetailsDto {
   id: number;
   listingId: number;
@@ -26,16 +39,3 @@ export interface RoomDetailsDto {
   };
 }
 
-export interface HostRoomDto {
-  id: number;
-  listingId: number;
-  name: string;
-  type: string;
-  pricePerNight: number;
-  maxGuests: number;
-  isBookableAsWhole: boolean;
-  isActive: boolean;
-  photoUrls: string[];
-  listingTitle: string;
-  beds: BedDto[];
-}
