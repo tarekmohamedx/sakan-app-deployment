@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { CreateListingDTO } from '../../../core/models/CreateListingDTO';
+import { CreateListingDTO } from '../../core/models/CreateListingDTO';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../../auth/services/auth.service';
+import { AuthService } from '../../features/auth/services/auth.service';
 
 @Injectable({
   providedIn: 'root',

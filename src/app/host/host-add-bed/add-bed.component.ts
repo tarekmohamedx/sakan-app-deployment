@@ -7,14 +7,14 @@ import {
 } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
-import { BedDTO } from '../../../../core/models/BedDTO';
+import { BedDTO } from '../../core/models/BedDTO';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'beddialog',
   templateUrl: './add-bed.component.html',
   standalone: true,
-  imports: [ReactiveFormsModule , CommonModule],
+  imports: [ReactiveFormsModule, CommonModule],
   styleUrls: ['./add-bed.component.css'],
 })
 export class BedDialogComponent {
