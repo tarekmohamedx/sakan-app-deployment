@@ -30,20 +30,24 @@ export class ChatComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute
   ) {}
 
-  ngAfterViewChecked() {
-    this.scrollToBottom();
-  }
+  // ngAfterViewChecked() {
+  //   this.scrollToBottom();
+  // }
 
 
   scrollToBottom(): void {
-    try {
-      const container = this.chatMessagesContainer.nativeElement;
-      container.scrollTop = container.scrollHeight;
-    } catch (err) {
-      console.error('Scroll failed', err);
-    }
+    setTimeout(() => {
+      try {
+        const container = this.chatMessagesContainer?.nativeElement;
+        if (container) {
+          container.scrollTop = container.scrollHeight;
+        }
+      } catch (err) {
+        console.error('Scroll failed', err);
+      }
+    }, 100);
   }
-
+  
   chats: ChatDto[] = [];
   selectedChat: any = null;
   messages: MessageDto[] = [];
@@ -82,6 +86,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         );
         if (!exists) {
           this.messages.push(message);
+          this.scrollToBottom();
         }
       }
     });
@@ -163,6 +168,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       });
 
       this.newMessage = '';
+      this.scrollToBottom();
 
       // Send via SignalR
       await this.chatHubService.sendMessage(messageDto);
@@ -256,6 +262,8 @@ export class ChatComponent implements OnInit, OnDestroy {
       }));
 
       console.log(this.messages, 'Chat history loaded:', this.messages);
+
+      this.scrollToBottom();
     } catch (error) {
       console.error('Error loading chat history:', error);
       this.messages = [];
