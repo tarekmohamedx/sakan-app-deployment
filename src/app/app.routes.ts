@@ -2,6 +2,11 @@ import { Routes } from '@angular/router';
 import { RegisterComponent } from '../app/features/auth/components/register/register.component';
 import { LoginComponent } from '../app/features/auth/components/login/login.component';
 import { HometestComponent } from './hometest/hometest.component';
+import { HomePageComponent } from './features/home/pages/home-page/home-page.component';
+import { ListingsPageComponent } from './features/listings/pages/listings-page/listings-page.component';
+import { WishlistPageComponent } from './features/wishlist/pages/wishlist-page/wishlist-page.component';
+import { PaymentFormComponent } from './features/checkout/pages/payment-form/payment-form.component';
+
 import { ListingDetailsComponent } from './features/listings/pages/listing-details/listing-details.component';
 import { RoomDetailsComponent } from './features/rooms/pages/room-details/room-details.component';
 import { NotfoundComponent } from './shared/components/notfound/notfound.component';
@@ -19,9 +24,14 @@ import { HostUserReviewsComponent } from './host/host-user-reviews/host-user-rev
 import { HostMyReviewsComponent } from './host/host-my-reviews/host-my-reviews.component';
 import { BookingRequestsComponent } from './host/booking-requests/booking-requests.component';
 export const routes: Routes = [
-  {path  : '', redirectTo: 'host', pathMatch: 'full' },
+  { path: 'home', component: HomePageComponent },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'listings', component: ListingsPageComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'hometest', component: HometestComponent },
+  { path: 'wishlist', component: WishlistPageComponent},
+  { path: 'payment', component: PaymentFormComponent},
   { path: 'listing/:id', component:ListingDetailsComponent},
   { path: 'room/:id', component:RoomDetailsComponent},
   { path: 'chat', component: ChatComponent },

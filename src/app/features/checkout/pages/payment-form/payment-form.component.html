@@ -1,0 +1,57 @@
+<div class="max-w-md mx-auto my-10 p-8 border rounded-lg shadow-lg bg-white">
+  
+  <!-- عرض رسالة النجاح -->
+  <div *ngIf="paymentSuccess" class="text-center text-green-600">
+    <svg class="mx-auto h-12 w-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    <h3 class="text-xl font-bold mt-4">Payment Successful!</h3>
+    <p class="text-gray-600">Your booking is confirmed. Redirecting...</p>
+  </div>
+
+  <!-- عرض رسالة التحميل -->
+  <div *ngIf="isLoading && !paymentSuccess" class="text-center py-10">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary mx-auto"></div>
+    <p class="mt-4 text-gray-500">Initializing Secure Payment...</p>
+  </div>
+
+  <!-- عرض نموذج الدفع -->
+  <form [hidden]="isLoading || paymentSuccess"  id="payment-form" (ngSubmit)="handleSubmit()">
+    <h3 class="text-xl font-semibold mb-6 text-center text-gray-800">Pay with Card</h3>
+
+    <!-- **هذا هو العنصر الذي سيحتوي على نموذج البطاقة الآمن من Stripe** -->
+    <div class="space-y-4">
+    
+    <!-- 1. حقل رقم البطاقة -->
+    <div>
+      <label for="card-number-element" class="block text-sm font-medium text-gray-700">Card Number</label>
+      <div id="card-number-element" #cardNumberElement class="mt-1 p-3 border rounded-md shadow-sm bg-gray-50"></div>
+    </div>
+
+    <!-- 2. حقلي تاريخ الانتهاء و CVC بجانب بعضهما -->
+    <div class="flex space-x-4">
+      <div class="w-1/2">
+        <label for="card-expiry-element" class="block text-sm font-medium text-gray-700">Expiration Date</label>
+        <div id="card-expiry-element" #cardExpiryElement class="mt-1 p-3 border rounded-md shadow-sm bg-gray-50"></div>
+      </div>
+      <div class="w-1/2">
+        <label for="card-cvc-element" class="block text-sm font-medium text-gray-700">CVC</label>
+        <div id="card-cvc-element" #cardCvcElement class="mt-1 p-3 border rounded-md shadow-sm bg-gray-50"></div>
+      </div>
+    </div>
+
+  </div>
+
+    <!-- عرض رسائل الخطأ من Stripe -->
+    <div id="card-errors" role="alert" *ngIf="paymentError" class="text-red-600 mt-3 text-sm text-center">
+      {{ paymentError }}
+    </div>
+
+    <!-- زر الدفع -->
+    <button id="submit" type="button" (click)="handleSubmit()"
+            class="w-full mt-6 bg-brand-primary text-white font-bold py-3 rounded-lg hover:bg-brand-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center"
+            [disabled]="isLoading || !!paymentError">
+      <span *ngIf="isLoading" class="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></span>
+      <span *ngIf="!isLoading">Pay Now (EGP {{ amount | number }})</span>
+    </button>
+  </form>
+
+</div>
