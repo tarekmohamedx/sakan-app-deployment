@@ -20,7 +20,7 @@ import { NoChatsComponent } from './components/app-no-chats/app-no-chats.compone
   styleUrls: ['./chat.component.css'],
 })
 export class ChatComponent implements OnInit, OnDestroy {
-  @ViewChild('scrollAnchor') private scrollAnchor!: ElementRef;
+  @ViewChild('chatMessagesContainer') private chatMessagesContainer!: ElementRef;
 
   constructor(
     private chatService: ChatService,
@@ -34,9 +34,13 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.scrollToBottom();
   }
 
+
   scrollToBottom(): void {
-    if (this.scrollAnchor) {
-      this.scrollAnchor.nativeElement.scrollIntoView({ behavior: 'smooth' });
+    try {
+      const container = this.chatMessagesContainer.nativeElement;
+      container.scrollTop = container.scrollHeight;
+    } catch (err) {
+      console.error('Scroll failed', err);
     }
   }
 

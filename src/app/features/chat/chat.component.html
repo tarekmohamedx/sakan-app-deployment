@@ -40,7 +40,7 @@
         <h3>Select a conversation to start messaging</h3>
       </div>
 
-      <div *ngIf="selectedChat" class="chat-messages">
+      <div *ngIf="selectedChat" class="chat-messages" #chatMessagesContainer>
         <div
           *ngFor="let message of messages"
           [ngClass]="{
