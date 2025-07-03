@@ -223,42 +223,99 @@ export class ListingDetailsComponent implements OnInit {
   //------------------------------------------------------
 
   // Booking
-  sendBookingRequest(): void {
-    const selectedRooms = this.listing.bedroomList.filter(room => room.selected);
-    const guestId = this.listingService.getCurrentUserId();
-    if (!this.moveIn || !this.moveOut) {
-      alert('Please select check-in and check-out months.');
-      return;
-    }
-    if (selectedRooms.length === 0) {
-      // Booking the whole apartment
+    //   sendBookingRequest(): void {
+    //   const selectedRooms = this.listing.bedroomList.filter(room => room.selected);
+    //   const guestId = this.listingService.getCurrentUserId();
+    //   const guestName = this.listingService.getCurrentUserName();
+
+    //   if (!this.moveIn || !this.moveOut) {
+    //     alert('Please select check-in and check-out months.');
+    //     return;
+    //   }
+
+    //   if (selectedRooms.length === 0) {
+    //     // Booking the whole apartment
+    //     const dto: BookingRequestDto = {
+    //       guestId,
+    //       listingId: this.listing.id,
+    //       fromDate: new Date(this.moveIn).toISOString(),
+    //       toDate: new Date(this.moveOut).toISOString()
+    //     };
+    //     this.listingService.createRequest(dto).subscribe(res => {
+    //       this.requestSent = true;
+    //       this.hostId = res.hostId;
+    //       alert('Your request has been sent successfully!');
+    //     });
+    //   } else {
+    //     // Booking individual rooms
+    //     selectedRooms.forEach(room => {
+    //     // const selectedBed = room.beds?.find(b => b.selected);
+
+    //       const dto: BookingRequestDto = {
+    //         guestId,
+    //         listingId: this.listing.id,
+    //         roomId: room.id,
+    //         bedIds: room.beds?.map(b => b.id) ?? [],
+    //         fromDate: new Date(this.moveIn).toISOString(),
+    //         toDate: new Date(this.moveOut).toISOString()
+    //       };
+
+    //       this.listingService.createRequest(dto).subscribe(res => {
+    //         this.requestSent = true;
+    //         this.hostId = res.hostId;
+    //         alert('Your request has been sent successfully!');
+    //       });
+    //     });
+
+    //   }
+    // }
+
+    sendBookingRequest(): void {
+  const selectedRooms = this.listing.bedroomList.filter(room => room.selected);
+  const guestId = this.listingService.getCurrentUserId();
+
+  if (!this.moveIn || !this.moveOut) {
+    alert('Please select check-in and check-out months.');
+    return;
+  }
+
+  if (selectedRooms.length === 0) {
+    // Booking the whole apartment
+    const dto: BookingRequestDto = {
+      guestId,
+      listingId: this.listing.id,
+      fromDate: new Date(this.moveIn).toISOString(),
+      toDate: new Date(this.moveOut).toISOString()
+    };
+
+    this.listingService.createRequest(dto).subscribe(res => {
+      this.requestSent = true;
+      this.hostId = res.hostId;
+      alert('Your request has been sent successfully!');
+    });
+  } else {
+    // Booking selected rooms (all beds in each)
+    selectedRooms.forEach(room => {
       const dto: BookingRequestDto = {
         guestId,
         listingId: this.listing.id,
+        roomId: room.id,
+        bedIds: room.beds?.map(b => b.id).filter((id): id is number => id !== null) ?? [],
         fromDate: new Date(this.moveIn).toISOString(),
         toDate: new Date(this.moveOut).toISOString()
       };
+
       this.listingService.createRequest(dto).subscribe(res => {
         this.requestSent = true;
         this.hostId = res.hostId;
         alert('Your request has been sent successfully!');
       });
-    } else {
-      // Booking individual rooms
-      selectedRooms.forEach(room => {
-        const dto: BookingRequestDto = {
-          guestId,
-          listingId: this.listing.id,
-          roomId: room.id,
-          fromDate: new Date(this.moveIn).toISOString(),
-          toDate: new Date(this.moveOut).toISOString()
-        };
-        this.listingService.createRequest(dto).subscribe(res => {
-          this.requestSent = true;
-          this.hostId = res.hostId;
-          alert('Your request has been sent successfully!');
-        });
-      });
-    }
+    });
   }
+}
+
+
+
+
+
 }

@@ -1,14 +1,5 @@
 import { ListingDetailsDto } from './listing-details.model';
 
-export interface BedDto {
-  id: number | null;
-  label: string;
-  type: string;
-  price: number;
-  isAvailable: boolean;
-  bedPhotos: string[];
-  selected?: boolean;
-}
 
 export interface HostRoomDto {
   id: number;
@@ -37,5 +28,14 @@ export interface RoomDetailsDto {
     latitude: number;
     longitude: number;
   };
+}
+export interface BedDto {
+  id: number | null;
+  label: string;
+  type: string;
+  price: number;
+  isAvailable: boolean;
+  bedPhotos: string[];
+  selected?: boolean;
 }
 

@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs';
 export class HeaderComponent {
   @ViewChild('dropdownContainer') dropdownContainer?: ElementRef;
 
-  isLoggedIn = false;
+  isLoggedIn = true;
   isMobileMenuOpen = false;
   isDropdownOpen = false;
   user = {

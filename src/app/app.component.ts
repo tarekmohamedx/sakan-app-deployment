@@ -34,4 +34,9 @@ export class AppComponent implements OnInit {
     
   }
   title = 'sakan-app';
+
+   get isHostRoute(): boolean {
+    return this.router.url.startsWith('/host');
+  }
 }
+

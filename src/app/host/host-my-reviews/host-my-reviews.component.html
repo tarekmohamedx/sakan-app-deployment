@@ -28,10 +28,10 @@
                         <ng-template #noRating>—</ng-template>
                     </td>
                     <td>{{ review.comment || '—' }}</td>
-                    <td>{{ review.createdAt | date:'yyyy/MM/dd, h:mm a':'en-US' }}</td>
+                    <td>{{ review.createdAt | date:'yyyy/MM/dd' }}</td>
                     <td>
                         <button class="action-button edit" (click)="openReviewModal(review)">
-                            <span class="icon">✏️</span> Review
+                            <span class="icon">✏️</span> edit
                         </button>
                     </td>
                 </tr>
