@@ -22,6 +22,7 @@ import { HostBookingComponent } from './host/host-booking/host-booking.component
 import { HostUserReviewsComponent } from './host/host-user-reviews/host-user-reviews.component';
 import { HostMyReviewsComponent } from './host/host-my-reviews/host-my-reviews.component';
 import { BookingRequestsComponent } from './host/booking-requests/booking-requests.component';
+import { LayoutComponent } from './admin/layout/layout.component';
 export const routes: Routes = [
   {path  : '', redirectTo: 'host', pathMatch: 'full' },
   { path: 'register', component: RegisterComponent },
@@ -41,6 +42,8 @@ export const routes: Routes = [
     { path: 'reviews', component: HostUserReviewsComponent },
     { path: 'myReviews', component: HostMyReviewsComponent },
   ]},
+
+  { path: 'admin', component: LayoutComponent},
   { path: '**', component: NotfoundComponent },
   { path: 'signin-google', component: CallbackComponent },
 ];

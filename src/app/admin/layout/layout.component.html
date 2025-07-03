@@ -1,0 +1,78 @@
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar" [class.collapsed]="isSidebarCollapsed">
+    <div class="sidebar-header">
+      <div class="logo" *ngIf="!isSidebarCollapsed">
+        <h2>Sakan Admin</h2>
+      </div>
+      <div class="logo-collapsed" *ngIf="isSidebarCollapsed">
+        <span>سكن</span>
+      </div>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <ul class="nav-list">
+        <li class="nav-item" *ngFor="let item of menuItems">
+          <a 
+            [routerLink]="item.route" 
+            class="nav-link"
+            [class.active]="activeMenuItem === item.id"
+            (click)="setActiveMenuItem(item.id)"
+          >
+            <span class="material-icons nav-icon">{{ item.icon }}</span>
+            <span class="nav-text" *ngIf="!isSidebarCollapsed">{{ item.label }}</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-content" [class.sidebar-collapsed]="isSidebarCollapsed">
+    <!-- Top Navbar -->
+    <header class="top-navbar">
+      <div class="navbar-left">
+        <button class="sidebar-toggle" (click)="toggleSidebar()">
+          <span class="material-icons">menu</span>
+        </button>
+        <div class="search-container">
+          <span class="material-icons search-icon">search</span>
+          <input type="text" placeholder="Search..." class="search-input">
+        </div>
+      </div>
+      
+      <div class="navbar-right">
+        <div class="navbar-item">
+          <button class="notification-btn">
+            <span class="material-icons">notifications</span>
+            <span class="notification-badge">3</span>
+          </button>
+        </div>
+        
+        <div class="navbar-item">
+          <div class="admin-profile">
+            <img src="https://via.placeholder.com/32x32" alt="Admin" class="profile-avatar">
+            <span class="profile-name">Admin User</span>
+            <span class="material-icons">keyboard_arrow_down</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content Area -->
+    <main class="content-area">
+      <div class="content-wrapper">
+        <!-- Dynamic content will be routed here -->
+        <router-outlet></router-outlet>
+        
+        <!-- Placeholder content when no route is active -->
+        <div class="placeholder-content" *ngIf="!hasActiveRoute">
+          <div class="welcome-card">
+            <h1>Welcome to Sakan Admin Panel</h1>
+            <p>Select a menu item from the sidebar to get started managing your platform.</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
