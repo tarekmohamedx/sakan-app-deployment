@@ -38,5 +38,8 @@ export class AppComponent implements OnInit {
    get isHostRoute(): boolean {
     return this.router.url.startsWith('/host');
   }
+   get isAdminRoute(): boolean {
+    return this.router.url.startsWith('/admin');
+  }
 }
 

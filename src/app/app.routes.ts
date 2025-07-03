@@ -23,6 +23,9 @@ import { HostUserReviewsComponent } from './host/host-user-reviews/host-user-rev
 import { HostMyReviewsComponent } from './host/host-my-reviews/host-my-reviews.component';
 import { BookingRequestsComponent } from './host/booking-requests/booking-requests.component';
 import { LayoutComponent } from './admin/layout/layout.component';
+import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
+import { AdminListingsComponent } from './admin/admin-listings/admin-listings.component';
+import { AdminEditlistingComponent } from './admin/admin-editlisting/admin-editlisting.component';
 export const routes: Routes = [
   {path  : '', redirectTo: 'host', pathMatch: 'full' },
   { path: 'register', component: RegisterComponent },
@@ -43,7 +46,12 @@ export const routes: Routes = [
     { path: 'myReviews', component: HostMyReviewsComponent },
   ]},
 
-  { path: 'admin', component: LayoutComponent},
+  { path: 'admin', component: LayoutComponent,  children:[
+    {path:'dashboard', component:AdminDashboardComponent},
+    {path: 'listings', component: AdminListingsComponent},
+    { path: 'editlisting/:id', component: AdminEditlistingComponent },
+  ]},
+
   { path: '**', component: NotfoundComponent },
   { path: 'signin-google', component: CallbackComponent },
 ];
