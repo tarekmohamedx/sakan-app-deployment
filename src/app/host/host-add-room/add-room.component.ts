@@ -7,12 +7,13 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
-import { BedDTO } from '../../../../core/models/BedDTO';
-import { RoomDTO } from '../../../../core/models/RoomDTO';
-import { BedDialogComponent } from '../add-bed/add-bed.component'; // adjust path if needed
+import { BedDTO } from '../../core/models/BedDTO';
+import { RoomDTO } from '../../core/models/RoomDTO';
+import { BedDialogComponent } from '../host-add-bed/add-bed.component'; // adjust path if needed
 import Swal from 'sweetalert2';
 import { from } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { MapSelectorComponentt } from '../../shared/map-selector/map-selector.component';
 
 @Component({
   selector: 'roomdialog',
@@ -21,6 +22,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   styleUrls: ['./add-room.component.css'],
 })
+
 export class RoomDialogComponent {
   roomForm: FormGroup;
   roomPhotos: File[] = [];
