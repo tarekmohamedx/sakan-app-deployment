@@ -98,7 +98,7 @@ export class AdminEditlistingComponent implements OnInit {
     this.adminListingService.updateListing(this.listingId, this.listingForm.value).subscribe({
       next: () => {
         this.toastr.success('Listing updated ✅');
-        this.router.navigate(['/host/listings']);
+        this.router.navigate(['/admin/listings']);
       },
       error: () => this.toastr.error('Failed to update listing ❌')
     });

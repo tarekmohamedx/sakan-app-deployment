@@ -14,35 +14,25 @@ import { FooterComponent } from './layout/footer/footer.component';
     HeaderComponent,
     CommonModule,
     TranslateModule,
-    FooterComponent
+    FooterComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
   role = '';
-  constructor(
-    private router: Router,
-    private authService : AuthService
-  ) { 
- 
-  }
+  constructor(private router: Router, private authService: AuthService) {}
   ngOnInit(): void {
     // this.router.navigate(['/home']);
     console.log('Role', this.authService.getuserdata()?.role);
     this.role = this.authService.getuserdata()?.role || '';
-    if (this.authService.isLoggedIn()) {
-      this.authService.notifyLogin(); // 👈 Add this
-    }
-    
   }
   title = 'sakan-app';
 
-   get isHostRoute(): boolean {
+  get isHostRoute(): boolean {
     return this.router.url.startsWith('/host');
   }
-   get isAdminRoute(): boolean {
+  get isAdminRoute(): boolean {
     return this.router.url.startsWith('/admin');
   }
 }
-

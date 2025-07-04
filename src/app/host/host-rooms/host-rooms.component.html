@@ -92,130 +92,105 @@
     </div>
 </div>
 
-    <!-- Edit Room Modal (Hidden by default) -->
-    <div class="modal-overlay"  *ngIf="editRoom">
-        <div class="modal-content">
-            <h2 class="gradient-text">
-                Edit Room: {{ editForm.name }}
-            </h2>
-             <form (ngSubmit)="saveEdit()" class="modal-form">
-                <div class="form-group">
-                    <label>Name:</label>
-                    <input type="text" [(ngModel)]="editForm.name" name="name" required />
-                </div>
-            <div class="form-group">
-                <label>Type:</label>
-                <input type="text" [(ngModel)]="editForm.type" name="type" />
-            </div>
-            <div class="form-group">
-                <label>Price:</label>
-                <input type="number" [(ngModel)]="editForm.pricePerNight" name="pricePerNight" min="0" />
-            </div>
-            <div class="form-group">
-                <label>Guests:</label>
-                <input type="number" [(ngModel)]="editForm.maxGuests" name="maxGuests" min="1" />
-            </div>
+<!-- Edit Room Modal -->
+<div class="modal-overlay" *ngIf="editRoom">
+  <div class="modal-content">
+    <h2 class="gradient-text">Edit Room: {{ editForm.name }}</h2>
 
-                <!-- Room Photos Section -->
-                <div class="form-group">
-                    <label>Upload Room Photos</label>
-                    <input type="file" multiple (change)="onRoomPhotosSelected($event)" />
-                    <button type="button" class="action-button" style="margin-top: 10px;" (click)="uploadRoomPhotos()">Upload Room Photos</button>
-                </div>
+    <form (ngSubmit)="saveEdit()" name="editRoomForm" #editRoomForm="ngForm" class="modal-form">
 
-                <!-- Display Existing Room Photos -->
-                <div class="photo-grid">
-                    <div class="photo-item" *ngFor="let photo of editForm.photoUrls; let i = index">
-                        <!-- <img src="https://via.placeholder.com/80x80/667eea/ffffff?text=Room" alt="Room photo" /> -->
-                        <img [src]="photo" style="width: 80px; height: 80px; object-fit: cover;" class="rounded border" />
-                        <button type="button" class="photo-remove-btn" (click)="editForm.photoUrls?.splice(i, 1)" >×</button>
-                    </div>
-                    <!-- <div class="photo-item" >
-                        <img src="https://via.placeholder.com/80x80/667eea/ffffff?text=Room" alt="Room photo" />
-                        <button type="button" class="photo-remove-btn">×</button>
-                    </div> -->
-                </div>
+      <!-- Room Info -->
+      <div class="form-group">
+        <label>Name:</label>
+        <input type="text" [(ngModel)]="editForm.name" name="name" required />
+      </div>
 
-                <!-- Beds Section -->
-                <div class="bed-photo-block" *ngFor="let bed of editForm.beds; let i = index" >
-                    <h5>Bed {{ i + 1 }}</h5>
-                    <input type="file" multiple multiple (change)="onBedPhotoFilesChange($event, i)"/>
-                    <button type="button" class="action-button" style="margin-top: 10px;" (click)="uploadBedPhotos(i)">Upload Bed Photos</button>
-                    <div class="photo-grid">
-                        <div class="photo-item" *ngFor="let photo of bed.bedPhotos; let j = index">
-                            <!-- <img src="https://via.placeholder.com/80x80/28a745/ffffff?text=Bed" alt="Bed photo" /> -->
-                            <img [src]="photo" style="width: 80px; height: 80px; object-fit: cover;" class="rounded border" />
-                            <button type="button" class="photo-remove-btn" (click)="editForm.beds?.[i]?.bedPhotos?.splice(j, 1)">×</button>
-                        </div>
-                    </div>
-                </div>
+      <div class="form-group">
+        <label>Type:</label>
+        <input type="text" [(ngModel)]="editForm.type" name="type" />
+      </div>
 
-                <div class="form-group">
-                    <label>Bed Details:</label>
-                    <div class="bed-edit-block" *ngFor="let bed of editForm.beds; let i = index">
-                        <div class="bed-fields">
-                            <div class="form-group">
-				<input type="hidden" [(ngModel)]="bed.id" name="bedId{{i}}" />
-                                <label>Label:</label>
-                                <input
-                            type="text"
-                            [(ngModel)]="bed.label"
-                            name="bedLabel{{i}}"
-                            placeholder="Label"
-                            required
-                        />
-                            </div>
-                            <div class="form-group">
-                                <label>Type:</label>
-                                <input
-                            type="text"
-                            [(ngModel)]="bed.type"
-                            name="bedType{{i}}"
-                            placeholder="Type"
-                        />
-                            </div>
-                            <div class="form-group">
-                                <label>Price:</label>
-                                <input
-                            type="number"
-                            [(ngModel)]="bed.price"
-                            name="bedPrice{{i}}"
-                            placeholder="Price"
-                            min="0"
-                        />
-                            </div>
-                            <div class="bed-available-label">
-                                <input
-                                type="checkbox"
-                                [(ngModel)]="bed.isAvailable"
-                                name="bedAvailable{{i}}"
-                            />
-                                <label>Available</label>
-                            </div>
-                            <button type="button" class="remove-bed-btn" (click)="removeBed(i)" title="Remove Bed">Delete</button>
-                        </div>
-                    </div>
-                    
-                    <button type="button" class="add-bed-btn" (click)="addBed()">➕ Add Bed</button>
-                </div>
+      <div class="form-group">
+        <label>Price:</label>
+        <input type="number" [(ngModel)]="editForm.pricePerNight" name="pricePerNight" min="0" />
+      </div>
 
-                <div class="checkbox-group">
-                    <input type="checkbox" [(ngModel)]="editForm.isBookableAsWhole" name="isBookableAsWhole" id="bookableAsWhole" />
-                    <label for="bookableAsWhole">Bookable as Whole</label>
-                </div>
-                <div class="checkbox-group">
-                    <input type="checkbox" [(ngModel)]="editForm.isActive" name="isActive" id="isActive" />
-                    <label for="isActive">Active</label>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="submit" class="action-button save">
-                        💾 Save
-                    </button>
-                    <button type="button" class="action-button cancel" (click)="cancelEdit()">
-                        ✖ Cancel
-                    </button>
-                </div>
-            </form>
+      <div class="form-group">
+        <label>Guests:</label>
+        <input type="number" [(ngModel)]="editForm.maxGuests" name="maxGuests" min="1" />
+      </div>
+
+      <!-- Room Photos -->
+      <div class="form-group">
+        <label>Upload Room Photos</label>
+        <input type="file" multiple (change)="onRoomPhotosSelected($event)" />
+        <button type="button" class="action-button" (click)="uploadRoomPhotos()">Upload Room Photos</button>
+      </div>
+
+      <div class="photo-grid">
+        <div class="photo-item" *ngFor="let photo of editForm.photoUrls; let i = index">
+          <img [src]="photo" style="width: 80px; height: 80px; object-fit: cover;" class="rounded border" />
+          <button type="button" class="photo-remove-btn" (click)="editForm.photoUrls?.splice(i, 1)">×</button>
         </div>
-    </div>
+      </div>
+
+      <!-- Beds Section -->
+      <div *ngFor="let bed of editForm.beds; let i = index" class="bed-photo-block">
+        <h5>Bed {{ i + 1 }}</h5>
+        <input type="file" multiple (change)="onBedPhotoFilesChange($event, i)" />
+        <button type="button" class="action-button" (click)="uploadBedPhotos(i)">Upload Bed Photos</button>
+
+        <div class="photo-grid">
+          <div class="photo-item" *ngFor="let photo of bed.bedPhotos; let j = index">
+            <img [src]="photo" class="rounded border" style="width: 80px; height: 80px; object-fit: cover;" />
+            <button type="button" class="photo-remove-btn" (click)="editForm.beds?.[i]?.bedPhotos?.splice(j, 1)">×</button>
+          </div>
+        </div>
+
+        <!-- Bed Details -->
+        <div class="form-group">
+          <input type="hidden" [(ngModel)]="bed.id" name="bedId{{ i }}" />
+          <label>Label:</label>
+          <input type="text" [(ngModel)]="bed.label" name="bedLabel{{ i }}" required />
+        </div>
+
+        <div class="form-group">
+          <label>Type:</label>
+          <input type="text" [(ngModel)]="bed.type" name="bedType{{ i }}" />
+        </div>
+
+        <div class="form-group">
+          <label>Price:</label>
+          <input type="number" [(ngModel)]="bed.price" name="bedPrice{{ i }}" min="0" />
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" [(ngModel)]="bed.isAvailable" name="bedAvailable{{ i }}" />
+          <label>Available</label>
+        </div>
+
+        <button type="button" class="remove-bed-btn" (click)="removeBed(i)">Delete Bed</button>
+      </div>
+
+      <!-- Add Bed -->
+      <button type="button" class="add-bed-btn" (click)="addBed()">➕ Add Bed</button>
+
+      <!-- Room Checkboxes -->
+      <div class="checkbox-group">
+        <input type="checkbox" [(ngModel)]="editForm.isBookableAsWhole" name="isBookableAsWhole" />
+        <label>Bookable as Whole</label>
+      </div>
+
+      <div class="checkbox-group">
+        <input type="checkbox" [(ngModel)]="editForm.isActive" name="isActive" />
+        <label>Active</label>
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button type="submit" class="action-button save">💾 Save</button>
+        <button type="button" class="action-button cancel" (click)="cancelEdit()">✖ Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>

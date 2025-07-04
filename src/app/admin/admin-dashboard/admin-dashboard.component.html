@@ -1,11 +1,22 @@
 
+<!-- <button #refreshButton class="refresh-btn" (click)="handleRefresh()">
+    <span>🔄</span>
+    <span>Refresh</span>
+</button> -->
 
 <div class="dashboard-container">
     <div class="dashboard-header">
         <h2>Your Dashboard</h2>
-        <button #refreshButton class="refresh-btn" (click)="handleRefresh()">
-            <span>🔄</span>
-            <span>Refresh</span>
+        <button 
+          class="refresh-button" 
+          (click)="loadDashboard()" 
+          [disabled]="isLoading"
+          [class.loading]="isLoading">
+          <svg class="refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M3 2v6h6M21 12a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 8"></path>
+            <path d="M21 22v-6h-6M3 12a9 9 0 0 0 9 9 9 9 0 0 0 6-2.3l3 2.3"></path>
+          </svg>
+          {{ isLoading ? 'Loading...' : 'Refresh' }}
         </button>
     </div>
 
@@ -50,56 +61,14 @@
             </div>
         </div>
 
-        <div class="card stat-card">
+        <!-- <div class="card stat-card">
             <div class="icon"><i class="fas fa-envelope" style="color: #0a7298;"></i></div>
             <div class="stat-content">
                 <div class="stat-title">Unread Messages</div>
                 <div class="stat-value">{{ summary?.unreadMessages }}</div>
             </div>
-        </div>  
+        </div>   -->
     </div>
-
-
-      <!-- Signups Section -->
-  <div class="activity-section">
-    <h3>Recent Signups</h3>
-    <ul class="activity-list">
-      <li *ngFor="let log of paginatedSignupLogs">
-        <div class="activity-item"><strong>{{ log.activityType }}:</strong> {{ log.description }}</div>
-        <div class="timestamp">{{ log.timestamp | date:'yyyy/MM/dd' }}</div>
-      </li>
-    </ul>
-    
-    <!-- Pagination for Signups -->
-    <div class="pagination-container" *ngIf="signupLogs && signupLogs.length > signupItemsPerPage">
-      <button 
-        class="pagination-btn" 
-        [disabled]="signupCurrentPage === 1"
-        (click)="changeSignupPage(signupCurrentPage - 1)">
-        ← Previous
-      </button>
-      
-      <div class="pagination-info">
-        <span class="page-numbers">
-          <button 
-            *ngFor="let page of getSignupPageNumbers()"
-            class="page-btn"
-            [class.active]="page === signupCurrentPage"
-            (click)="changeSignupPage(page)">
-            {{ page }}
-          </button>
-        </span>
-      </div>
-      
-      <button 
-        class="pagination-btn" 
-        [disabled]="signupCurrentPage === signupTotalPages"
-        (click)="changeSignupPage(signupCurrentPage + 1)">
-        Next →
-      </button>
-    </div>
-  </div>
-<br/>
   <!-- Listings Section -->
   <div class="activity-section">
     <h3>Recent Listings</h3>
@@ -140,27 +109,30 @@
     </div>
   </div>
 
-<!-- <div class="chart-row">
+<div class="chart-row">
   <div class="chart-box">
     <h4>Listing Status Overview</h4>
-    <canvas baseChart
-            [type]="'bar'"
-            [data]="barChartData"
-            [options]="barChartOptions">
-    </canvas>
+        <canvas baseChart
+        #barChart
+        [data]="barChartData"
+        [type]="barChartType"
+        [options]="barChartOptions">
+</canvas>
   </div>
 
   <div class="chart-box">
     <h4>User Distribution</h4>
+
+
     <canvas baseChart
-            [type]="'pie'"
+            #pieChart
             [data]="pieChartData"
+            [type]="pieChartType"
             [options]="pieChartOptions">
     </canvas>
+
   </div>
-</div> -->
-
-
+</div>
 
 </div>
 

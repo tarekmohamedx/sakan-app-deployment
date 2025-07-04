@@ -1,46 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../features/auth/services/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { LoginComponent } from '../features/auth/components/login/login.component';
-import { CommonModule } from '@angular/common';
-import { runInThisContext } from 'vm';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, CommonModule],
+  imports: [RouterLink, RouterLinkActive],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
-export class HeaderComponent implements OnInit {
-  user: { name: string; email: string; id: string; role: string } | null = null;
-  isuserloggedin!: boolean; 
-  constructor(private dialog: MatDialog, private authservice: AuthService) {}
-
-  ngOnInit(): void {
-    // Subscribe to login changes (if using BehaviorSubject)
-    this.authservice.currentUser$.subscribe((data) => {
-      this.user = data;
-    });
-    this.authservice.getauthsubject().subscribe((isLoggedIn) => {
-      this.isuserloggedin = isLoggedIn; 
-      console.log('is user logged in:', this.isuserloggedin);
-    });
-  }
+export class HeaderComponent {
+  constructor(private dialog: MatDialog) {}
 
   openLoginDialog() {
     this.dialog.open(LoginComponent, {
       width: '100%',
       maxWidth: '400px',
-      panelClass: 'custom-dialog-container',
+      panelClass: 'custom-dialog-container', // This matches our global class
       backdropClass: 'cdk-overlay-dark-backdrop',
-      disableClose: true,
+      disableClose: true, // Optional - prevents closing by clicking outside
     });
-  }
-
-  logout() {
-    this.authservice.logout();
-   // this.user = null;
   }
 }

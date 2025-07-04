@@ -1,25 +1,20 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Register } from '../../../core/models/register';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { env } from 'process';
 import { environment } from '../../../environments/environment';
 import { Login } from '../../../core/models/Login';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { Jwtpayloadd } from '../../../core/models/Jwtpayload';
-import { Route } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
-
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private currentUserSubject = new BehaviorSubject<any>(this.getuserdata());
-  private authsubject = new BehaviorSubject<boolean>(this.isLoggedIn());
-  public currentUser$ = this.currentUserSubject.asObservable();
-  constructor(private readonly httpclient: HttpClient, private route: Router) {}
+  constructor(private readonly httpclient: HttpClient) {}
+  private isLoggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
+  public isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
   // generation register & Login services
 
@@ -37,10 +32,6 @@ export class AuthService {
     window.location.href = `${environment.googleAuthUrl}?returnUrl=${environment.googleCallbackUrl}`;
   }
 
-  getauthsubject(): BehaviorSubject<boolean> {
-    return this.authsubject;
-  }
-
   handleGoogleCallback() {
     // This would be called after returning from Google
     const returnUrl = localStorage.getItem('preAuthRoute') || '/';
@@ -55,29 +46,6 @@ export class AuthService {
     window.location.href = `${environment.apiurlauth}/externallogin/google`;
   }
 
-  // islogging
-  isLoggedIn(): boolean {
-    const token = sessionStorage.getItem('token');
-    if (!token) return false;
-
-    const decoded: JwtPayload = jwtDecode(token);
-    const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
-
-    // Check if the token is expired
-    return decoded.exp ? decoded.exp > currentTime : true;
-  }
-  notifyLogin() {
-    const user = this.getuserdata();
-    this.currentUserSubject.next(user);
-  }
-  logout(): void {
-    sessionStorage.removeItem('token');
-    //this.user = null;
-    this.currentUserSubject.next(null); // Notify logout
-    this.authsubject.next(false); // Notify login status
-
-    this.route.navigateByUrl('/home');
-  }
   getuserdata(): {
     name: string;
     email: string;
@@ -133,5 +101,25 @@ export class AuthService {
       decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
 
     return role;
+  }
+
+  // Call this after login success
+
+  private hasToken(): boolean {
+    return !!sessionStorage.getItem('token');
+  }
+
+  setLogin(token: string): void {
+    sessionStorage.setItem('token', token);
+    this.isLoggedInSubject.next(true);
+  }
+
+  logout(): void {
+    sessionStorage.removeItem('token');
+    this.isLoggedInSubject.next(false);
+  }
+
+  checkLogin(): void {
+    this.isLoggedInSubject.next(this.hasToken());
   }
 }

@@ -1,12 +1,21 @@
 <div class="listing-container">
   
-  <h1 i18n>{{ listing.title }}</h1>
+  <h1>{{ listing.title }}</h1>
   <div class="gallery">
-  <img [src]="listing.photos[0]" class="main-photo" alt="Main" />
+  <img [src]="listing.photos[0]" class="main-photo" alt="Main" (click)="openImageModal(listing.photos[0])" />
   <div class="thumbs">
-    <img *ngFor="let photo of listing.photos.slice(1, 5)" [src]="photo" class="thumb" />
+    <img *ngFor="let photo of listing.photos.slice(1, 5)" [src]="photo" class="thumb" (click)="openImageModal(photo)" alt="listing image"/>
   </div>
   </div>
+
+  <!-- Image Popup Modal -->
+  <div class="modal-overlay" *ngIf="selectedImage" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <img [src]="selectedImage" alt="Full size" class="modal-image" />
+      <button class="close-btn" (click)="closeModal()">×</button>
+    </div>
+  </div>
+
 
   <div class="details-layout">
   <!-- Left section -->
