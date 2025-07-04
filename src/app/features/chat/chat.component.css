@@ -237,3 +237,14 @@
   background-color: #bee3f8;
   color: #2b6cb0;
 }
+
+
+.listing-link {
+  color: #2c5ca4;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.listing-link:hover {
+  text-decoration: underline;
+}
