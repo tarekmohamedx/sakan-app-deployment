@@ -304,7 +304,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   getListingTitle(chat: ChatDto): string {
     if (!chat.lastMessage) return 'Unknown';
 
-    return chat.ListingTitle || 'No messages yet';
+    return chat.listingTitle || 'No messages yet';
   }
 
   getUserName(chat: ChatDto): string {

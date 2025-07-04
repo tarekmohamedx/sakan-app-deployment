@@ -22,7 +22,12 @@
           <div class="chat-item-content">
             <i class="fas fa-home"></i>
             <div class="chat-item-details">
-              <h5>{{ getUserName(chat) }}</h5>
+              <div class="chat-header-row">
+                <h5 class="chat-username">{{ getUserName(chat) }}</h5>
+                <span class="status-badge" [ngClass]="chat.listingStatus?.toLowerCase()">
+                  {{ chat.listingStatus }}
+                </span>
+              </div>
               <p class="lead">{{ getLatestMessage(chat) }}</p>
             </div>
           </div>
