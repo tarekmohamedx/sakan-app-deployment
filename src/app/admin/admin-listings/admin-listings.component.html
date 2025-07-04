@@ -1,8 +1,16 @@
 <div class="admin-listing-container">
   <h2>All Listings</h2>
 
-  <input [(ngModel)]="searchTerm" placeholder="Search listings..." (input)="onSearch()" />
-
+  <div class="search-bar-container">
+    <input
+        type="text"
+        class="search-input"
+        placeholder="🔍 Search listings by title..."
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+    />
+    <button class="clear-btn" *ngIf="searchTerm" (click)="searchTerm=''; onSearch()" title="Clear"> &times; </button>
+  </div>
   <!-- Desktop Table View -->
   <table class="listing-table desktop-only" *ngIf="listings.length > 0">
     <thead>
@@ -31,7 +39,7 @@
           <img *ngIf="listing.previewImage" [src]="listing.previewImage" width="60" />
         </td>
       <td>
-        <button (click)="show(listing.id)" title="View">👁️</button>
+        <button (click)="show(listing.id)" title="View">👁</button>
         <button (click)="update(listing.id)" title="Update">✏️</button>
         <button (click)="delete(listing.id)" title="Delete">🗑️</button>
       </td>
@@ -69,7 +77,7 @@
       </div>
       
       <div class="listing-card-actions">
-        <button (click)="show(listing.id)" title="View">👁️</button>
+        <button (click)="show(listing.id)" title="View">👁</button>
         <button (click)="update(listing.id)" title="Update">✏️</button>
         <button (click)="delete(listing.id)" title="Delete">🗑️</button>
       </div>
