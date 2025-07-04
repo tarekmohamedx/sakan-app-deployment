@@ -23,6 +23,7 @@ import { HostUserReviewsComponent } from './host/host-user-reviews/host-user-rev
 import { HostMyReviewsComponent } from './host/host-my-reviews/host-my-reviews.component';
 import { BookingRequestsComponent } from './host/booking-requests/booking-requests.component';
 import { LayoutComponent } from './admin/layout/layout.component';
+import { AdminListingsComponent } from './admin/listing/listings.component';
 export const routes: Routes = [
   {path  : '', redirectTo: 'host', pathMatch: 'full' },
   { path: 'register', component: RegisterComponent },
@@ -43,7 +44,10 @@ export const routes: Routes = [
     { path: 'myReviews', component: HostMyReviewsComponent },
   ]},
 
-  { path: 'admin', component: LayoutComponent},
+  { path: 'admin', component: LayoutComponent, children: [
+    {path : '', redirectTo: 'listings', pathMatch: 'full' },
+    { path: 'listings', component: AdminListingsComponent },
+  ]},
   { path: '**', component: NotfoundComponent },
   { path: 'signin-google', component: CallbackComponent },
 ];

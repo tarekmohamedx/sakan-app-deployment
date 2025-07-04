@@ -1,0 +1,59 @@
+<div class="host-dashboard-container">
+  <h1 class="dashboard-title">All Listings</h1>
+  <p class="dashboard-subtitle">Approve Property Listings</p>
+
+  <div class="table-container">
+    <div class="search-bar-container">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="🔍 Search listings by title..."
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()" />
+      <button class="clear-btn" *ngIf="searchTerm" (click)="searchTerm=''; onSearch()" title="Clear">&times;</button>
+    </div>
+
+    <div class="responsive-table-wrapper">
+      <table class="listing-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Host</th>
+            <th>Created At</th>
+            <th>Price / Month</th>
+            <th>Image</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let listing of listings">
+            <td data-label="Title">{{ listing.title }}</td>
+            <td data-label="Host">{{ listing.hostName }}</td>
+            <td data-label="Created At">{{ listing.createdAt | date: 'yyyy-MM-dd HH:mm' : undefined : 'en-US' }}</td>
+            <td data-label="Price">{{ listing.pricePerMonth | currency: 'EGP' }}</td>
+            <td data-label="Image">
+              <img [src]="listing.photoUrl" class="preview-img" alt="listing image" style="width: 100px; height: auto;" />
+            </td>
+            <td data-label="Actions">
+              <button class="action-button approve" (click)="approveListing(listing.id)" title="Approve Listing">Approve</button>
+              <button class="action-button reject" (click)="rejectListing(listing.id)" title="Reject Listing">Reject</button>
+              <button class="action-button" (click)="viewListing(listing.id)" title="View Listing">👁️</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination-controls">
+      <button class="pagination-btn" (click)="prevPage()" [disabled]="page === 1">
+        <span>&laquo;</span>
+      </button>
+      <span class="pagination-info">
+        <strong>{{ page }}</strong> of <strong>{{ totalPages }}</strong>
+      </span>
+      <button class="pagination-btn" (click)="nextPage()" [disabled]="page * pageSize >= totalCount">
+        <span>&raquo;</span>
+      </button>
+    </div>
+  </div>
+</div>
