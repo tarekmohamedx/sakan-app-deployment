@@ -22,25 +22,45 @@ export class LoginComponent {
   apiError: string = '';
   constructor(private loginservice: AuthService, private router: Router) {}
 
-  onSubmit(registerForm: any) {
-    if (registerForm.valid) {
-      this.loginservice.Login(this.model).subscribe({
-        next: (response) => {
-          console.log('Login successful', response);
-          // Navigate to home page after successful login
-          sessionStorage.setItem('token', response.token);
-          console.log('Token saved to sessionStorage:', response.token);
+  // onSubmit(registerForm: any) {
+  //   if (registerForm.valid) {
+  //     this.loginservice.Login(this.model).subscribe({
+  //       next: (response) => {
+  //         console.log('Login successful', response);
+  //         // Navigate to home page after successful login
+  //         sessionStorage.setItem('token', response.token);
+  //         console.log('Token saved to sessionStorage:', response.token);
 
-          this.router.navigateByUrl('home');
-        },
-        error: (error) => {
-          console.error('Login failed', error);
-          // Handle error, show message to user, etc.
-          this.apiError = error.error?.message;
-        },
-      });
-    }
+  //         this.router.navigateByUrl('home');
+  //       },
+  //       error: (error) => {
+  //         console.error('Login failed', error);
+  //         // Handle error, show message to user, etc.
+  //         this.apiError = error.error?.message;
+  //       },
+  //     });
+  //   }
+  // }
+
+  onSubmit(registerForm: any) {
+  if (registerForm.valid) {
+    this.loginservice.Login(this.model).subscribe({
+      next: (response) => {
+        console.log('Login successful', response);
+        // ✅ Save token and notify login
+        this.loginservice.setLogin(response.token);
+        console.log('Token saved to sessionStorage:', response.token);
+        // ✅ Navigate to home
+        this.router.navigateByUrl('home');
+      },
+      error: (error) => {
+        console.error('Login failed', error);
+        this.apiError = error.error?.message;
+      },
+    });
   }
+}
+
   externalLogin() {
     this.loginservice.initiateGoogleLogin();
 

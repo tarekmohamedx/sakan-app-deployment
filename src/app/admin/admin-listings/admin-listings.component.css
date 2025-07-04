@@ -44,7 +44,7 @@
 }
 
 .listing-table thead {
-  background: #34495e;
+  background: #0a7298;
   color: white;
 }
 
@@ -124,10 +124,10 @@
 }
 
 .pagination button {
-  padding: 0.75rem 1.5rem;
-  border: 2px solid #3498db;
-  background: white;
-  color: #3498db;
+  padding: 0.3rem 0.5rem;
+  border: 2px solidrgb(128, 141, 150);
+  background:rgba(145, 138, 138, 0.4);
+  color:rgb(44, 45, 46);
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
@@ -135,7 +135,7 @@
 }
 
 .pagination button:hover:not(:disabled) {
-  background: #3498db;
+  background:rgb(163, 174, 182);
   color: white;
   transform: translateY(-2px);
 }

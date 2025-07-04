@@ -1,4 +1,4 @@
-.listing-container {
+/* .listing-container {
   padding: 2.5rem 1.5rem;
   max-width: 1100px;
   margin: 2rem auto;
@@ -6,6 +6,23 @@
   background: linear-gradient(120deg, #f6fafd 60%, #e3eaf6 100%);
   border-radius: 18px;
   box-shadow: 0 8px 32px rgba(60, 120, 200, 0.08);
+} */
+
+.listing-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  line-height: 1.6;
+  color: #333;
+}
+
+.listing-container h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #2c3e50;
+  text-align: center;
 }
 
 .gallery {
@@ -22,7 +39,54 @@
   min-width: 260px;
   box-shadow: 0 4px 18px rgba(80, 120, 180, 0.13);
   border: 2px solid #e3eaf6;
+  cursor: pointer;
 }
+
+.image-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+
+.modal-image {
+  width: 90%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.close-btn {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: white;
+  color: black;
+  border: none;
+  font-size: 1.5rem;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0.25rem 0.6rem;
+}
+
+
 
 .thumbs {
   display: grid;
@@ -30,6 +94,7 @@
   gap: 0.7rem;
   width: 30%;
   min-width: 160px;
+  cursor: pointer;
 }
 
 .thumb {
@@ -45,19 +110,141 @@
   box-shadow: 0 2px 8px rgba(80, 120, 180, 0.13);
 }
 
+/* .details-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  margin-block: 2.5rem;
+  align-items: start;
+  padding-inline: 1rem;
+}
+
+@media (max-width: 1024px) {
+  .details-layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-block: 2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .details-layout {
+    padding-inline: 0.5rem;
+    gap: 1rem;
+  }
+} */
+
+
 .details-layout {
-  display: flex;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
   gap: 2.5rem;
-  margin-top: 2.5rem;
+  margin-block: 2.5rem;
+  align-items: start;
+  padding-inline: 1rem;
+}
+
+@media (max-width: 1024px) {
+  .details-layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-block: 2rem;
+    padding-inline: 0.5rem;
+  }
+}
+
+/* Description Section */
+.description {
+  background: #f7fafd;
+  border-radius: 14px;
+  padding: 1.7rem 1.3rem;
+  box-shadow: 0 2px 8px rgba(80, 120, 180, 0.07);
+  margin-bottom: 1.5rem;
+}
+
+.description h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #31456e;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.description h2::before {
+  content: '📍';
+  font-size: 1.3rem;
+  margin-right: 0.4rem;
+}
+
+.icons {
+  display: flex;
+  gap: 1.2rem;
+  margin-bottom: 1.1rem;
   flex-wrap: wrap;
 }
 
-.description {
-  flex: 2;
+.icons span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #e6ecf5;
+  color: #31456e;
+  border-radius: 8px;
+  padding: 0.4rem 0.8rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.host-summary {
+  display: flex;
+  align-items: center;
   font-size: 1.08rem;
-  color: #2d3748;
+  margin-top: 1.2rem;
+  background: #f5f8fa;
+  border-radius: 10px;
+  padding: 0.9rem 1.1rem;
+  box-shadow: 0 2px 8px rgba(80, 120, 180, 0.05);
+}
+
+.avatar-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: #31456e;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  font-size: 20px;
+  margin-right: 12px;
+}
+
+.host-summary h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #091c46;
+  margin: 0 0 0 0.5rem;
+}
+
+.description h3 {
+  font-size: 1.13rem;
+  font-weight: 600;
+  color: #31456e;
+  margin-bottom: 0.7rem;
+}
+
+.description p {
+  color: #4b5563;
+  font-size: 1.05rem;
+  margin-bottom: 0.7rem;
   line-height: 1.7;
 }
+
+
 
 /* ------------------------------------------- booking styles ------------------------------------------- */
 
@@ -357,42 +544,3 @@ hr{
   text-align: left;
 }
 
-
-
-/* .host-section {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-  margin-top: 1.5rem;
-}
-
-.host-card {
-  flex: 1;
-  max-width: 250px;
-  background: #fafafa;
-  padding: 1rem;
-  border-radius: 10px;
-  text-align: center;
-}
-
-.host-card img {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 50%;
-  margin-bottom: 0.5rem;
-}
-
-.host-details {
-  flex: 2;
-}
-
-.message-button {
-  margin-top: 1rem;
-  padding: 0.6rem 1rem;
-  background-color: #84a8c9;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-} */
