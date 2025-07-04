@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { HostRoomService } from '../services/HostRoom.service';
 import { HostRoomDto } from '../../core/models/room-details.model';
 import { HttpClient } from '@angular/common/http';
@@ -25,6 +25,9 @@ export class HostRoomsComponent implements OnInit {
   searchTerm: string = '';
   roomPhotoFiles: File[][] = [];
   bedPhotoFiles: { [index: number]: File[] } = {};
+// @ViewChild('editRoomForm') editFormRef!: NgForm;
+@ViewChild('editRoomForm', { static: false }) editFormRef!: NgForm;
+
 
   constructor(
     private route: ActivatedRoute,
@@ -164,6 +167,10 @@ uploadRoomPhotos(): void {
       beds: room.beds.map(b => ({ ...b, bedPhotos: [...(b.bedPhotos || [])] }))
     };
 
+    setTimeout(() => {
+    console.log('Form reference after view init:', this.editFormRef);
+  });
+
   }
   
 
@@ -172,18 +179,21 @@ uploadRoomPhotos(): void {
     this.editForm = {};
   }
 
-  saveEdit(): void {
-    if (!this.editRoom) return;
+saveEdit(): void {
+  console.log('✅ Submitting room update:', this.editForm);
 
-    this.roomService.updateRoom(this.editRoom.id, this.editForm).subscribe({
-      next: () => {
-        this.toastr.success('Room updated successfully');
-        this.editRoom = null;
-        this.loadRooms();
-      },
-      error: () => this.toastr.error('Failed to update room')
-    });
-  }
+  if (!this.editRoom) return;
+
+  this.roomService.updateRoom(this.editRoom.id, this.editForm).subscribe({
+    next: () => {
+      this.toastr.success('Room updated successfully');
+      this.editRoom = null;
+      this.loadRooms();
+    },
+    error: () => this.toastr.error('Failed to update room')
+  });
+}
+
 }
 
 

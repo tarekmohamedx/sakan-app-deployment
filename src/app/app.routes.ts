@@ -50,6 +50,7 @@ export const routes: Routes = [
     { path: 'booking', component: HostBookingComponent },
     { path: 'reviews', component: HostUserReviewsComponent },
     { path: 'myReviews', component: HostMyReviewsComponent },
+    { path: 'requests', component: BookingRequestsComponent },
   ]},
 
   { path: 'admin', component: LayoutComponent,  children:[

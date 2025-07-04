@@ -18,6 +18,8 @@ export class HostMyReviewsComponent implements OnInit {
   editingReviewId: number | null = null;
   rating = 0;
   comment = '';
+  currentPage = 1;
+  pageSize = 5;
 
   constructor(
     private reviewService: HostReviewService,
@@ -28,12 +30,28 @@ export class HostMyReviewsComponent implements OnInit {
     this.loadReviews();
   }
 
-  loadReviews(): void {
-    this.reviewService.getmyReviews().subscribe({
-      next: res => this.reviews = res,
-      error: () => this.toastr.error('Failed to load reviews')
-    });
-  }
+//   loadReviews(): void {
+//     console.log('Total reviews:', this.reviews.length);
+// console.log('Page size:', this.pageSize);
+// console.log('Total pages:', this.totalPages);
+
+//     this.reviewService.getmyReviews().subscribe({
+//       next: res => this.reviews = res,
+//       error: () => this.toastr.error('Failed to load reviews')
+//     });
+//   }
+
+loadReviews(): void {
+  this.reviewService.getmyReviews().subscribe({
+    next: res => {
+      console.log('Fetched reviews:', res); // <-- add this
+      this.reviews = res;
+      console.log('Total reviews:', this.reviews.length); // Confirm actual count
+    },
+    error: () => this.toastr.error('Failed to load reviews')
+  });
+}
+
 
   //----------------------
 
@@ -70,6 +88,27 @@ submitReview(): void {
     },
     error: () => this.toastr.error('Failed to submit review')
   });
+}
+
+
+
+get totalPages(): number {
+  return Math.ceil(this.reviews.length / this.pageSize);
+}
+
+get paginatedReviews(): UserReview[] {
+  const start = (this.currentPage - 1) * this.pageSize;
+  return this.reviews.slice(start, start + this.pageSize);
+}
+
+changePage(page: number): void {
+  if (page >= 1 && page <= this.totalPages) {
+    this.currentPage = page;
+  }
+}
+
+getPageNumbers(): number[] {
+  return Array.from({ length: this.totalPages }, (_, i) => i + 1);
 }
 
 }

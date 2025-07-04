@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Register } from '../../../core/models/register';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { env } from 'process';
 import { environment } from '../../../environments/environment';
 import { Login } from '../../../core/models/Login';
@@ -13,6 +13,8 @@ import { Jwtpayloadd } from '../../../core/models/Jwtpayload';
 })
 export class AuthService {
   constructor(private readonly httpclient: HttpClient) {}
+  private isLoggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
+  public isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
   // generation register & Login services
 
@@ -102,4 +104,28 @@ export class AuthService {
 
     return role;
   }
+
+
+  // Call this after login success
+
+    private hasToken(): boolean {
+    return !!sessionStorage.getItem('token');
+  }
+  
+  setLogin(token: string): void {
+    sessionStorage.setItem('token', token);
+    this.isLoggedInSubject.next(true);
+  }
+
+  logout(): void {
+    sessionStorage.removeItem('token');
+    this.isLoggedInSubject.next(false);
+  }
+
+  checkLogin(): void {
+    this.isLoggedInSubject.next(this.hasToken());
+  }
+
+
+
 }

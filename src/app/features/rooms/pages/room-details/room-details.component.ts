@@ -178,50 +178,18 @@ get selectedBedIds(): number[] {
   get totalCost(): number {
     return this.room?.beds
       .filter(b => b.selected)
-      .reduce((sum, b) => sum + (b.price || 0), 0) || 0;
+      .reduce((sum, b) => sum + (b.price || 0), 0) || this.room.pricePerNight;
   }
 
-  // Booking
-  // sendBookingRequest(): void {
-  //   const selectedBeds = this.room.beds.filter(bed => bed.selected);
-  //   const guestId = this.listingService.getCurrentUserId();
-  //   if (!this.moveIn || !this.moveOut) {
-  //     alert('Please select check-in and check-out months.');
-  //     return;
-  //   }
-  //   if (selectedBeds.length === 0) {
-  //     // Booking the whole room
-  //     const dto: BookingRequestDto = {
-  //       guestId,
-  //       listingId: this.room.listingId,
-  //       roomId: this.room.id,
-  //       fromDate: new Date(this.moveIn).toISOString(),
-  //       toDate: new Date(this.moveOut).toISOString()
-  //     };
-  //     this.listingService.createRequest(dto).subscribe(res => {
-  //       this.requestSent = true;
-  //       this.hostId = res.hostId;
-  //       alert('Your request has been sent successfully!');
-  //     });
-  //   } else {
-  //     // Booking selected beds individually
-  //     selectedBeds.forEach(bed => {
-  //       const dto: BookingRequestDto = {
-  //         guestId,
-  //         listingId: this.room.listingId,
-  //         roomId: this.room.id,
-  //         bedIds: [bed.id],
-  //         fromDate: new Date(this.moveIn).toISOString(),
-  //         toDate: new Date(this.moveOut).toISOString()
-  //       };
-  //       this.listingService.createRequest(dto).subscribe(res => {
-  //         this.requestSent = true;
-  //         this.hostId = res.hostId;
-  //         alert('Your request has been sent successfully!');
-  //       });
-  //     });
-  //   }
-  // }
+  selectedImage: string | null = null;
+
+  openImageModal(imageUrl: string) {
+    this.selectedImage = imageUrl;
+  }
+
+  closeModal() {
+    this.selectedImage = null;
+  }
 
   sendBookingRequest(): void {
   const selectedBeds = this.room.beds.filter(bed => bed.selected);
@@ -235,7 +203,7 @@ get selectedBedIds(): number[] {
   if (selectedBeds.length === 0) {
     // Booking the whole room (send all beds in room)
     const dto: BookingRequestDto = {
-      guestId,
+      guestId: guestId!,
       listingId: this.room.listingId,
       roomId: this.room.id,
       bedIds: this.room.beds.map(b => b.id).filter(id => id !== null) as number[],
@@ -251,7 +219,7 @@ get selectedBedIds(): number[] {
   } else {
     // Booking selected beds in this room
     const dto: BookingRequestDto = {
-      guestId,
+      guestId: guestId!,
       listingId: this.room.listingId,
       roomId: this.room.id,
       bedIds: selectedBeds.map(b => b.id as number),
