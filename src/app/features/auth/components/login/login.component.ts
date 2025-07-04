@@ -31,7 +31,7 @@ export class LoginComponent {
           sessionStorage.setItem('token', response.token);
           console.log('Token saved to sessionStorage:', response.token);
 
-          this.router.navigateByUrl('hometest');
+          this.router.navigateByUrl('home');
         },
         error: (error) => {
           console.error('Login failed', error);
@@ -44,6 +44,6 @@ export class LoginComponent {
   externalLogin() {
     this.loginservice.initiateGoogleLogin();
 
-    this.router.navigateByUrl('hometest');
+    this.router.navigateByUrl('home');
   }
 }

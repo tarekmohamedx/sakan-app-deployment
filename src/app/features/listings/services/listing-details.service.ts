@@ -29,4 +29,16 @@ export class ListingDetailsService {
     return 'bdb1afd1-897a-46ef-8773-ff28354135b5'; // Replace with real auth logic
   }
 
+  getCurrentUserName(): string {
+  const token = sessionStorage.getItem('token'); // or localStorage
+  if (!token) return '';
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.name || ''; // or 'unique_name' based on your claim structure
+  } catch {
+    return '';
+  }
+}
+
 }

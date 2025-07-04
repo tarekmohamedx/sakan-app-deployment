@@ -6,34 +6,39 @@
         <label class="form-label">Title <span class="text-danger">*</span></label>
         <input formControlName="title" class="form-control" placeholder="Enter listing title" required />
       </div>
+      
       <div class="col-12">
         <label class="form-label">Description <span class="text-danger">*</span></label>
-        <textarea formControlName="description" class="form-control" rows="3" placeholder="Describe your listing" required></textarea>
+        <textarea formControlName="description" class="form-control" rows="4" placeholder="Describe your listing in detail..." required></textarea>
       </div>
+      
       <div class="col-md-6">
         <label class="form-label">Price Per Month <span class="text-danger">*</span></label>
         <div class="input-group">
-          <!-- <span class="input-group-text">EGP</span> -->
           <input type="number" formControlName="pricePerMonth" class="form-control" min="0" placeholder="e.g. 500" required />
         </div>
       </div>
+      
       <div class="col-md-6">
         <label class="form-label">Max Guests <span class="text-danger">*</span></label>
         <input type="number" formControlName="maxGuests" class="form-control" min="1" placeholder="e.g. 4" required />
       </div>
+      
       <div class="col-md-6">
         <label class="form-label">Governorate <span class="text-danger">*</span></label>
         <input formControlName="governorate" class="form-control" placeholder="e.g. Cairo" required />
       </div>
+      
       <div class="col-md-6">
         <label class="form-label">District <span class="text-danger">*</span></label>
         <input formControlName="district" class="form-control" placeholder="e.g. Nasr City" required />
       </div>
-      <div class="col-12 mb-2">
-        <label class="form-label mb-1">Photos</label>
+      
+      <div class="col-12">
+        <label class="form-label">Photos</label>
         <div class="photo-list">
           <div *ngFor="let photo of photoUrls; let i = index" class="photo-item">
-            <img [src]="photo" class="photo-img" alt="Photo" />
+            <img [src]="photo" class="photo-img" alt="Listing photo" />
             <button type="button" class="photo-remove-btn" (click)="removePhoto(i)" title="Remove photo">×</button>
           </div>
         </div>
@@ -43,26 +48,37 @@
             <i class="bi bi-upload"></i> Browse Photos
           </label>
         </div>
-        <small class="text-muted">JPG, PNG, JPEG. You can select multiple images.</small>
+        <small class="text-muted">JPG, PNG, JPEG formats accepted. You can select multiple images at once.</small>
         <div *ngIf="selectedFiles.length > 0" class="selected-files-alert">
-          <span>{{ selectedFiles.length }} file(s) selected</span>
-          <button type="button" class="btn btn-sm btn-primary" (click)="uploadSelectedPhotos()">Upload</button>
+          <span>{{ selectedFiles.length }} file(s) selected for upload</span>
+          <button type="button" class="btn btn-sm btn-primary" (click)="uploadSelectedPhotos()">
+            Upload Photos
+          </button>
         </div>
       </div>
-      <div class="col-md-6 mt-2">
+      
+      <div class="col-md-6">
         <div class="form-check form-switch">
           <input type="checkbox" formControlName="isBookableAsWhole" class="form-check-input" id="bookableWhole" />
-          <label class="form-check-label" for="bookableWhole">Bookable as Whole</label>
+          <label class="form-check-label" for="bookableWhole">
+            Available for Whole Booking
+          </label>
         </div>
       </div>
-      <div class="col-md-6 mt-2">
+      
+      <div class="col-md-6">
         <div class="form-check form-switch">
           <input type="checkbox" formControlName="isActive" class="form-check-input" id="isActive" />
-          <span class="form-check-label" for="isActive">Is Active</span>
+          <label class="form-check-label" for="isActive">
+            Active Listing
+          </label>
         </div>
       </div>
-      <div class="col-12 mt-3">
-        <button type="submit" class="submit-btn">Update Listing</button>
+      
+      <div class="col-12">
+        <button type="submit" class="submit-btn" [disabled]="listingForm.invalid">
+          <span>Update Listing</span>
+        </button>
       </div>
     </div>
   </form>

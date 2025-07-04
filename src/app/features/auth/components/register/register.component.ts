@@ -35,7 +35,7 @@ export class RegisterComponent {
           sessionStorage.setItem('token', response.token);
           console.log('Token saved to sessionStorage:', response.token);
           // Navigate to login or home page after successful registration
-          this.router.navigateByUrl('hometest');
+          this.router.navigateByUrl('home');
         },
         error: (error) => {
           console.error('Registration failed', error);

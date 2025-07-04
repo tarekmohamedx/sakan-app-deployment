@@ -1,20 +1,20 @@
 import { Component, OnInit } from '@angular/core';
+import { adminListingService } from '../services/admin-listing.service';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HostListingService } from '../services/HostListing.service';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-edit-host-listings',
+  selector: 'app-admin-editlisting',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, FormsModule],
-  templateUrl: './edit-host-listings.component.html',
-  styleUrl: './edit-host-listings.component.css'
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  templateUrl: './admin-editlisting.component.html',
+  styleUrl: './admin-editlisting.component.css'
 })
-export class EditHostListingComponent implements OnInit {
+export class AdminEditlistingComponent implements OnInit {
   listingForm: FormGroup;
   listingId!: number;
   isLoading = true;
@@ -25,7 +25,7 @@ export class EditHostListingComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private hostListingService: HostListingService,
+    private adminListingService: adminListingService,
     private toastr: ToastrService,
     private http: HttpClient
   ) {
@@ -48,7 +48,7 @@ export class EditHostListingComponent implements OnInit {
   }
 
   loadListing(): void {
-    this.hostListingService.getListingById(this.listingId).subscribe({
+    this.adminListingService.getListingById(this.listingId).subscribe({
       next: (data) => {
         this.photoUrls = data.photoUrls || [];
         this.listingForm.patchValue({ ...data, photoUrls: this.photoUrls });
@@ -56,7 +56,7 @@ export class EditHostListingComponent implements OnInit {
       },
       error: () => {
         this.toastr.error('Failed to load listing.', 'Error');
-        this.router.navigate(['/host/listings']);
+        this.router.navigate(['admin/listings']);
       }
     });
   }
@@ -95,7 +95,7 @@ export class EditHostListingComponent implements OnInit {
 
     this.listingForm.patchValue({ photoUrls: this.photoUrls });
 
-    this.hostListingService.updateListing(this.listingId, this.listingForm.value).subscribe({
+    this.adminListingService.updateListing(this.listingId, this.listingForm.value).subscribe({
       next: () => {
         this.toastr.success('Listing updated ✅');
         this.router.navigate(['/host/listings']);
@@ -103,4 +103,5 @@ export class EditHostListingComponent implements OnInit {
       error: () => this.toastr.error('Failed to update listing ❌')
     });
   }
+
 }
