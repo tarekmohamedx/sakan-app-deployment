@@ -23,7 +23,7 @@ import { HostUserReviewsComponent } from './host/host-user-reviews/host-user-rev
 import { HostMyReviewsComponent } from './host/host-my-reviews/host-my-reviews.component';
 import { BookingRequestsComponent } from './host/booking-requests/booking-requests.component';
 export const routes: Routes = [
-  {path  : '', redirectTo: 'host', pathMatch: 'full' },
+  {path  : '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   { path: 'listing/:id', component:ListingDetailsComponent},

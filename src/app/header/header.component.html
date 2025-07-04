@@ -6,58 +6,53 @@
       type="button"
       data-bs-toggle="collapse"
       data-bs-target="#navbarNavDropdown"
-      aria-controls="navbarNavDropdown"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
     >
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav w-100 align-items-center" style="display: flex">
+        <!-- Static links -->
         <li class="nav-item">
-          <a class="nav-link" routerLink="/home" routerLinkActive="active"
-            >Home</a
-          >
+          <a class="nav-link" routerLink="/home">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/contact" routerLinkActive="active"
-            >Contact Us</a
-          >
+          <a class="nav-link" routerLink="/contact">Contact Us</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/about" routerLinkActive="active"
-            >About Us</a
-          >
+          <a class="nav-link" routerLink="/about">About Us</a>
         </li>
+
         <li class="flex-grow-1"></li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/login" routerLinkActive="active"
-            >Login</a
-          >
-          <!-- <a class="nav-link" (click)="openLoginDialog()">Login</a> -->
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/register" routerLinkActive="active"
-            >Register</a
-          >
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/chat" routerLinkActive="active"
-            >Messages</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            routerLink="/add-apartment"
-            routerLinkActive="active"
-            >add apartment</a
-          >
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="host/listings" routerLinkActive="active"
-            >Listing</a>
-        </li>
+
+        <!-- ✅ LOGGED IN USER -->
+        <ng-container *ngIf="user">
+          <li class="nav-item">
+            <span class="nav-link">👋 Hello, {{ user.name }}</span>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" (click)="logout()">Logout</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/chat">Messages</a>
+          </li>
+          <li class="nav-item" *ngIf="user.role?.toLowerCase() === 'host'">
+            <a class="nav-link" routerLink="/add-apartment">Add Apartment</a>
+          </li>
+          <li class="nav-item" *ngIf="user.role?.toLowerCase() === 'host'">
+            <a class="nav-link" routerLink="/host/listings">Listings</a>
+          </li>
+        </ng-container>
+
+        <!-- ❌ GUEST USER -->
+        <ng-container *ngIf="!user">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/login">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/register">Register</a>
+          </li>
+        </ng-container>
       </ul>
     </div>
   </div>

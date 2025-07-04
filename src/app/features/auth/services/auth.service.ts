@@ -7,12 +7,18 @@ import { environment } from '../../../environments/environment';
 import { Login } from '../../../core/models/Login';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { Jwtpayloadd } from '../../../core/models/Jwtpayload';
+import { Route } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
+
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private readonly httpclient: HttpClient) {}
+  private currentUserSubject = new BehaviorSubject<any>(this.getuserdata());
+  public currentUser$ = this.currentUserSubject.asObservable();
+  constructor(private readonly httpclient: HttpClient, private route: Router) {}
 
   // generation register & Login services
 
@@ -44,6 +50,27 @@ export class AuthService {
     window.location.href = `${environment.apiurlauth}/externallogin/google`;
   }
 
+  // islogging
+  isLoggedIn(): boolean {
+    const token = sessionStorage.getItem('token');
+    if (!token) return false;
+
+    const decoded: JwtPayload = jwtDecode(token);
+    const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+
+    // Check if the token is expired
+    return decoded.exp ? decoded.exp > currentTime : true;
+  }
+  notifyLogin() {
+    const user = this.getuserdata(); 
+    this.currentUserSubject.next(user);  }
+  logout(): void {
+    sessionStorage.removeItem('token');
+    //this.user = null;
+    this.currentUserSubject.next(null); // Notify logout
+
+    this.route.navigateByUrl('/home');
+  }
   getuserdata(): {
     name: string;
     email: string;
@@ -96,9 +123,7 @@ export class AuthService {
 
     const decoded = jwtDecode(token) as { [key: string]: any };
     const role =
-      decoded[
-        'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
-      ];
+      decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
 
     return role;
   }

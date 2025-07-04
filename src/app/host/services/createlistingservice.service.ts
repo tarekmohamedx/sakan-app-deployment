@@ -2,22 +2,26 @@ import { Injectable } from '@angular/core';
 import { CreateListingDTO } from '../../core/models/CreateListingDTO';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../features/auth/services/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CreatelistingserviceService {
+  
   constructor(private http: HttpClient, private authserice: AuthService) {}
 
   createListing(dto: CreateListingDTO): Observable<any> {
-    const hostId = this.authserice.getuserdata()?.id ?? '';
+    const token = sessionStorage.getItem('token'); 
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+    // const hostId = this.authserice.getuserdata()?.id ?? '';
     const formData = this.buildFormData(dto);
-    return this.http.post<any>(
-      `${environment.apiurllisting}/${hostId}`,
-      formData
-    );
+    return this.http.post<any>(`${environment.apiurllisting}`, formData, {
+      headers: headers,
+    });
   }
 
   private buildFormData(dto: CreateListingDTO): FormData {
