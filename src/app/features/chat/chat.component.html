@@ -37,7 +37,9 @@
 
     <div class="chat-main">
       <div *ngIf="selectedChat" class="chat-header">
-        <h2>{{ listingTitle }} - Tarek Mohamed</h2>
+        <h2>
+          {{ selectedChat?.listingTitle || 'Listing' }} - {{ selectedChat?.hostName || 'Host' }}
+        </h2>
         <button class="approve-btn" title="Approve Rent">Approve</button>
       </div>
 
