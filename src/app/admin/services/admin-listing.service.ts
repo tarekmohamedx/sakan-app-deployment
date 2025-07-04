@@ -16,10 +16,9 @@ export class AdminListingService {
 
         );
       }
-
-  approveListing(id: number) {
-    return this.http.post(`${this.baseUrl}/approve/${id}`, {});
-  }
+      approveListing(id: number): Observable<any> {
+        return this.http.post(`${this.baseUrl}/approve/${id}`, null);
+      }
 
   rejectListing(id: number) {
     return this.http.delete(`${this.baseUrl}/reject/${id}`);

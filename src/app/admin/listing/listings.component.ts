@@ -19,7 +19,7 @@ export class AdminListingsComponent implements OnInit {
   page = 1;
   pageSize = 5;
   searchTerm: string = '';
-
+  loadingListingIds: number[] = [];
   constructor(
     private listingService: AdminListingService,
     private router: Router,
@@ -83,21 +83,45 @@ export class AdminListingsComponent implements OnInit {
   // }
 
   approveListing(id: number) {
-    this.listingService.approveListing(id).subscribe(() => {
-      this.toastr.success('Listing approved');
-      this.loadListings();
+    this.loadingListingIds.push(id);
+  
+    this.listingService.approveListing(id).subscribe({
+      next: () => {
+        this.toastr.success('Listing approved');
+        this.listings = this.listings.filter(listing => listing.id !== id);
+      },
+      error: (err) => {
+        this.toastr.error('Approval failed');
+        console.error(err);
+        this.removeFromLoading(id);
+      },
+      complete: () => {
+        this.removeFromLoading(id);
+      }
     });
   }
-  
   rejectListing(id: number) {
-    this.listingService.rejectListing(id).subscribe(() => {
-      this.toastr.warning('Listing rejected');
-      this.loadListings();
+    this.loadingListingIds.push(id);
+  
+    this.listingService.rejectListing(id).subscribe({
+      next: () => {
+        this.toastr.warning('Listing rejected');
+        this.listings = this.listings.filter(listing => listing.id !== id);
+      },
+      error: (err) => {
+        this.toastr.error('Rejection failed');
+        console.error(err);
+        this.removeFromLoading(id);
+      },
+      complete: () => {
+        this.removeFromLoading(id);
+      }
     });
   }
-  
-  
 
+  private removeFromLoading(id: number): void {
+    this.loadingListingIds = this.loadingListingIds.filter(lid => lid !== id);
+  }
   goToRooms(listingId: number): void {
     this.router.navigate(['/host/listings', listingId, 'rooms']);
   }

@@ -35,8 +35,24 @@
               <img [src]="listing.photoUrl" class="preview-img" alt="listing image" style="width: 100px; height: auto;" />
             </td>
             <td data-label="Actions">
-              <button class="action-button approve" (click)="approveListing(listing.id)" title="Approve Listing">Approve</button>
-              <button class="action-button reject" (click)="rejectListing(listing.id)" title="Reject Listing">Reject</button>
+              <button 
+                class="action-button approve" 
+                [disabled]="loadingListingIds.includes(listing.id)"
+                (click)="approveListing(listing.id)" 
+                title="Approve Listing">
+                <span *ngIf="!loadingListingIds.includes(listing.id)">Approve</span>
+                <span *ngIf="loadingListingIds.includes(listing.id)" class="spinner"></span>
+              </button>
+            
+              <button 
+                class="action-button reject" 
+                [disabled]="loadingListingIds.includes(listing.id)"
+                (click)="rejectListing(listing.id)" 
+                title="Reject Listing">
+                <span *ngIf="!loadingListingIds.includes(listing.id)">Reject</span>
+                <span *ngIf="loadingListingIds.includes(listing.id)" class="spinner"></span>
+              </button>
+            
               <button class="action-button" (click)="viewListing(listing.id)" title="View Listing">👁️</button>
             </td>
           </tr>
