@@ -1,0 +1,172 @@
+
+
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h2>Your Dashboard</h2>
+        <button #refreshButton class="refresh-btn" (click)="handleRefresh()">
+            <span>🔄</span>
+            <span>Refresh</span>
+        </button>
+    </div>
+
+    <div class="cards-grid">
+        <div class="card stat-card">
+            <div class="icon"><i class="fas fa-user-tie" style="color: #0a7298;"></i></div>
+            <div class="stat-content">
+                <div class="stat-title">Total Hosts</div>
+                <div class="stat-value">{{ summary?.totalHosts }}</div>
+            </div>
+        </div>
+
+        <div class="card stat-card">
+            <div class="icon"><i class="fas fa-users" style="color: #0a7298;"></i></div>
+            <div class="stat-content">
+                <div class="stat-title">Total Guests</div>
+                <div class="stat-value">{{ summary?.totalGuests }}</div>
+            </div>
+        </div>
+
+        <div class="card stat-card">
+            <div class="icon"><i class="fas fa-home" style="color: #0a7298;"></i></div>
+            <div class="stat-content">
+                <div class="stat-title">Active Listings</div>
+                <div class="stat-value">{{ summary?.activeListings }}</div>
+            </div>
+        </div>
+
+        <div class="card stat-card">
+            <div class="icon"><i class="fas fa-check-circle" style="color: #0a7298;"></i></div>
+            <div class="stat-content">
+                <div class="stat-title">Approved Listings</div>
+                <div class="stat-value">{{ summary?.approvedListings }}</div>
+            </div>
+        </div>
+
+        <div class="card stat-card">
+            <div class="icon"><i class="fas fa-hourglass-half" style="color: #0a7298;"></i></div>
+            <div class="stat-content">
+                <div class="stat-title">Pending Listings</div>
+                <div class="stat-value">{{ summary?.pendingListings }}</div>
+            </div>
+        </div>
+
+        <div class="card stat-card">
+            <div class="icon"><i class="fas fa-envelope" style="color: #0a7298;"></i></div>
+            <div class="stat-content">
+                <div class="stat-title">Unread Messages</div>
+                <div class="stat-value">{{ summary?.unreadMessages }}</div>
+            </div>
+        </div>  
+    </div>
+
+
+      <!-- Signups Section -->
+  <div class="activity-section">
+    <h3>Recent Signups</h3>
+    <ul class="activity-list">
+      <li *ngFor="let log of paginatedSignupLogs">
+        <div class="activity-item"><strong>{{ log.activityType }}:</strong> {{ log.description }}</div>
+        <div class="timestamp">{{ log.timestamp | date:'yyyy/MM/dd' }}</div>
+      </li>
+    </ul>
+    
+    <!-- Pagination for Signups -->
+    <div class="pagination-container" *ngIf="signupLogs && signupLogs.length > signupItemsPerPage">
+      <button 
+        class="pagination-btn" 
+        [disabled]="signupCurrentPage === 1"
+        (click)="changeSignupPage(signupCurrentPage - 1)">
+        ← Previous
+      </button>
+      
+      <div class="pagination-info">
+        <span class="page-numbers">
+          <button 
+            *ngFor="let page of getSignupPageNumbers()"
+            class="page-btn"
+            [class.active]="page === signupCurrentPage"
+            (click)="changeSignupPage(page)">
+            {{ page }}
+          </button>
+        </span>
+      </div>
+      
+      <button 
+        class="pagination-btn" 
+        [disabled]="signupCurrentPage === signupTotalPages"
+        (click)="changeSignupPage(signupCurrentPage + 1)">
+        Next →
+      </button>
+    </div>
+  </div>
+<br/>
+  <!-- Listings Section -->
+  <div class="activity-section">
+    <h3>Recent Listings</h3>
+    <ul class="activity-list">
+      <li *ngFor="let log of paginatedListingLogs">
+        <div class="activity-item"><strong>{{ log.activityType }}:</strong> {{ log.description }}</div>
+        <div class="timestamp">{{ log.timestamp | date:'yyyy/MM/dd' }}</div>
+      </li>
+    </ul>
+    
+    <!-- Pagination for Listings -->
+    <div class="pagination-container" *ngIf="listingLogs && listingLogs.length > listingItemsPerPage">
+      <button 
+        class="pagination-btn" 
+        [disabled]="listingCurrentPage === 1"
+        (click)="changeListingPage(listingCurrentPage - 1)">
+        ← Previous
+      </button>
+      
+      <div class="pagination-info">
+        <span class="page-numbers">
+          <button 
+            *ngFor="let page of getListingPageNumbers()"
+            class="page-btn"
+            [class.active]="page === listingCurrentPage"
+            (click)="changeListingPage(page)">
+            {{ page }}
+          </button>
+        </span>
+      </div>
+      
+      <button 
+        class="pagination-btn" 
+        [disabled]="listingCurrentPage === listingTotalPages"
+        (click)="changeListingPage(listingCurrentPage + 1)">
+        Next →
+      </button>
+    </div>
+  </div>
+
+<!-- <div class="chart-row">
+  <div class="chart-box">
+    <h4>Listing Status Overview</h4>
+    <canvas baseChart
+            [type]="'bar'"
+            [data]="barChartData"
+            [options]="barChartOptions">
+    </canvas>
+  </div>
+
+  <div class="chart-box">
+    <h4>User Distribution</h4>
+    <canvas baseChart
+            [type]="'pie'"
+            [data]="pieChartData"
+            [options]="pieChartOptions">
+    </canvas>
+  </div>
+</div> -->
+
+
+
+</div>
+
+
+
+
+
+
+

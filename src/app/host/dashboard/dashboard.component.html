@@ -248,32 +248,29 @@
         >
       </div>
 
-      <div class="requests-table-container">
-        <table class="requests-table">
-          <thead>
-            <tr>
-              <th>Reviewer</th>
-              <th>Listing</th>
-              <th>Rating</th>
-              <th>Comment</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="guest-name">{{ stats.latestReview.reviewerName }}</td>
-              <td class="property-name">
-                {{ stats.latestReview.listingTitle }}
-              </td>
-              <td class="guest-count">{{ stats.latestReview.rating }}/5</td>
-              <td class="check-date">{{ stats.latestReview.comment }}</td>
-              <td class="request-date">
-                {{ stats.latestReview.createdAt | date : "MMM d, y" }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+  <div class="requests-table-container">
+    <table class="requests-table">
+      <thead>
+        <tr>
+          <th>Reviewer</th>
+          <th>Listing</th>
+          <th>Rating</th>
+          <th>Comment</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="guest-name">{{ stats.latestReview.reviewerName }}</td>
+          <td class="property-name">{{ stats.latestReview.listingTitle }}</td>
+          <td class="guest-count">{{ stats.latestReview.rating }}/5</td>
+          <td class="check-date">{{ stats.latestReview.comment }}</td>
+          <td class="request-date">{{ stats.latestReview.createdAt | date: 'MMM d, y' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
   </div>
 </div>

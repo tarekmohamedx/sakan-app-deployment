@@ -36,8 +36,9 @@ export class LoginComponent {
           console.log('user role', response.role);
           console.log('user role', this.loginservice.getuserdata()?.role);
           this.loginservice.notifyLogin(); // <--- trigger user update
+          this.loginservice.getauthsubject().next(true); // Notify login status
 
-          this.router.navigateByUrl('host');
+          this.router.navigateByUrl('hometest');
         },
         error: (error) => {
           console.error('Login failed', error);
@@ -73,6 +74,6 @@ export class LoginComponent {
   externalLogin() {
     this.loginservice.initiateGoogleLogin();
 
-    this.router.navigateByUrl('hometest');
+    this.router.navigateByUrl('home');
   }
 }

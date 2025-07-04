@@ -31,7 +31,18 @@ export class AppComponent implements OnInit {
     // this.router.navigate(['/home']);
     console.log('Role', this.authService.getuserdata()?.role);
     this.role = this.authService.getuserdata()?.role || '';
+    if (this.authService.isLoggedIn()) {
+      this.authService.notifyLogin(); // 👈 Add this
+    }
     
   }
   title = 'sakan-app';
+
+   get isHostRoute(): boolean {
+    return this.router.url.startsWith('/host');
+  }
+   get isAdminRoute(): boolean {
+    return this.router.url.startsWith('/admin');
+  }
 }
+

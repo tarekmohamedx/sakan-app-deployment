@@ -17,6 +17,7 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
   private currentUserSubject = new BehaviorSubject<any>(this.getuserdata());
+  private authsubject = new BehaviorSubject<boolean>(this.isLoggedIn());
   public currentUser$ = this.currentUserSubject.asObservable();
   constructor(private readonly httpclient: HttpClient, private route: Router) {}
 
@@ -34,6 +35,10 @@ export class AuthService {
 
     // Redirect to Google auth endpoint
     window.location.href = `${environment.googleAuthUrl}?returnUrl=${environment.googleCallbackUrl}`;
+  }
+
+  getauthsubject(): BehaviorSubject<boolean> {
+    return this.authsubject;
   }
 
   handleGoogleCallback() {
@@ -62,12 +67,14 @@ export class AuthService {
     return decoded.exp ? decoded.exp > currentTime : true;
   }
   notifyLogin() {
-    const user = this.getuserdata(); 
-    this.currentUserSubject.next(user);  }
+    const user = this.getuserdata();
+    this.currentUserSubject.next(user);
+  }
   logout(): void {
     sessionStorage.removeItem('token');
     //this.user = null;
     this.currentUserSubject.next(null); // Notify logout
+    this.authsubject.next(false); // Notify login status
 
     this.route.navigateByUrl('/home');
   }

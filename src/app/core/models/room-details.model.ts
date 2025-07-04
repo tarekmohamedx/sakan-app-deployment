@@ -1,15 +1,19 @@
 import { ListingDetailsDto } from './listing-details.model';
 
-export interface BedDto {
-  id: number | null;
-  label: string;
-  type: string;
-  price: number;
-  isAvailable: boolean;
-  bedPhotos: string[];
-  selected?: boolean;
-}
 
+export interface HostRoomDto {
+  id: number;
+  listingId: number;
+  name: string;
+  type: string;
+  pricePerNight: number;
+  maxGuests: number;
+  isBookableAsWhole: boolean;
+  isActive: boolean;
+  photoUrls: string[];
+  listingTitle: string;
+  beds: BedDto[];
+}
 export interface RoomDetailsDto {
   id: number;
   listingId: number;
@@ -25,17 +29,13 @@ export interface RoomDetailsDto {
     longitude: number;
   };
 }
-
-export interface HostRoomDto {
-  id: number;
-  listingId: number;
-  name: string;
+export interface BedDto {
+  id: number | null;
+  label: string;
   type: string;
-  pricePerNight: number;
-  maxGuests: number;
-  isBookableAsWhole: boolean;
-  isActive: boolean;
-  photoUrls: string[];
-  listingTitle: string;
-  beds: BedDto[];
+  price: number;
+  isAvailable: boolean;
+  bedPhotos: string[];
+  selected?: boolean;
 }
+

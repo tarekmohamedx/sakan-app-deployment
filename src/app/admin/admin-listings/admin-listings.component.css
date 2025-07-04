@@ -1,0 +1,408 @@
+/* Base container styles */
+.admin-listing-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(1rem, 2.5vw, 2rem);
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+.admin-listing-container h2 {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+}
+
+/* Search input */
+.admin-listing-container input[type="text"] {
+  width: 100%;
+  max-width: 400px;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e1e8ed;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.admin-listing-container input[type="text"]:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+/* Table styles for desktop */
+.listing-table {
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+}
+
+.listing-table thead {
+  background: #34495e;
+  color: white;
+}
+
+.listing-table th,
+.listing-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e1e8ed;
+}
+
+.listing-table th {
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.listing-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.listing-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.listing-table img {
+  border-radius: 6px;
+  object-fit: cover;
+  height: 60px;
+  width: 60px;
+}
+
+/* Action buttons */
+.listing-table button {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  margin: 0 0.25rem;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.listing-table button:hover {
+  background-color: #f1f2f6;
+  transform: scale(1.1);
+}
+
+.listing-table button:active {
+  transform: scale(0.95);
+}
+
+/* Status styling */
+.listing-table td:nth-child(5) {
+  font-weight: 600;
+}
+
+/* No listings message */
+.admin-listing-container > div p {
+  text-align: center;
+  color: #7f8c8d;
+  font-size: 1.1rem;
+  padding: 3rem 0;
+  background: white;
+  border-radius: 12px;
+  margin: 2rem 0;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.pagination button {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #3498db;
+  background: white;
+  color: #3498db;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: #3498db;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.pagination span {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 16px;
+    background: white;
+    transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.clear-btn {
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  padding: 0.2rem 0.6rem;
+  margin-left: 0.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.08);
+}
+
+.clear-btn:hover,
+.clear-btn:focus {
+  background: #c0392b;
+  box-shadow: 0 4px 16px rgba(231, 76, 60, 0.15);
+  transform: translateY(-2px) scale(1.05);
+  outline: none;
+}
+
+/* Mobile card layout */
+@media (max-width: 768px) {
+  .listing-table {
+    display: none;
+  }
+  
+  .listings-grid {
+    display: grid;
+    gap: 1rem;
+  }
+  
+  .listing-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    border-left: 4px solid #3498db;
+  }
+  
+  .listing-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+  
+  .listing-card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+  }
+  
+  .listing-card-status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  
+  .listing-card-status.active {
+    background: #d4edda;
+    color: #155724;
+  }
+  
+  .listing-card-status.inactive {
+    background: #f8d7da;
+    color: #721c24;
+  }
+  
+  .listing-card-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .listing-card-detail {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .listing-card-detail-label {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.25rem;
+  }
+  
+  .listing-card-detail-value {
+    font-weight: 600;
+    color: #2c3e50;
+  }
+  
+  .listing-card-image {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+  
+  .listing-card-image img {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  
+  .listing-card-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e1e8ed;
+  }
+  
+  .listing-card-actions button {
+    background: none;
+    border: 2px solid #e1e8ed;
+    padding: 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    flex: 1;
+    max-width: 60px;
+  }
+  
+  .listing-card-actions button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  
+  .listing-card-actions button:first-child {
+    border-color: #27ae60;
+    color: #27ae60;
+  }
+  
+  .listing-card-actions button:first-child:hover {
+    background: #27ae60;
+    color: white;
+  }
+  
+  .listing-card-actions button:nth-child(2) {
+    border-color: #e74c3c;
+    color: #e74c3c;
+  }
+  
+  .listing-card-actions button:nth-child(2):hover {
+    background: #e74c3c;
+    color: white;
+  }
+  
+  .listing-card-actions button:last-child {
+    border-color: #f39c12;
+    color: #f39c12;
+  }
+  
+  .listing-card-actions button:last-child:hover {
+    background: #f39c12;
+    color: white;
+  }
+  
+  .pagination {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .pagination button {
+    width: 100%;
+    max-width: 200px;
+  }
+}
+
+/* Tablet adjustments */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .listing-table th,
+  .listing-table td {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .listing-table th {
+    font-size: 0.8rem;
+  }
+  
+  .listing-table td {
+    font-size: 0.9rem;
+  }
+  
+  .listing-table img {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+/* Small mobile adjustments */
+@media (max-width: 480px) {
+  .admin-listing-container {
+    padding: 1rem;
+  }
+  
+  .listing-card {
+    padding: 1rem;
+  }
+  
+  .listing-card-details {
+    grid-template-columns: 1fr;
+  }
+  
+  .listing-card-actions {
+    flex-wrap: wrap;
+  }
+  
+  .listing-card-actions button {
+    flex: 1 1 calc(50% - 0.5rem);
+  }
+}
+
+/* Hide mobile view on larger screens */
+.mobile-only {
+  display: none;
+}
+
+/* Hide desktop view on smaller screens */
+.desktop-only {
+  display: table;
+}
+
+@media (max-width: 768px) {
+  .mobile-only {
+    display: block;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+}

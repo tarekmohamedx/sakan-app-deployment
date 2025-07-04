@@ -22,10 +22,17 @@ import { HostBookingComponent } from './host/host-booking/host-booking.component
 import { HostUserReviewsComponent } from './host/host-user-reviews/host-user-reviews.component';
 import { HostMyReviewsComponent } from './host/host-my-reviews/host-my-reviews.component';
 import { BookingRequestsComponent } from './host/booking-requests/booking-requests.component';
+import { LayoutComponent } from '../app/Admin/layout/layout.component';
+import { AdminDashboardComponent } from '../app/Admin/admin-dashboard/admin-dashboard.component';
+import { AdminListingsComponent } from '../app/Admin/admin-listings/admin-listings.component';
+import { AdminEditlistingComponent } from '../app/Admin/admin-editlisting/admin-editlisting.component';
+import { AboutComponent } from './about/about.component';
 export const routes: Routes = [
-  {path  : '', redirectTo: 'home', pathMatch: 'full' },
+  {path  : '', redirectTo: 'host', pathMatch: 'full' },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'wishlist', component: WishlistPageComponent},
+  { path: 'payment', component: PaymentFormComponent},
   { path: 'listing/:id', component:ListingDetailsComponent},
   { path: 'room/:id', component:RoomDetailsComponent},
   { path: 'chat', component: ChatComponent },
@@ -41,6 +48,13 @@ export const routes: Routes = [
     { path: 'reviews', component: HostUserReviewsComponent },
     { path: 'myReviews', component: HostMyReviewsComponent },
   ]},
+
+  { path: 'admin', component: LayoutComponent,  children:[
+    {path:'dashboard', component:AdminDashboardComponent},
+    {path: 'listings', component: AdminListingsComponent},
+    { path: 'editlisting/:id', component: AdminEditlistingComponent },
+  ]},
+
   { path: '**', component: NotfoundComponent },
   { path: 'signin-google', component: CallbackComponent },
 ];
