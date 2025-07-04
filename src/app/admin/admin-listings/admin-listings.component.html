@@ -1,0 +1,97 @@
+<div class="admin-listing-container">
+  <h2>All Listings</h2>
+
+  <div class="search-bar-container">
+    <input
+        type="text"
+        class="search-input"
+        placeholder="🔍 Search listings by title..."
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+    />
+    <button class="clear-btn" *ngIf="searchTerm" (click)="searchTerm=''; onSearch()" title="Clear"> &times; </button>
+  </div>
+  <!-- Desktop Table View -->
+  <table class="listing-table desktop-only" *ngIf="listings.length > 0">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Host</th>
+        <th>Location</th>
+        <th>Price</th>
+        <!-- <th>Status</th> -->
+        <th>Preview</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let listing of listings">
+        <td>{{ listing.title }}</td>
+        <td>{{ listing.hostName }}</td>
+        <td>{{ listing.location }}</td>
+        <td>EGP {{ listing.pricePerMonth }}</td>
+        <!-- <td>
+            <span class="status-label" [ngClass]="listing.isApproved ? 'text-success' : 'text-warning'">
+                {{ listing.isApproved ? 'Approved' : 'Pending' }}
+            </span>
+        </td> -->
+        <td>
+          <img *ngIf="listing.previewImage" [src]="listing.previewImage" width="60" />
+        </td>
+      <td>
+        <button (click)="show(listing.id)" title="View">👁</button>
+        <button (click)="update(listing.id)" title="Update">✏️</button>
+        <button (click)="delete(listing.id)" title="Delete">🗑️</button>
+      </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Mobile Card View -->
+  <div class="listings-grid mobile-only" *ngIf="listings.length > 0">
+    <div class="listing-card" *ngFor="let listing of listings">
+      <div class="listing-card-header">
+        <h3 class="listing-card-title">{{ listing.title }}</h3>
+        <span class="listing-card-status" [class.active]="listing.isActive" [class.inactive]="!listing.isActive">
+          {{ listing.isActive ? 'Active' : 'Inactive' }}
+        </span>
+      </div>
+      
+      <div class="listing-card-details">
+        <div class="listing-card-detail">
+          <span class="listing-card-detail-label">Host</span>
+          <span class="listing-card-detail-value">{{ listing.hostName }}</span>
+        </div>
+        <div class="listing-card-detail">
+          <span class="listing-card-detail-label">Location</span>
+          <span class="listing-card-detail-value">{{ listing.location }}</span>
+        </div>
+        <div class="listing-card-detail">
+          <span class="listing-card-detail-label">Price</span>
+          <span class="listing-card-detail-value">EGP {{ listing.pricePerMonth }}</span>
+        </div>
+      </div>
+      
+      <div class="listing-card-image" *ngIf="listing.previewImage">
+        <img [src]="listing.previewImage" [alt]="listing.title" />
+      </div>
+      
+      <div class="listing-card-actions">
+        <button (click)="show(listing.id)" title="View">👁</button>
+        <button (click)="update(listing.id)" title="Update">✏️</button>
+        <button (click)="delete(listing.id)" title="Delete">🗑️</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="listings.length === 0 && !loading">
+    <p>No listings found.</p>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination" *ngIf="totalCount > pageSize">
+    <button (click)="changePage(page - 1)" [disabled]="page === 1">←</button>
+    <span>Page {{ page }} of {{ totalPages() }}</span>
+    <button (click)="changePage(page + 1)" [disabled]="page >= totalPages()">→</button>
+  </div>
+</div>

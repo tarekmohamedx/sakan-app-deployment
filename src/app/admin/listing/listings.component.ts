@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { AdminListingService } from '../services/admin-listing.service';
+import { adminListingService } from '../services/admin-listing.service';
 
 @Component({
   selector: 'app-host-listings',
@@ -13,7 +13,7 @@ import { AdminListingService } from '../services/admin-listing.service';
   styleUrl: './listings.component.css'
 })
 
-export class AdminListingsComponent implements OnInit {
+export class AdminApproveListingsComponent implements OnInit {
   listings: any[] = [];
   totalCount = 0;
   page = 1;
@@ -21,7 +21,7 @@ export class AdminListingsComponent implements OnInit {
   searchTerm: string = '';
   loadingListingIds: number[] = [];
   constructor(
-    private listingService: AdminListingService,
+    private listingService: adminListingService,
     private router: Router,
     private toastr: ToastrService
   ) {}

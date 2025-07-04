@@ -1,9 +1,4 @@
-/* @import 'bootstrap-icons/font/bootstrap-icons.css';
-@import 'animate.css/animate.css';
-@import 'ngx-slider-v2/dist/ngx-slider.css';
-@import 'ngx-daterangepicker-material/assets/scss/daterangepicker.scss';
-@import 'leaflet/dist/leaflet.css'; */
-/* @import "../node_modules/bootstrap/dist/css/bootstrap.css"; */
+
 @import "../node_modules/ngx-slider-v2/scss/ngx-slider.scss";
 @import "../node_modules/leaflet/dist/leaflet.css";
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -13,11 +8,6 @@
 @tailwind utilities;
 @import 'ngx-toastr/toastr.css';
 
-/* body {
-  /* direction: rtl;
-  text-align: right;
-  font-family: 'Tajawal', 'Segoe UI', sans-serif;
-} */
 
 .custom-toastr {
   padding: 16px;

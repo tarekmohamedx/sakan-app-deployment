@@ -9,7 +9,8 @@ import { ToggleFavoriteResponse } from '../../../core/models/favorite.model';
   providedIn: 'root'
 })
 export class WishlistService {
-private apiUrl = `${environment.apiurlauth}/favorites`;
+// private apiUrl = `${environment.apiurlauth}/favorites`;
+private apiUrl = `${environment.apiurlfavorites}`;
   
   // نستخدم BehaviorSubject لتخزين قائمة IDs المفضلة محلياً
   // هذا يسمح لكل المكونات بمعرفة أي الوحدات في المفضلة بشكل لحظي

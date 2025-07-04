@@ -31,12 +31,6 @@ export class HostRoomService {
         });
     }
 
-//   getRoomsByListingId(listingId: number): Observable<HostRoomDto[]> {
-//     const hostId = this.getHostIdFromToken();
-//     return this.http.get<HostRoomDto[]>(`${this.baseUrl}/listing/${listingId}?hostId=${hostId}`, {
-//       headers: this.getAuthHeaders()
-//     });
-//   }
 
 getRoomsByListingId( listingId: number, page: number, pageSize: number, searchTerm: string = ''): Observable<{ rooms: HostRoomDto[], totalCount: number }> {
   const headers = this.getAuthHeaders();
@@ -65,6 +59,7 @@ getRoomsByListingId( listingId: number, page: number, pageSize: number, searchTe
     return this.http.put<void>(`${this.baseUrl}/${roomId}?hostId=${hostId}`, data, {
       headers: this.getAuthHeaders()
     });
+    
   }
 
   deleteRoom(roomId: number): Observable<void> {

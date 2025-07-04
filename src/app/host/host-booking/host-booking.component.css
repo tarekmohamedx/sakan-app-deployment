@@ -1,5 +1,5 @@
 .booking-table-container {
-    max-width: 1300px;
+    max-width: 1500px;
     margin: 40px auto;
     padding: 40px 32px;
 }
@@ -115,4 +115,25 @@
     .booking-table {
         font-size: 0.97em;
     }
+}
+
+.pagination {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.pagination-btn,
+.page-btn {
+  padding: 6px 12px;
+  margin: 0 4px;
+  border: none;
+  border-radius: 4px;
+  background: #eee;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.page-btn.active {
+  background: #0a7298;
+  color: white;
 }

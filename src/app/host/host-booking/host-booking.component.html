@@ -17,7 +17,8 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let booking of bookings">
+            <!-- <tr *ngFor="let booking of bookings"> -->
+                <tr *ngFor="let booking of paginatedReviews">
                 <td>{{ booking.guestName }}</td>
                 <td>{{ booking.guestEmail }}</td>
                 <td>{{ booking.listingTitle }}</td>
@@ -42,4 +43,31 @@
             </tr>
         </tbody>
     </table>
+</div>
+
+<!-- Pagination Controls -->
+<div class="pagination" *ngIf="bookings.length > 0">
+  <button 
+    class="pagination-btn" 
+    (click)="changePage(currentPage - 1)" 
+    [disabled]="currentPage === 1">
+    ← 
+  </button>
+
+  <span class="page-numbers">
+    <button 
+      *ngFor="let page of getPageNumbers()" 
+      class="page-btn" 
+      [class.active]="page === currentPage" 
+      (click)="changePage(page)">
+      {{ page }}
+    </button>
+  </span>
+
+  <button 
+    class="pagination-btn" 
+    (click)="changePage(currentPage + 1)" 
+    [disabled]="currentPage === totalPages">
+     →
+  </button>
 </div>

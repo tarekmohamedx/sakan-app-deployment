@@ -23,11 +23,21 @@ import { HostUserReviewsComponent } from './host/host-user-reviews/host-user-rev
 import { HostMyReviewsComponent } from './host/host-my-reviews/host-my-reviews.component';
 import { BookingRequestsComponent } from './host/booking-requests/booking-requests.component';
 import { LayoutComponent } from './admin/layout/layout.component';
-import { AdminListingsComponent } from './admin/listing/listings.component';
+import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
+import { AdminListingsComponent } from './admin/admin-listings/admin-listings.component';
+import { AdminEditlistingComponent } from './admin/admin-editlisting/admin-editlisting.component';
+import { AboutComponent } from './about/about.component';
+import { AdminApproveListingsComponent } from './admin/listing/listings.component';
+
 export const routes: Routes = [
-  {path  : '', redirectTo: 'host', pathMatch: 'full' },
+  { path: 'home', component: HomePageComponent },
+  { path: 'about', component: AboutComponent },
+  {path  : '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'listings', component: ListingsPageComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'wishlist', component: WishlistPageComponent},
+  { path: 'payment', component: PaymentFormComponent},
   { path: 'listing/:id', component:ListingDetailsComponent},
   { path: 'room/:id', component:RoomDetailsComponent},
   { path: 'chat', component: ChatComponent },
@@ -42,12 +52,17 @@ export const routes: Routes = [
     { path: 'booking', component: HostBookingComponent },
     { path: 'reviews', component: HostUserReviewsComponent },
     { path: 'myReviews', component: HostMyReviewsComponent },
+    { path: 'requests', component: BookingRequestsComponent },
   ]},
 
-  { path: 'admin', component: LayoutComponent, children: [
-    {path : '', redirectTo: 'listings', pathMatch: 'full' },
-    { path: 'listings', component: AdminListingsComponent },
+  { path: 'admin', component: LayoutComponent,  children:[
+    {path : '', redirectTo: 'dashboard', pathMatch: 'full' },
+    {path:'dashboard', component:AdminDashboardComponent},
+    {path: 'listings', component: AdminListingsComponent},
+    { path: 'editlisting/:id', component: AdminEditlistingComponent },
+    { path: 'approvelistings', component: AdminApproveListingsComponent },
   ]},
+
   { path: '**', component: NotfoundComponent },
   { path: 'signin-google', component: CallbackComponent },
 ];

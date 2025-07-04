@@ -6,7 +6,9 @@
         <h2>Sakan Admin</h2>
       </div>
       <div class="logo-collapsed" *ngIf="isSidebarCollapsed">
-        <span>سكن</span>
+        <svg width="35" height="28" viewBox="0 0 35 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16.9102 7.65809L5.79071 16.9694V27.0189C5.79071 27.2791 5.89238 27.5287 6.07334 27.7126C6.25431 27.8966 6.49975 28 6.75568 28L13.5141 27.9822C13.7692 27.9809 14.0134 27.877 14.1933 27.6931C14.3732 27.5093 14.4742 27.2605 14.4742 27.0011V21.1323C14.4742 20.8721 14.5759 20.6225 14.7568 20.4385C14.9378 20.2546 15.1833 20.1512 15.4392 20.1512H19.2991C19.555 20.1512 19.8004 20.2546 19.9814 20.4385C20.1624 20.6225 20.264 20.8721 20.264 21.1323V26.9968C20.2636 27.1259 20.2883 27.2538 20.3366 27.3732C20.3849 27.4926 20.4559 27.6011 20.5456 27.6926C20.6352 27.784 20.7417 27.8565 20.859 27.906C20.9763 27.9555 21.102 27.981 21.229 27.981L27.985 28C28.2409 28 28.4863 27.8966 28.6673 27.7126C28.8483 27.5287 28.9499 27.2791 28.9499 27.0189V16.9626L17.8329 7.65809C17.7022 7.55098 17.5394 7.49257 17.3715 7.49257C17.2037 7.49257 17.0409 7.55098 16.9102 7.65809ZM34.4744 13.9868L29.4324 9.76132V1.26805C29.4324 1.0729 29.3562 0.885739 29.2204 0.747745C29.0847 0.609751 28.9006 0.532227 28.7087 0.532227H25.3313C25.1394 0.532227 24.9553 0.609751 24.8196 0.747745C24.6838 0.885739 24.6076 1.0729 24.6076 1.26805V5.72041L19.208 1.20367C18.6898 0.770131 18.0396 0.533093 17.3685 0.533093C16.6974 0.533093 16.0472 0.770131 15.529 1.20367L0.262651 13.9868C0.189367 14.0484 0.128735 14.1241 0.0842211 14.2095C0.0397071 14.2949 0.0121832 14.3884 0.00322188 14.4846C-0.00573942 14.5809 0.00403758 14.6779 0.0319942 14.7703C0.0599509 14.8627 0.105539 14.9486 0.166155 15.0231L1.70407 16.924C1.76452 16.9987 1.83888 17.0606 1.92288 17.1061C2.00688 17.1515 2.09888 17.1797 2.19361 17.189C2.28834 17.1983 2.38394 17.1885 2.47494 17.1602C2.56594 17.1318 2.65055 17.0855 2.72392 17.0239L16.9102 5.14402C17.0409 5.03691 17.2037 4.9785 17.3715 4.9785C17.5394 4.9785 17.7022 5.03691 17.8329 5.14402L32.0197 17.0239C32.093 17.0856 32.1775 17.1319 32.2683 17.1603C32.3592 17.1888 32.4547 17.1987 32.5494 17.1896C32.644 17.1805 32.736 17.1525 32.82 17.1072C32.904 17.062 32.9784 17.0003 33.039 16.9258L34.5769 15.0249C34.6375 14.95 34.6829 14.8637 34.7105 14.7709C34.7381 14.6781 34.7474 14.5807 34.7379 14.4842C34.7284 14.3877 34.7002 14.2941 34.655 14.2088C34.6097 14.1234 34.5484 14.048 34.4744 13.9868Z" fill="#fff"/>
+      </svg>
       </div>
     </div>
     
@@ -35,25 +37,25 @@
         <button class="sidebar-toggle" (click)="toggleSidebar()">
           <span class="material-icons">menu</span>
         </button>
-        <div class="search-container">
+        <!-- <div class="search-container">
           <span class="material-icons search-icon">search</span>
           <input type="text" placeholder="Search..." class="search-input">
-        </div>
+        </div> -->
       </div>
       
       <div class="navbar-right">
-        <div class="navbar-item">
+        <!-- <div class="navbar-item">
           <button class="notification-btn">
             <span class="material-icons">notifications</span>
             <span class="notification-badge">3</span>
           </button>
-        </div>
+        </div> -->
         
         <div class="navbar-item">
           <div class="admin-profile">
-            <img src="https://via.placeholder.com/32x32" alt="Admin" class="profile-avatar">
-            <span class="profile-name">Admin User</span>
-            <span class="material-icons">keyboard_arrow_down</span>
+            <img src="https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png" alt="Admin" class="profile-avatar">
+            <span class="profile-name">Admin</span>
+            <!-- <span class="material-icons">keyboard_arrow_down</span> -->
           </div>
         </div>
       </div>
@@ -65,13 +67,13 @@
         <!-- Dynamic content will be routed here -->
         <router-outlet></router-outlet>
         
-        <!-- Placeholder content when no route is active -->
+        <!-- 
         <div class="placeholder-content" *ngIf="!hasActiveRoute">
           <div class="welcome-card">
             <h1>Welcome to Sakan Admin Panel</h1>
             <p>Select a menu item from the sidebar to get started managing your platform.</p>
           </div>
-        </div>
+        </div> -->
       </div>
     </main>
   </div>
