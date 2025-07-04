@@ -27,6 +27,8 @@ import { AdminDashboardComponent } from '../app/Admin/admin-dashboard/admin-dash
 import { AdminListingsComponent } from '../app/Admin/admin-listings/admin-listings.component';
 import { AdminEditlistingComponent } from '../app/Admin/admin-editlisting/admin-editlisting.component';
 import { AboutComponent } from './about/about.component';
+import { AdminApproveListingsComponent } from './admin/listing/listings.component';
+
 export const routes: Routes = [
   {path  : '', redirectTo: 'host', pathMatch: 'full' },
   { path: 'register', component: RegisterComponent },
@@ -51,9 +53,11 @@ export const routes: Routes = [
   ]},
 
   { path: 'admin', component: LayoutComponent,  children:[
+    {path : '', redirectTo: 'dashboard', pathMatch: 'full' },
     {path:'dashboard', component:AdminDashboardComponent},
     {path: 'listings', component: AdminListingsComponent},
     { path: 'editlisting/:id', component: AdminEditlistingComponent },
+    { path: 'approvelistings', component: AdminApproveListingsComponent },
   ]},
 
   { path: '**', component: NotfoundComponent },
