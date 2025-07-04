@@ -8,7 +8,7 @@ import { ActivityLogDto, DashboardSummaryDto } from '../../core/models/admin-das
 })
 export class adminListingService {
   private apiUrl = 'https://localhost:7188/api/admin/list';
-  private baseUrl = 'https://localhost:7188/api/admin';
+  private adminApproveUrl = 'https://localhost:7188/api/adminapprove';
 
   constructor(private http: HttpClient) {}
 
@@ -39,15 +39,15 @@ export class adminListingService {
 
   getPendingListings(page: number, pageSize: number, search: string = '') {
     return this.http.get<{ items: any[], totalCount: number }>(
-     `${this.baseUrl}/not-approved-listings?pageNumber=${page}&pageSize=${pageSize}&search=${search}`
+     `${this.adminApproveUrl}/not-approved-listings?pageNumber=${page}&pageSize=${pageSize}&search=${search}`
 
     );
   }
   approveListing(id: number): Observable<any> {
-    return this.http.post(`${this.baseUrl}/approve/${id}`, null);
+    return this.http.post(`${this.adminApproveUrl}/approve/${id}`, null);
   }
 
 rejectListing(id: number) {
-return this.http.delete(`${this.baseUrl}/reject/${id}`);
+return this.http.delete(`${this.adminApproveUrl}/reject/${id}`);
 }
 }
