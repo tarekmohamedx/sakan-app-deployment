@@ -8,14 +8,14 @@ import { ChatDto } from '../../core/models/chatDto';
 import { AuthService } from '../auth/services/auth.service'; 
 import { MatDialog } from '@angular/material/dialog';
 import { ChatConfirmationModalComponent } from './components/chat-confirmation-modal/chat-confirmation-modal.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { NoChatsComponent } from './components/app-no-chats/app-no-chats.component';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css'],
 })
@@ -304,7 +304,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   getListingTitle(chat: ChatDto): string {
     if (!chat.lastMessage) return 'Unknown';
 
-    return chat.ListingTitle || 'No messages yet';
+    return chat.listingTitle || 'No messages yet';
   }
 
   getUserName(chat: ChatDto): string {
