@@ -16,7 +16,7 @@ export class HostBookingComponent implements OnInit {
   isLoading = true;
   currentPage = 1;
   pageSize = 5;
-
+ 
   constructor(
     private bookingService: HostListingService,
     private toastr: ToastrService

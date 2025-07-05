@@ -16,7 +16,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let req of requests">
+        <!-- <tr *ngFor="let req of requests"> -->
+        <tr *ngFor="let req of paginatedReviews">
           <td>{{ req.guestName }}</td>
           <td>{{ req.listingTitle }}</td>
           <td>{{ req.roomTitle }}</td>
@@ -56,4 +57,31 @@
       <p class="dashboard-subtitle">No booking requests found.</p>
     </ng-template>
   </div>
+</div>
+
+<!-- Pagination Controls -->
+<div class="pagination" *ngIf="requests.length > 0">
+  <button 
+    class="pagination-btn" 
+    (click)="changePage(currentPage - 1)" 
+    [disabled]="currentPage === 1">
+    ← 
+  </button>
+
+  <span class="page-numbers">
+    <button 
+      *ngFor="let page of getPageNumbers()" 
+      class="page-btn" 
+      [class.active]="page === currentPage" 
+      (click)="changePage(page)">
+      {{ page }}
+    </button>
+  </span>
+
+  <button 
+    class="pagination-btn" 
+    (click)="changePage(currentPage + 1)" 
+    [disabled]="currentPage === totalPages">
+     →
+  </button>
 </div>

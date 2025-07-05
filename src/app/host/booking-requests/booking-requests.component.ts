@@ -13,6 +13,8 @@ import { CommonModule } from '@angular/common';
 export class BookingRequestsComponent implements OnInit {
   requests: BookingRequest[] = [];
   loading = false;
+  currentPage = 1;
+  pageSize = 10;
 
   constructor(
     private bookingRequestsService: BookingRequestsService,
@@ -40,4 +42,24 @@ export class BookingRequestsComponent implements OnInit {
       error: () => this.toastr.error('Failed to update request')
     });
   }
+
+    get totalPages(): number {
+      return Math.ceil(this.requests.length / this.pageSize);
+    }
+    
+    get paginatedReviews(): BookingRequest[] {
+      const start = (this.currentPage - 1) * this.pageSize;
+      return this.requests.slice(start, start + this.pageSize);
+    }
+    
+    changePage(page: number): void {
+      if (page >= 1 && page <= this.totalPages) {
+        this.currentPage = page;
+      }
+    }
+    
+    getPageNumbers(): number[] {
+      return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    }
+
 }

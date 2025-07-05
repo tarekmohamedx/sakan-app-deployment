@@ -11,24 +11,21 @@ export class ListingDetailsService {
   constructor(private http: HttpClient) {}
 
   getListingDetails(id: number): Observable<ListingDetailsDto> {
-    const lang = localStorage.getItem('lang') || 'en';
-    return this.http.get<ListingDetailsDto>(`${this.baseUrl}/ListingDetails/${id}?lang=${lang}`);
+    // const lang = localStorage.getItem('lang') || 'en';
+    return this.http.get<ListingDetailsDto>(`${this.baseUrl}/ListingDetails/${id}`);
   }
 
   getBookedMonths(listingId: number): Observable<{ year: number, month: number }[]> {
-    const lang = localStorage.getItem('lang') || 'en';
-    return this.http.get<{ year: number, month: number }[]>(`${this.baseUrl}/booked-months/${listingId}?lang=${lang}`);
+    // const lang = localStorage.getItem('lang') || 'en';
+    return this.http.get<{ year: number, month: number }[]>(`${this.baseUrl}/booked-months/${listingId}`);
   }
 
   createRequest(dto: BookingRequestDto): Observable<{ requestId: number, hostId: string }> {
     return this.http.post<{ requestId: number, hostId: string }>(
       `${this.baseUrl}/ListingDetails/request`,dto 
     );
-  }
+  } 
 
-  // getCurrentUserId(): string {
-  //   return 'bdb1afd1-897a-46ef-8773-ff28354135b5'; // Replace with real auth logic
-  // }
     getToken(): string | null {
     return sessionStorage.getItem('token');
   }
@@ -46,30 +43,12 @@ export class ListingDetailsService {
       return userId;
     }
 
-//   getCurrentUserName(): string {
-//   const token = sessionStorage.getItem('token'); // or localStorage
-//   if (!token) return '';
-
-//   try {
-//     const payload = JSON.parse(atob(token.split('.')[1]));
-//     return payload.name || ''; // or 'unique_name' based on your claim structure
-//   } catch {
-//     return '';
-//   }
-// }
   private getAuthHeaders(): HttpHeaders {
     const token = sessionStorage.getItem('token');
     return new HttpHeaders({
       Authorization: `Bearer ${token}`
     });
   }
-
-  //   getListingById(id: number): Observable<any> {
-  //   const hostId = this.getHostIdFromToken();
-  //   return this.http.get<any>(`${this.apiUrl}/${id}?hostId=${hostId}`, {
-  //     headers: this.getAuthHeaders()
-  //   });
-  // }
 
   private getCurrentUserName(): string | null {
   const token = sessionStorage.getItem('token');
