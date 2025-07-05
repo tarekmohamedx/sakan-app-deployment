@@ -28,7 +28,7 @@ export interface BookingRequestDto {
   guestId: string;
   listingId?: number;
   roomId?: number;
-  bedIds?: number[];
+  bedIds: number[];
   fromDate: string;
   toDate: string;
 }
