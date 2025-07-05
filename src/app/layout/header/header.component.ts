@@ -5,11 +5,12 @@ import { RouterModule } from '@angular/router';
 import { Router } from 'express';
 import { AuthService } from '../../features/auth/services/auth.service';
 import { Subscription } from 'rxjs';
+import { UserBookingRequestsComponent } from '../../features/bookings/components/user-booking-requests.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterModule,CommonModule,FormsModule],
+  imports: [RouterModule,CommonModule,FormsModule,UserBookingRequestsComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
@@ -22,6 +23,7 @@ export class HeaderComponent implements OnInit, OnDestroy{
   // isLoggedIn = true;
   isMobileMenuOpen = false;
   isDropdownOpen = false;
+  showUserRequestsPopup = false;
   user = {
     name: "",
     profilePictureUrl: ""
@@ -57,6 +59,14 @@ export class HeaderComponent implements OnInit, OnDestroy{
 
   closeDropdown(): void {
     this.isDropdownOpen = false;
+  }
+
+  openUserRequestsPopup() {
+    this.showUserRequestsPopup = true;
+  }
+
+  closeUserRequestsPopup() {
+    this.showUserRequestsPopup = false;
   }
 
   // للاستماع لأي نقرة في الصفحة

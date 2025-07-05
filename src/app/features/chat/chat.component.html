@@ -22,7 +22,12 @@
           <div class="chat-item-content">
             <i class="fas fa-home"></i>
             <div class="chat-item-details">
-              <h5>{{ getUserName(chat) }}</h5>
+              <div class="chat-header-row">
+                <h5 class="chat-username">{{ getUserName(chat) }}</h5>
+                <span class="status-badge" [ngClass]="chat.listingStatus?.toLowerCase()">
+                  {{ chat.listingStatus }}
+                </span>
+              </div>
               <p class="lead">{{ getLatestMessage(chat) }}</p>
             </div>
           </div>
@@ -32,7 +37,17 @@
 
     <div class="chat-main">
       <div *ngIf="selectedChat" class="chat-header">
-        <h2>{{ listingTitle }} - Tarek Mohamed</h2>
+        <div *ngIf="selectedChat" class="chat-header">
+          <h2>
+            <a
+              [routerLink]="['/listing', selectedChat.listingId]"
+              class="listing-link"
+            >
+              {{ selectedChat.listingTitle }}
+            </a>
+            - {{ selectedChat.hostName }}
+          </h2>
+        </div>
         <button class="approve-btn" title="Approve Rent">Approve</button>
       </div>
 

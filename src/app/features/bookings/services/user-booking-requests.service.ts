@@ -2,26 +2,25 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export interface BookingRequest {
-  bookingRequestId: number;
+export interface UserBookingRequest {
   guestId: string;
-  guestName: string;
+  hostId: string;
+  bookingRequestId: number;
   listingTitle: string;
-  roomTitle: string;
-  bedTitle: string;
+  bedPrice: number | null;
   listingLocation: string;
   fromDate: string;
   toDate: string;
-  isApproved: string; // Changed to string to match API response
+  status: string;
 }
 
 @Injectable({ providedIn: 'root' })
-export class BookingRequestsService {
+export class UserBookingRequestsService {
   private apiUrl = 'https://localhost:7188/api/BookingRequest';
 
   constructor(private http: HttpClient) {}
 
-  private getHostId(): string | null {
+  private getUserId(): string | null {
     const token = sessionStorage.getItem('token');
     if (!token) return null;
     try {
@@ -39,15 +38,9 @@ export class BookingRequestsService {
     });
   }
 
-  getBookingRequests(): Observable<BookingRequest[]> {
-    const hostId = this.getHostId();
-    return this.http.get<BookingRequest[]>(`${this.apiUrl}/host/${hostId}`, {
-      headers: this.getAuthHeaders()
-    });
-  }
-
-  updateBookingRequest(requestId: number, isAccepted: boolean): Observable<any> {
-    return this.http.post(`${this.apiUrl}/update/${requestId}/${isAccepted}`,  {
+  getUserBookingRequests(): Observable<UserBookingRequest[]> {
+    const userId = this.getUserId();
+    return this.http.get<UserBookingRequest[]>(`${this.apiUrl}/user/${userId}`, {
       headers: this.getAuthHeaders()
     });
   }
