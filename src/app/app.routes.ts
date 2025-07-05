@@ -25,9 +25,9 @@ import { BookingRequestsComponent } from './host/booking-requests/booking-reques
 import { LayoutComponent } from './admin/layout/layout.component';
 import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 import { AdminListingsComponent } from './admin/admin-listings/admin-listings.component';
-import { AdminEditlistingComponent } from './admin/admin-editlisting/admin-editlisting.component';
 import { AboutComponent } from './about/about.component';
 import { AdminApproveListingsComponent } from './admin/listing/listings.component';
+import { AdminEditlistingComponent } from './admin/admin-editlisting/admin-editlisting.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
