@@ -28,6 +28,7 @@ import { AdminListingsComponent } from './admin/admin-listings/admin-listings.co
 import { AboutComponent } from './about/about.component';
 import { AdminApproveListingsComponent } from './admin/listing/listings.component';
 import { AdminEditlistingComponent } from './admin/admin-editlisting/admin-editlisting.component';
+import { UserReviewComponent } from './features/UserReviews/user-review/user-review.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -41,6 +42,7 @@ export const routes: Routes = [
   { path: 'listing/:id', component:ListingDetailsComponent},
   { path: 'room/:id', component:RoomDetailsComponent},
   { path: 'chat', component: ChatComponent },
+  { path: 'review', component: UserReviewComponent },
   { path: 'host', component: HostLayoutComponent, children: [
     {path : '', redirectTo: 'dashboard', pathMatch: 'full' },
     { path: 'dashboard', component: DashboardComponent },

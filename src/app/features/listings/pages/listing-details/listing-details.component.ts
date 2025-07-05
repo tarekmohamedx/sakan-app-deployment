@@ -207,20 +207,36 @@ export class ListingDetailsComponent implements OnInit {
       .reduce((acc, r) => acc + (r.pricePerNight || 0), 0) || 0;
   }
 
-  get totalCost(): number {
-    const totalRooms = this.listing.bedroomList?.length || 0;
-    const selectedRooms = this.listing.bedroomList?.filter(r => r.selected) || [];
-    const allRoomsSelected = selectedRooms.length === totalRooms;
-    if (allRoomsSelected && totalRooms > 0 ) {
-      return (this.listing.pricePerMonth || 0);
-    }
-    const selectedRoomSum = selectedRooms.reduce((acc, r) => acc + (r.pricePerNight || 0), 0);
-    return selectedRoomSum;
-  }
+  // get totalCost(): number {
+  //   const totalRooms = this.listing.bedroomList?.length || 0;
+  //   const selectedRooms = this.listing.bedroomList?.filter(r => r.selected) || [];
+  //   const allRoomsSelected = selectedRooms.length === totalRooms;
+  //   if (allRoomsSelected && totalRooms > 0 ) {
+  //     return (this.listing.pricePerMonth || 0);
+  //   }
+  //   const selectedRoomSum = selectedRooms.reduce((acc, r) => acc + (r.pricePerNight || 0), 0);
+  //   return selectedRoomSum;
+  // }
 
-  get allRoomsSelected(): boolean {
-    return this.listing.bedroomList?.every(r => r.selected) || false;
-  }
+    get totalCost(): number {
+      const totalRooms = this.listing.bedroomList?.length || 0;
+      const selectedRooms = this.listing.bedroomList?.filter(r => r.selected) || [];
+
+      // ✅ if ALL rooms are selected, show full listing price
+      const allRoomsSelected = selectedRooms.length === totalRooms && totalRooms > 0;
+      if (allRoomsSelected) {
+        return this.listing.pricePerMonth || 0;
+      }
+
+      // 🔹 Otherwise, sum individual room prices
+      return selectedRooms.reduce((acc, r) => acc + (r.pricePerNight || 0), 0) || this.listing.pricePerMonth ;
+    }
+
+
+
+  // get allRoomsSelected(): boolean {
+  //   return this.listing.bedroomList?.every(r => r.selected) || false;
+  // }
 
   get selectedRooms() {
     return this.listing?.bedroomList?.filter(r => r.selected);
@@ -229,6 +245,12 @@ export class ListingDetailsComponent implements OnInit {
   goToRoom(roomId: number) {
     this.router.navigate(['/room', roomId]);
   }
+
+  get allRoomsSelected(): boolean {
+  const totalRooms = this.listing.bedroomList?.length || 0;
+  const selectedRooms = this.listing.bedroomList?.filter(r => r.selected) || [];
+  return selectedRooms.length === totalRooms && totalRooms > 0;
+}
 
   //------------------------------------------------------
 
