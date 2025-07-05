@@ -29,19 +29,13 @@ export class HeaderComponent implements OnInit, OnDestroy{
 
   constructor(private authService: AuthService) {}
 
-  // ngOnInit(): void {
-  //   this.subscription = this.authService.isLoggedIn$.subscribe(status => {
-  //     this.isLoggedIn = status;
-  //   });
-  // }
-
     ngOnInit(): void {
     const userData = this.authService.getuserdata();
     if (userData) {
       this.isLoggedIn = true;
       this.user = {
         name: userData.name,
-        profilePictureUrl: 'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png'  // Optional: Replace if you have user photo
+        profilePictureUrl: 'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png' 
       };
     }
         this.subscription = this.authService.isLoggedIn$.subscribe(status => {
