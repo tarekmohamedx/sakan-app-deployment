@@ -1,13 +1,6 @@
-<div class="message-content">
-  <strong
-    >{{
-      message.senderID === currentUserId ? "You" : message.senderID
-    }}:</strong
-  >
-  {{ message.content }}
-</div>
 <div class="chat-wrapper">
   <div class="chat-container">
+    <!-- Sidebar -->
     <div class="sidebar">
       <div class="sidebar-header">
         <h2>Messages</h2>
@@ -35,60 +28,77 @@
       </div>
     </div>
 
+    <!-- Chat Main -->
     <div class="chat-main">
+
+      <!-- Header -->
       <div *ngIf="selectedChat" class="chat-header">
-        <div *ngIf="selectedChat" class="chat-header">
-          <h2>
-            <a
-              [routerLink]="['/listing', selectedChat.listingId]"
-              class="listing-link"
-            >
-              {{ selectedChat.listingTitle }}
-            </a>
-            - {{ selectedChat.hostName }}
-          </h2>
-        </div>
-        <button class="approve-btn" title="Approve Rent">Approve</button>
+        <h2>
+          <a
+            [routerLink]="['/listing', selectedChat.listingId]"
+            class="listing-link"
+          >
+            {{ selectedChat.listingTitle }}
+          </a>
+          - {{ selectedChat.hostName }}
+        </h2>
+
+        <ng-container [ngSwitch]="approvalStatus">
+          <button *ngSwitchCase="'GoToPayment'" class="btn success">
+            Go to Payment
+          </button>
+
+          <span *ngSwitchCase="'PendingHost'" class="status-msg">
+            Waiting for host approval
+          </span>
+
+          <span *ngSwitchCase="'PendingGuest'" class="status-msg">
+            Waiting for guest approval
+          </span>
+
+          <span *ngSwitchCase="'PendingUserBooking'" class="status-msg">
+            Waiting for guest to complete booking
+          </span>
+
+          <button *ngSwitchDefault class="approve-btn" (click)="onApproveClick()">
+            Approve
+          </button>
+        </ng-container>
       </div>
 
+      <!-- No Chat Selected -->
       <div *ngIf="!selectedChat" class="no-chat-selected">
         <h3>Select a conversation to start messaging</h3>
       </div>
 
+      <!-- Chat Messages -->
       <div *ngIf="selectedChat" class="chat-messages" #chatMessagesContainer>
         <div
           *ngFor="let message of messages"
           [ngClass]="{
             message: true,
-            'message-sent':
-              message.senderID?.trim()?.toLowerCase() ===
-              currentUserId?.trim().toLowerCase(),
-            'message-received':
-              message.senderID?.trim()?.toLowerCase() !==
-              currentUserId?.trim().toLowerCase()
+            'message-sent': message.senderID?.trim()?.toLowerCase() === currentUserId?.trim().toLowerCase(),
+            'message-received': message.senderID?.trim()?.toLowerCase() !== currentUserId?.trim().toLowerCase()
           }"
         >
           <div class="message-content">
-            <strong
-              >{{
-                message.senderID?.trim()?.toLowerCase() ===
-                currentUserId?.trim().toLowerCase()
+            <strong>
+              {{
+                message.senderID?.trim()?.toLowerCase() === currentUserId?.trim().toLowerCase()
                   ? "You"
                   : "Other"
-              }}:</strong
-            >
-
+              }}:
+            </strong>
             {{ message.content }}
           </div>
 
-          <!-- الوقت بتنسيق AM/PM -->
           <div class="message-time">
             {{ message.timestamp | date : "hh:mm a" }}
           </div>
         </div>
-        <!-- <div #scrollAnchor></div> -->
       </div>
 
+      <!-- Chat Input -->
       <div *ngIf="selectedChat" class="chat-input">
         <input
           type="text"

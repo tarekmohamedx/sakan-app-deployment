@@ -57,6 +57,9 @@ export class ChatComponent implements OnInit, OnDestroy {
   listingTitle: string = 'Default Listing Title';
   HostID: string = 'host-123';
   ListingID: string = '4';
+  approvalStatus: string = '';
+  hostApproved: boolean = false;
+  guestApproved: boolean = false; 
 
   message: MessageDto = {
     senderID: '',
@@ -222,7 +225,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       ...chat,
       receiverID,
     };
-
+    this.approvalStatus = chat?.status ?? '';
     await this.loadChatHistory(chat.chatId);
   }
 
@@ -312,4 +315,41 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     return chat.userName || 'No messages yet';
   }
+
+  async onApproveClick() {
+    if (!this.selectedChat) return;
+  
+    const isHost = this.selectedChat?.isHost ?? false;
+  
+    try {
+      const result = await this.chatService.approveBooking(this.selectedChat.chatId, isHost);
+  
+      // حسب الحالة، عدل الـ UI
+      switch (result.status) {
+        case "GoToPayment":
+          // Show Go to Payment button
+          break;
+        case "PendingHost":
+          // Show "Pending host approval"
+          break;
+        case "PendingGuest":
+          // Show "Pending guest approval"
+          break;
+        case "PendingUserBooking":
+          // Show "Waiting for guest to book"
+          break;
+        default:
+          // Handle other states if needed
+          break;
+      }
+      this.approvalStatus = result.status;
+      console.log("Booking approved:", result);
+    } catch (error) {
+      console.error("Approval failed", error);
+    }
+  }
+
+  
+
+
 }
