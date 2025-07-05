@@ -23,14 +23,30 @@
           <td>{{ req.fromDate | date:'yyyy/MM/dd' }}</td>
           <td>{{ req.toDate | date:'yyyy/MM/dd' }}</td>
           <td>
-            <span [ngClass]="{'approved': req.isApproved, 'pending': req.isApproved === false}">
-              {{ req.isApproved === null ? 'Pending' : (req.isApproved ? 'Approved' : 'Rejected') }}
+            <!-- <span [ngClass]="{'approved': req.isApproved==='Accepted', 'pending': req.isApproved === 'Pending'}"> -->
+              <!-- {{ req.isApproved === null ? 'Pending' : (req.isApproved ? 'Approved' : 'Rejected') }} -->
+                <span [ngClass]="{'approved': req.isApproved === 'Accepted', 'rejected': req.isApproved === 'Rejected', 'pending': req.isApproved === 'Pending'}">
+                    {{ req.isApproved }}
             </span>
           </td>
-          <td>
-            <button class="action-button approve" [disabled]="req.isApproved === true" (click)="updateRequest(req.bookingRequestId, true)">Approve</button>
-            <button class="action-button reject" [disabled]="req.isApproved === false" (click)="updateRequest(req.bookingRequestId, false)">Reject</button>
-          </td>
+        <td class="action-icons">
+            <button 
+                class="icon-btn approve" 
+                [disabled]="req.isApproved === 'Accepted'" 
+                (click)="updateRequest(req.bookingRequestId, true)" 
+                title="Approve"
+            >
+                <i class="fa fa-check-circle" aria-hidden="true"></i>
+            </button>
+            <button 
+                class="icon-btn reject" 
+                [disabled]="req.isApproved === 'Rejected'" 
+                (click)="updateRequest(req.bookingRequestId, false)" 
+                title="Reject"
+            >
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </td>
         </tr>
       </tbody>
     </table>
