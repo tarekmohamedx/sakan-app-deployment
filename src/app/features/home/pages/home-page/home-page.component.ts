@@ -33,11 +33,11 @@ export class HomePageComponent implements OnInit {
   
   // بيانات ثابتة لقسم "Featured Destinations"
   featuredDestinations = [
-    { name: 'Cairo', image: 'https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrNa6vRGA_b8SQ0nffJA2bkSECOElo2Xk9cApRKsUsMi7GufDR976-le135eMGcUcGT7SHegcA025S4rjWuv-4xsBAH0M4hlilQvhMB7i55UA3bHShXYthQQLmcxD-3fvFHGWQ=w270-h312-n-k-no'},
+    { name: 'Cairo', image: 'https://media.cntraveler.com/photos/655cdf1d2d09a7e0b27741b5/16:9/w_2560%2Cc_limit/Cairo%2520Egypt_GettyImages-1370918272.jpg'},
     { name: 'Giza', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/All_Gizah_Pyramids.jpg/1280px-All_Gizah_Pyramids.jpg' },
     { name: 'Alexandria', image: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSc8pbROiMPcATSeVWBzH9BEn2xs95RNucagJw6YhhU5AvxLbkLaEVnwfwjyQv3WM30RP28iqieuHf918LXu8z7OKiNPZ0hghu77W_1ed-c' },
     { name: 'Luxor', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR95FjX1VoedrbghPkpRqS2iF3Py0j0SZV0jJ8Kzh4r4w&s' },
-    { name: 'Aswan', image:'https://lh3.googleusercontent.com/gps-cs-s/AC9h4noXBDlDhLxUqrwn-aOU0YKbD7mX52o7Ik27TfxYHlaEiyoV5qnIdx8CjXOow1s4MsDi2j2f1JbK_IvEBHcAjjfJLNz6U8E4o3qfnbNAsBIoYFZH-DmsSIza7xVhCOR6zpwWgkuauA=w675-h390-n-k-no'}
+    { name: 'Aswan', image:'https://www.revigorate.com/images/Great-nile-aswan.jpg'}
   ];
 
   favoriteIds = new Set<number>();

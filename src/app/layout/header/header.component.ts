@@ -5,11 +5,12 @@ import { RouterModule } from '@angular/router';
 import { Router } from 'express';
 import { AuthService } from '../../features/auth/services/auth.service';
 import { Subscription } from 'rxjs';
+import { UserBookingRequestsComponent } from '../../features/bookings/components/user-booking-requests.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterModule,CommonModule,FormsModule],
+  imports: [RouterModule,CommonModule,FormsModule,UserBookingRequestsComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
@@ -22,6 +23,7 @@ export class HeaderComponent implements OnInit, OnDestroy{
   // isLoggedIn = true;
   isMobileMenuOpen = false;
   isDropdownOpen = false;
+  showUserRequestsPopup = false;
   user = {
     name: "",
     profilePictureUrl: ""
@@ -29,25 +31,25 @@ export class HeaderComponent implements OnInit, OnDestroy{
 
   constructor(private authService: AuthService) {}
 
-  // ngOnInit(): void {
-  //   this.subscription = this.authService.isLoggedIn$.subscribe(status => {
-  //     this.isLoggedIn = status;
-  //   });
-  // }
-
     ngOnInit(): void {
-    const userData = this.authService.getuserdata();
-    if (userData) {
-      this.isLoggedIn = true;
+  this.subscription = this.authService.isLoggedIn$.subscribe(status => {
+    this.isLoggedIn = status;
+
+    if (status) {
+      const userData = this.authService.getuserdata();
       this.user = {
-        name: userData.name,
-        profilePictureUrl: 'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png'  // Optional: Replace if you have user photo
+        name: userData?.name || 'Guest',
+        profilePictureUrl: 'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png'
+      };
+    } else {
+      this.user = {
+        name: '',
+        profilePictureUrl: ''
       };
     }
-        this.subscription = this.authService.isLoggedIn$.subscribe(status => {
-      this.isLoggedIn = status;
-    });
-  }
+  });
+}
+
 
     logout(): void {
     this.authService.logout();
@@ -63,6 +65,14 @@ export class HeaderComponent implements OnInit, OnDestroy{
 
   closeDropdown(): void {
     this.isDropdownOpen = false;
+  }
+
+  openUserRequestsPopup() {
+    this.showUserRequestsPopup = true;
+  }
+
+  closeUserRequestsPopup() {
+    this.showUserRequestsPopup = false;
   }
 
   // للاستماع لأي نقرة في الصفحة

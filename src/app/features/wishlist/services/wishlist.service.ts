@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ListingSummary } from '../../../core/models/listing.model';
 import { ToggleFavoriteResponse } from '../../../core/models/favorite.model';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -22,12 +23,35 @@ private apiUrl = `${environment.apiurlfavorites}`;
     this.loadUserFavorites();
   }
 
+  private getHostIdFromToken(): string | null {
+    const token = sessionStorage.getItem('token');
+    if (!token) return null;
+  
+    try {
+      const decoded = jwtDecode<any>(token);
+      const hostId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+      return hostId || null;
+    } catch (error) {
+      console.error("❌ Failed to decode JWT", error);
+      return null;
+    }
+  }
+  
+  
+    private getAuthHeaders(): HttpHeaders {
+      const token = sessionStorage.getItem('token');
+      return new HttpHeaders({
+        Authorization: `Bearer ${token}`
+      });
+    }
+
   /**
    * يجلب قائمة الوحدات المفضلة للمستخدم الحالي.
    * يتصل بـ: GET /api/favorites
    */
   getUserFavorites(): Observable<ListingSummary[]> {
-    return this.http.get<ListingSummary[]>(this.apiUrl);
+    const userId = this.getHostIdFromToken();
+    return this.http.get<ListingSummary[]>(`${this.apiUrl}?userId=${userId}`, {headers: this.getAuthHeaders()});
   }
 
   /**
@@ -35,7 +59,8 @@ private apiUrl = `${environment.apiurlfavorites}`;
    * يتصل بـ: POST /api/favorites/toggle/{listingId}
    */
   toggleFavorite(listingId: number): Observable<ToggleFavoriteResponse> {
-    return this.http.post<ToggleFavoriteResponse>(`${this.apiUrl}/toggle/${listingId}`, {}).pipe(
+    const userId = this.getHostIdFromToken();
+    return this.http.post<ToggleFavoriteResponse>(`${this.apiUrl}/toggle/${listingId}?userId=${userId}`, {headers: this.getAuthHeaders()}).pipe(
       // بعد نجاح الطلب، نقوم بتحديث الحالة المحلية
       tap(response => {
         const currentIds = this.favoriteIdsSubject.getValue();

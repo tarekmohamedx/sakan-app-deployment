@@ -1,0 +1,43 @@
+<div class="popup-overlay" *ngIf="popupOpen">
+  <div class="popup-content enhanced">
+    <button class="popup-close" (click)="closePopup()" aria-label="Close">&times;</button>
+    <h2 class="popup-title">My Booking Requests</h2>
+    <div class="table-container">
+      <table class="listing-table" *ngIf="requests.length > 0; else noRequests">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Price</th>
+            <th>Location</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Status</th>
+            <th>Chat With Host</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let req of requests">
+            <td>{{ req.listingTitle }}</td>
+            <td>{{ req.bedPrice || '—' }}</td>
+            <td>{{ req.listingLocation }}</td>
+            <td>{{ req.fromDate | date:'yyyy/MM/dd' }}</td>
+            <td>{{ req.toDate | date:'yyyy/MM/dd' }}</td>
+            <td>
+              <span [ngClass]="{
+                'pending': req.status === 'Pending',
+                'accepted': req.status === 'Accepted',
+                'rejected': req.status === 'Rejected'
+              }">{{ req.status }}</span>
+            </td>
+            <td>
+              <button class="action-button chat" (click)="goToChat(req)">Chat</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <ng-template #noRequests>
+        <p class="dashboard-subtitle">No booking requests found.</p>
+      </ng-template>
+    </div>
+  </div>
+</div>

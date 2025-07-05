@@ -39,7 +39,7 @@ private getHostIdFromToken(): string | null {
       Authorization: `Bearer ${token}`
     });
   }
-
+ 
   // Get listings for current host
   getMyListings(page: number, pageSize: number, searchTerm: string = ''): Observable<any> {
     const hostId = this.getHostIdFromToken();  

@@ -38,7 +38,7 @@ bootstrapApplication(AppComponent, {
     ...appConfig.providers,
     provideAnimations(),
     provideToastr({
-      positionClass: 'toast-top-center',
+      positionClass: 'toast-right-center',
       toastClass: 'ngx-toastr custom-toastr',
       titleClass: 'custom-toastr-title',
       messageClass: 'custom-toastr-message',
