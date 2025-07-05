@@ -18,6 +18,8 @@
   padding: 40px 36px;
   min-width: 420px;
   max-width: 98vw;
+  max-height: 90vh;
+  overflow-y: auto;
   box-shadow: 0 10px 40px rgba(0,0,0,0.20);
   position: relative;
   animation: modalPop 0.22s;
@@ -120,6 +122,7 @@
   .popup-content.enhanced {
     padding: 18px 4vw;
     min-width: unset;
+    max-height: 90vh;
   }
   .listing-table th, .listing-table td {
     padding: 8px 6px;

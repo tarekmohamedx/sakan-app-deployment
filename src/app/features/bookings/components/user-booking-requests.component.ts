@@ -40,6 +40,7 @@ export class UserBookingRequestsComponent implements OnInit {
   }
 
   goToChat(request: UserBookingRequest) {
+    this.closePopup();
     // Navigate to chat with host (assuming hostId is available in request)
     if (request.hostId) {
       this.router.navigate(['/chat'], { queryParams: { hostId: request.hostId, bookingId: request.bookingRequestId } });
