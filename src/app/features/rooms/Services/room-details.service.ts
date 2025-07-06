@@ -16,7 +16,7 @@ export class RoomDetailsService {
 
     getBookedMonths(roomId: number): Observable<{ year: number; month: number }[]> {
         const lang = localStorage.getItem('lang') || 'en';
-        return this.http.get<{ year: number; month: number }[]>(`${this.baseUrl}/booked-months/${roomId}?lang=${lang}`);
+        return this.http.get<{ year: number; month: number }[]>(`${this.baseUrl}/ListingDetails/booked-months/${roomId}?lang=${lang}`);
     }
 //     getBookedMonths(listingId: number): Observable<{ year: number, month: number }[]> {
 //     return this.http.get<{ year: number, month: number }[]>(`${this.baseUrl}/booked-months/${listingId}`);

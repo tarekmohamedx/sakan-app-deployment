@@ -1,0 +1,19 @@
+<div class="ai-container">
+  <h2>AI Response Assistant</h2>
+
+  <textarea
+    [(ngModel)]="inputText"
+    rows="5"
+    placeholder="Enter review, complaint, or message..."
+    class="input-box"
+  ></textarea>
+
+  <button (click)="getAiResponse()" [disabled]="isLoading" class="btn">
+    {{ isLoading ? 'Thinking...' : 'Generate Response' }}
+  </button>
+
+  <div *ngIf="generatedResponse" class="result-box">
+    <h4>Suggested Response:</h4>
+    <p>{{ generatedResponse }}</p>
+  </div>
+</div>
