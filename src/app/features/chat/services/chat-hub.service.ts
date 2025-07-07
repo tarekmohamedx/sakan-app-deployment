@@ -1,76 +1,105 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { Subject } from 'rxjs';
-import { MessageDto} from '../../../core/models/messageDto';
+import { MessageDto } from '../../../core/models/messageDto';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ChatHubService {
   private hubConnection!: signalR.HubConnection;
+  private connectionPromise: Promise<void> | null = null;
+  private isInitialized = false;
+
   private messageSubject = new Subject<MessageDto>();
   private connectionStatusSubject = new Subject<boolean>();
-  private connectionPromise: Promise<void> | null = null;
 
   message$ = this.messageSubject.asObservable();
   connectionStatus$ = this.connectionStatusSubject.asObservable();
 
-  // Ensure connection is established before sending messages
-  public async ensureConnection(): Promise<void> {
-    // Return if already connected
-    if (this.hubConnection?.state === signalR.HubConnectionState.Connected) {
+  /**
+   * Start SignalR connection if not already connected.
+   * Safe to call multiple times.
+   */
+  public async startConnection(userId: string): Promise<void> {
+    if (this.hubConnection && this.hubConnection.state === signalR.HubConnectionState.Connected) {
       return;
     }
 
-    // Only start one connection attempt at a time
+    if (!this.hubConnection) {
+      this.hubConnection = new signalR.HubConnectionBuilder()
+        .withUrl(`${environment.serverUrl}/ChatHub?userId=${userId}`)
+        .withAutomaticReconnect()
+        .build();
+
+      this.setupListeners(); // only once
+    }
+
+    await this.ensureConnection();
+  }
+
+  /**
+   * Setup SignalR listeners
+   */
+  private setupListeners(): void {
+    if (this.isInitialized) return;
+
+    this.hubConnection.on('ReceiveMessage', (message: MessageDto) => {
+      message.timestamp = new Date(message.timestamp ?? new Date());
+      console.log('[SignalR] Received message:', message);
+      this.messageSubject.next(message);
+    });
+
+    this.isInitialized = true;
+  }
+
+  /**
+   * Ensure SignalR connection is active
+   */
+  private async ensureConnection(): Promise<void> {
+    if (this.hubConnection.state === signalR.HubConnectionState.Connected) return;
+
     if (!this.connectionPromise) {
-      this.connectionPromise = this.hubConnection.start()
+      this.connectionPromise = this.hubConnection
+        .start()
         .then(() => {
-          console.log('SignalR connection established');
+          console.log('[SignalR] Connection established');
           this.connectionStatusSubject.next(true);
         })
-        .catch(err => {
-          console.error('Error establishing SignalR connection:', err);
+        .catch((err) => {
+          console.error('[SignalR] Connection failed:', err);
           this.connectionStatusSubject.next(false);
           throw err;
         })
-        .finally(() => this.connectionPromise = null);
+        .finally(() => {
+          this.connectionPromise = null;
+        });
     }
 
     return this.connectionPromise;
   }
 
+  /**
+   * Send message through SignalR
+   */
   public async sendMessage(message: MessageDto): Promise<void> {
     try {
       await this.ensureConnection();
       await this.hubConnection.invoke('SendMessage', message);
     } catch (error) {
-      console.error('Error sending message through SignalR:', error);
+      console.error('[SignalR] Failed to send message:', error);
       throw error;
     }
   }
 
-  startConnection(userId: string) {
-    console.log(`Starting SignalR connection for user: ${userId}`);
-    
-    this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(`${environment.serverUrl}/ChatHub?userId=${userId}`)
-      .withAutomaticReconnect() // Add automatic reconnect
-      .build();
-
-      this.hubConnection.on('ReceiveMessage', (message: MessageDto) => {
-        message.timestamp = new Date(message.timestamp ?? new Date());
-        console.log('Received message from chathub Backend:', message);
-        this.messageSubject.next(message);
-      });
-
-    // Start connection but don't wait for it here
-    this.ensureConnection();
-  }
-
-  stopConnection() {
-    this.hubConnection?.stop();
-    this.connectionStatusSubject.next(false);
+  /**
+   * Stop SignalR connection
+   */
+  public stopConnection(): void {
+    if (this.hubConnection) {
+      this.hubConnection.stop().catch((err) => console.error('[SignalR] Error stopping connection:', err));
+      this.connectionStatusSubject.next(false);
+    }
   }
 }
