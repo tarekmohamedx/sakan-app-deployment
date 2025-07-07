@@ -94,6 +94,20 @@ export class ChatComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.chatHubService.bookingRequest$.subscribe((data) => {
+      console.log("Booking info received in component:", data);
+    
+      this.selectedChat = {
+        ...this.selectedChat,
+        listingId: data.request.listingId,
+        listingTitle: data.request.listingTitle,
+        hostId: data.request.hostId,
+        hostName: data.request.hostName,
+        guestId: data.request.guestId,
+        guestName: data.request.guestName
+      };
+    });
+
     // Get chats
     this.chatService.getUserChats(this.currentUserId).subscribe({
       next: async (chats) => {
@@ -110,6 +124,9 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.route.queryParams.subscribe(async (params) => {
           const hostId = params['hostId'];
           const listingId = params['listingId'];
+
+          console.log('Query params:', params);
+          
         
           this.currentUserId = this.authService.getUserIdFromToken()?.toString().trim();
         
@@ -120,9 +137,10 @@ export class ChatComponent implements OnInit, OnDestroy {
                 hostId,
                 +listingId
               );
+
         
               if (chat) {
-                // ✅ ده شات جديد، اعرض الـ Dialog
+
                 await this.DisplayConfirmationDialog();
         
                 this.selectedChat = {
@@ -130,6 +148,8 @@ export class ChatComponent implements OnInit, OnDestroy {
                   receiverID: hostId,
                 };
                 await this.loadChatHistory(chat.chatId);
+                await this.chatHubService.invokeChatWithHost(+listingId, this.currentUserId);
+                
               }
             } catch (error) {
               console.error('Error creating chat:', error);

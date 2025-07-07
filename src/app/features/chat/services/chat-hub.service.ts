@@ -18,6 +18,9 @@ export class ChatHubService {
   message$ = this.messageSubject.asObservable();
   connectionStatus$ = this.connectionStatusSubject.asObservable();
 
+  private bookingRequestSubject = new Subject<any>();
+public bookingRequest$ = this.bookingRequestSubject.asObservable();
+
   /**
    * Start SignalR connection if not already connected.
    * Safe to call multiple times.
@@ -51,6 +54,10 @@ export class ChatHubService {
       this.messageSubject.next(message);
     });
 
+    this.hubConnection.on('ReceiveBookingRequestInfo', (data) => {
+      console.log('Received booking info:', data);
+      this.bookingRequestSubject.next(data); 
+    });
     this.isInitialized = true;
   }
 
@@ -102,4 +109,15 @@ export class ChatHubService {
       this.connectionStatusSubject.next(false);
     }
   }
+
+  public async invokeChatWithHost(listingId: number, guestId: string): Promise<void> {
+    try {
+      await this.ensureConnection();
+      await this.hubConnection.invoke('ChatWithHost', listingId, guestId);
+    } catch (error) {
+      console.error('Error invoking ChatWithHost:', error);
+      throw error;
+    }
+  }
+  
 }
