@@ -184,31 +184,4 @@ deleteChat(sessionId: string, event: MouseEvent) {
   }
 }
 
-// deleteChat(sessionId: string, event: MouseEvent) {
-//   event.stopPropagation(); // prevent loading the session if delete is clicked
-
-//   const userId = this.getCurrentUserId();
-//   if (!userId) return;
-
-//   // Remove chat history from local storage
-//   const historyKey = this.getHistoryKey(sessionId, userId);
-//   localStorage.removeItem(historyKey);
-
-//   // Update session list in memory and localStorage
-//   this.sessionList = this.sessionList.filter(s => s.id !== sessionId);
-//   localStorage.setItem(this.getSessionKey(userId), JSON.stringify(this.sessionList));
-
-//   // If deleted session is currently open, reset to new chat or load another
-//   if (this.currentSessionId === sessionId) {
-//     if (this.sessionList.length > 0) {
-//       this.loadSession(this.sessionList[0].id);
-//     } else {
-//       this.newChat();
-//     }
-//   }
-// }
-
-
-
-
 }

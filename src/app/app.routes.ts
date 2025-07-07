@@ -30,6 +30,7 @@ import { AdminApproveListingsComponent } from './admin/listing/listings.componen
 import { AdminEditlistingComponent } from './admin/admin-editlisting/admin-editlisting.component';
 import { UserReviewComponent } from './features/UserReviews/user-review/user-review.component';
 import { AiComponent } from './ai/ai.component';
+import { BecomeHostComponent } from './features/become-host/become-host.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -44,6 +45,7 @@ export const routes: Routes = [
   { path: 'listing/:id', component:ListingDetailsComponent},
   { path: 'room/:id', component:RoomDetailsComponent},
   { path: 'chat', component: ChatComponent },
+  { path: 'becomeHost', component: BecomeHostComponent },
   { path: 'review', component: UserReviewComponent },
   { path: 'host', component: HostLayoutComponent, children: [
     {path : '', redirectTo: 'dashboard', pathMatch: 'full' },

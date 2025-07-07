@@ -1,0 +1,44 @@
+<div class="modal fade show" id="becomeHostModal" style="display: block;" tabindex="-1" aria-modal="true" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content p-4">
+      <!-- Your content here -->
+      <div class="modal-header border-0">
+        <h5 class="modal-title">🚀 Join as a Host</h5>
+        <button type="button" class="btn-close" (click)="closePopup()"></button>
+      </div>
+
+      <div class="modal-body">
+                <!-- Benefits -->
+        <section class="benefits-section">
+          <h6 class="benefits-title">What You'll Gain</h6>
+          <ul class="benefits-list">
+            <li>Earn income by renting your space</li>
+            <li>Control your schedule, guests, and prices</li>
+            <li>Reach a growing, trusted guest community</li>
+          </ul>
+        </section>
+
+        <!-- Policies -->
+        <section class="policy-section">
+          <h6 class="policy-title">Host Responsibilities</h6>
+          <p class="policy-text">
+            All hosts are expected to provide accurate listing information, maintain safe and clean environments, and respond to guests in a timely manner.
+            Your listing may be reviewed before approval.
+          </p>
+        </section>
+
+        <!-- Final Prompt -->
+        <section class="final-question">
+          <p>Are you ready to join our community as a host?</p>
+        </section>
+      </div>
+
+      <div class="modal-footer border-0">
+        <button class="btn btn-secondary" (click)="closePopup()">Cancel</button>
+        <button class="btn btn-primary" (click)="confirmBecomeHost()">Yes, Join</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade show"></div>
+
