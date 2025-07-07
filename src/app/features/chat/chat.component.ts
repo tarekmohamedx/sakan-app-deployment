@@ -12,6 +12,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { NoChatsComponent } from './components/app-no-chats/app-no-chats.component';
 import { Router } from '@angular/router';
+import { ApproveConfirmationModalComponent } from './components/approve-confirmation-modal/approve-confirmation-modal';
 
 @Component({
   selector: 'app-chat',
@@ -259,7 +260,20 @@ export class ChatComponent implements OnInit, OnDestroy {
     const confirmed = await dialogRef.afterClosed().toPromise();
     if (!confirmed) {
       console.log('No chats confirmation cancelled');
+      
+      this.router.navigate(['/home']);
       return;
+    }
+  }
+
+  async DisplayApproveDialog() {
+    const dialogRef = this.dialog.open(ApproveConfirmationModalComponent);
+    const result = await dialogRef.afterClosed().toPromise();
+  
+    if (result === 'confirm') {
+      console.log('User confirmed');
+    } else if (result === 'cancel') {
+      console.log('User cancelled');
     }
   }
 
@@ -342,38 +356,41 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   async onApproveClick() {
-    if (!this.selectedChat) return;
+    console.log("Approve Button Clicked");
+    await this.DisplayApproveDialog();
+    
+    // if (!this.selectedChat) return;
   
-    const isHost = this.selectedChat?.isHost ?? false;
+    // const isHost = this.selectedChat?.isHost ?? false;
   
-    try {
-      const result = await this.chatService.approveBooking(this.selectedChat.chatId, isHost);
+    // try {
+    //   const result = await this.chatService.approveBooking(this.selectedChat.chatId, isHost);
   
-      switch (result.status) {
-        case "GoToPayment":
-          // Show Go to Payment button
-          break;
-        case "PendingHost":
-          // Show "Pending host approval"
-          break;
-        case "PendingGuest":
-          // Show "Pending guest approval"
-          break;
-        case "PendingUserBooking":
-          // Show "Waiting for guest to book"
-          break;
-        default:
-          // Handle other states if needed
-          break;
-      }
-      this.approvalStatus = result.status;
-      console.log("Approval status updated:", this.approvalStatus);
+    //   switch (result.status) {
+    //     case "GoToPayment":
+    //       // Show Go to Payment button
+    //       break;
+    //     case "PendingHost":
+    //       // Show "Pending host approval"
+    //       break;
+    //     case "PendingGuest":
+    //       // Show "Pending guest approval"
+    //       break;
+    //     case "PendingUserBooking":
+    //       // Show "Waiting for guest to book"
+    //       break;
+    //     default:
+    //       // Handle other states if needed
+    //       break;
+    //   }
+    //   this.approvalStatus = result.status;
+    //   console.log("Approval status updated:", this.approvalStatus);
       
-      console.log("Booking approved:", result);
+    //   console.log("Booking approved:", result);
 
-    } catch (error) {
-      console.error("Approval failed", error);
-    }
+    // } catch (error) {
+    //   console.error("Approval failed", error);
+    // }
   }
 
   
