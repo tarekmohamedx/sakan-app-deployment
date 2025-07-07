@@ -110,12 +110,9 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.route.queryParams.subscribe(async (params) => {
           const hostId = params['hostId'];
           const listingId = params['listingId'];
-
-          this.currentUserId = this.authService
-            .getUserIdFromToken()
-            ?.toString()
-            .trim();
-
+        
+          this.currentUserId = this.authService.getUserIdFromToken()?.toString().trim();
+        
           if (hostId && listingId) {
             try {
               const chat = await this.chatService.createChatIfNotExists(
@@ -123,9 +120,11 @@ export class ChatComponent implements OnInit, OnDestroy {
                 hostId,
                 +listingId
               );
-
+        
               if (chat) {
-                this.DisplayConfirmationDialog();
+                // ✅ ده شات جديد، اعرض الـ Dialog
+                await this.DisplayConfirmationDialog();
+        
                 this.selectedChat = {
                   ...chat,
                   receiverID: hostId,
@@ -135,11 +134,11 @@ export class ChatComponent implements OnInit, OnDestroy {
             } catch (error) {
               console.error('Error creating chat:', error);
             }
+          } else {
+            this.getChatsByUserId(this.currentUserId);
           }
-
-          this.getChatsByUserId(this.currentUserId);
-          this.chatHubService.startConnection(this.currentUserId);
         });
+        
       },
       error: (err) => {
         console.error('Error fetching chats', err);

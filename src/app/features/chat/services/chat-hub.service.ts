@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { Subject } from 'rxjs';
-import { MessageDto, MessageModel } from '../../../core/models/messageDto';
+import { MessageDto} from '../../../core/models/messageDto';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatHubService {
   private hubConnection!: signalR.HubConnection;
-  private messageSubject = new Subject<MessageModel>();
+  private messageSubject = new Subject<MessageDto>();
   private connectionStatusSubject = new Subject<boolean>();
   private connectionPromise: Promise<void> | null = null;
 
@@ -54,13 +55,13 @@ export class ChatHubService {
     console.log(`Starting SignalR connection for user: ${userId}`);
     
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(`https://localhost:7188/chat?userId=${userId}`)
+      .withUrl(`${environment.serverUrl}/ChatHub?userId=${userId}`)
       .withAutomaticReconnect() // Add automatic reconnect
       .build();
 
-      this.hubConnection.on('ReceiveMessage', (message: MessageModel) => {
-        message.timestamp = new Date(message.timestamp);
-        console.log('Received message:', message);
+      this.hubConnection.on('ReceiveMessage', (message: MessageDto) => {
+        message.timestamp = new Date(message.timestamp ?? new Date());
+        console.log('Received message from chathub Backend:', message);
         this.messageSubject.next(message);
       });
 
