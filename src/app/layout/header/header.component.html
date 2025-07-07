@@ -49,7 +49,7 @@
 </ul>
 
     <div class="hidden md:flex items-center space-x-4">
-      <button class="text-brand-primary font-semibold">Become a host</button>
+      <button routerLink="becomeHost" class="text-brand-primary font-semibold">Become a host</button>
       <ng-container *ngIf="!isLoggedIn; else userMenu">
         <button routerLink="login" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">Log In</button>
         <button routerLink="register" class="px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-secondary">Sign Up</button>
@@ -92,12 +92,22 @@
             <span>My Booking Requests</span>
           </a>
 
-            <a routerLink="/review" (click)="closeDropdown()" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer" role="menuitem">
+          <a routerLink="/review" (click)="closeDropdown()" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer" role="menuitem">
             <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm6 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
             <span>My Reviews</span>
-            </a>
+          </a>
+
+          <a routerLink="/ai" (click)="closeDropdown()" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer" role="menuitem">
+            <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2v-6a2 2 0 012-2h2m-2-4h6a2 2 0 012 2v6a2 2 0 01-2 2H9l-4 4V6a2 2 0 012-2z"/>
+            </svg>
+            <span>Chat With Our AI</span>
+          </a>
+
+
 
           <!-- فاصل -->
           <div class="border-t border-gray-100 my-1"></div>
@@ -176,6 +186,19 @@
             My Booking Requests
           </a>
         </li>
+
+        <li>
+          <a routerLink="/review" (click)="closeAllMenus()" class="block px-6 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
+            My Reviews
+          </a>
+        </li>
+
+        <li>
+          <a routerLink="/ai" (click)="closeAllMenus()" class="block px-6 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
+            Chat With Our AI
+          </a>
+        </li>
+
         <!-- رابط الحساب -->
         <li>
           <a routerLink="/account" (click)="closeAllMenus()" 

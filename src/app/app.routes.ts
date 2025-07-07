@@ -29,6 +29,9 @@ import { AboutComponent } from './about/about.component';
 import { AdminApproveListingsComponent } from './admin/listing/listings.component';
 import { AdminEditlistingComponent } from './admin/admin-editlisting/admin-editlisting.component';
 import { UserReviewComponent } from './features/UserReviews/user-review/user-review.component';
+import { AiComponent } from './ai/ai.component';
+import { BecomeHostComponent } from './features/become-host/become-host.component';
+import { AdminHostsApproveComponent } from './admin/admin-hosts-approve/admin-hosts-approve.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -37,11 +40,13 @@ export const routes: Routes = [
   { path: 'listings', component: ListingsPageComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'ai', component: AiComponent },
   { path: 'wishlist', component: WishlistPageComponent},
   { path: 'payment', component: PaymentFormComponent},
   { path: 'listing/:id', component:ListingDetailsComponent},
   { path: 'room/:id', component:RoomDetailsComponent},
   { path: 'chat', component: ChatComponent },
+  { path: 'becomeHost', component: BecomeHostComponent },
   { path: 'review', component: UserReviewComponent },
   { path: 'host', component: HostLayoutComponent, children: [
     {path : '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -63,6 +68,7 @@ export const routes: Routes = [
     {path: 'listings', component: AdminListingsComponent},
     { path: 'editlisting/:id', component: AdminEditlistingComponent },
     { path: 'approvelistings', component: AdminApproveListingsComponent },
+    { path: 'approveHost', component: AdminHostsApproveComponent },
   ]},
 
   { path: '**', component: NotfoundComponent },

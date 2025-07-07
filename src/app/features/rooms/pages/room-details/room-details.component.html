@@ -84,16 +84,16 @@
     </div>
 
     <div class="months-grid">
-    <div *ngFor="let m of monthsShort; let i = index"
-        (click)="selectMonth(i + 1)"
-        class="month-tile"
-        [class.selected]="isMonthSelected(i + 1)"
-        [class.booked]="isMonthBooked(currentYear, i + 1)"
-        [attr.aria-pressed]="isMonthSelected(i + 1)"
-        role="button">
-    {{ m }}
+    <div
+      *ngFor="let m of monthsShort; let i = index"
+      class="month-tile"
+      [class.selected]="isMonthSelected(i + 1)"
+      [class.booked]="isMonthBooked(currentYear, i + 1)"
+      [attr.aria-pressed]="isMonthSelected(i + 1)"
+      role="button"
+      (click)="selectMonth(i + 1)">
+      {{ m }}
     </div>
-
     </div>
 
     <div *ngIf="selectedMonths.length" class="summary">

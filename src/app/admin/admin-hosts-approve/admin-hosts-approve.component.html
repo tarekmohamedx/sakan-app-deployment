@@ -1,0 +1,84 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Manage Host Requests</h2>
+  <!-- Search Bar -->
+  <div class="mb-3 row">
+    <div class="col-md-6" >
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search by name , email or status..."
+        [(ngModel)]="searchTerm"
+        (input)="filterHosts()" />
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="text-center">
+    <p>Loading...</p>
+  </div>
+
+  <!-- Host Table -->
+  <table class="table table-striped" *ngIf="!isLoading && pagedHosts.length > 0">
+    <thead>
+      <tr>
+        <th>Host Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let host of pagedHosts">
+        <td>{{ host.userName }}</td>
+        <td>{{ host.email }}</td>
+        <td>
+          <span class="badge"
+                [ngClass]="{
+                  'bg-warning text-dark': host.hostVerificationStatus === 'pending',
+                  'bg-success': host.hostVerificationStatus === 'accepted',
+                  'bg-danger': host.hostVerificationStatus === 'rejected'
+                }">
+            {{ host.hostVerificationStatus }}
+          </span>
+        </td>
+        <td>
+          <button class="btn btn-sm btn-success me-2"
+                  (click)="handleAction(host, 'approve')"
+                  [disabled]="host.hostVerificationStatus === 'accepted'">
+            Approve
+          </button>
+          <button class="btn btn-sm btn-danger"
+                  (click)="handleAction(host, 'reject')"
+                  [disabled]="host.hostVerificationStatus === 'rejected' || host.hostVerificationStatus === 'accepted'">
+                  <!-- [disabled]="host.hostVerificationStatus === 'accepted'"> -->
+            Reject
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- No results -->
+  <div *ngIf="!isLoading && pagedHosts.length === 0" class="alert alert-info">
+    No matching hosts found.
+  </div>
+
+<div class="d-flex justify-content-center mt-4">
+  <nav *ngIf="filteredHosts.length > pageSize">
+    <ul class="pagination">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button class="page-link" (click)="changePage(currentPage - 1)">«</button>
+      </li>
+
+      <li class="page-item" *ngFor="let page of totalPagesArray()" [class.active]="page === currentPage">
+        <button class="page-link" (click)="changePage(page)">{{ page }}</button>
+      </li>
+
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button class="page-link" (click)="changePage(currentPage + 1)">»</button>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+</div>

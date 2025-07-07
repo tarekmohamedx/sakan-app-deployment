@@ -470,6 +470,13 @@
   box-shadow: 0 2px 8px rgba(59,130,246,0.04);
 }
 
+/* .month-tile.disabled {
+  pointer-events: none;
+  opacity: 0.6;
+  cursor: not-allowed;
+} */
+
+
 .month-tile.selected {
   background: linear-gradient(90deg, #112c66 60%, #60a5fa8a 100%);
   color: #fff;

@@ -17,7 +17,7 @@ export class ListingDetailsService {
 
   getBookedMonths(listingId: number): Observable<{ year: number, month: number }[]> {
     // const lang = localStorage.getItem('lang') || 'en';
-    return this.http.get<{ year: number, month: number }[]>(`${this.baseUrl}/booked-months/${listingId}`);
+    return this.http.get<{ year: number, month: number }[]>(`${this.baseUrl}/ListingDetails/booked-months/${listingId}`);
   }
 
   createRequest(dto: BookingRequestDto): Observable<{ requestId: number, hostId: string }> {
