@@ -49,7 +49,7 @@
 </ul>
 
     <div class="hidden md:flex items-center space-x-4">
-      <button class="text-brand-primary font-semibold">Become a host</button>
+      <button routerLink="becomeHost" class="text-brand-primary font-semibold">Become a host</button>
       <ng-container *ngIf="!isLoggedIn; else userMenu">
         <button routerLink="login" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">Log In</button>
         <button routerLink="register" class="px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-secondary">Sign Up</button>
