@@ -11,6 +11,7 @@ import { ChatConfirmationModalComponent } from './components/chat-confirmation-m
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { NoChatsComponent } from './components/app-no-chats/app-no-chats.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chat',
@@ -27,7 +28,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     private chatHubService: ChatHubService,
     private authService: AuthService,
     private dialog: MatDialog,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router : Router
   ) {}
 
   // ngAfterViewChecked() {
@@ -149,7 +151,11 @@ export class ChatComponent implements OnInit, OnDestroy {
                 };
                 await this.loadChatHistory(chat.chatId);
                 await this.chatHubService.invokeChatWithHost(+listingId, this.currentUserId);
-                
+                this.router.navigate([], {
+                  relativeTo: this.route,
+                  queryParams: {},
+                  replaceUrl: true,
+                });
               }
             } catch (error) {
               console.error('Error creating chat:', error);
