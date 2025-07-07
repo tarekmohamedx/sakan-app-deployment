@@ -29,6 +29,7 @@ import { AboutComponent } from './about/about.component';
 import { AdminApproveListingsComponent } from './admin/listing/listings.component';
 import { AdminEditlistingComponent } from './admin/admin-editlisting/admin-editlisting.component';
 import { UserReviewComponent } from './features/UserReviews/user-review/user-review.component';
+import { AiComponent } from './ai/ai.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -37,6 +38,7 @@ export const routes: Routes = [
   { path: 'listings', component: ListingsPageComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'ai', component: AiComponent },
   { path: 'wishlist', component: WishlistPageComponent},
   { path: 'payment', component: PaymentFormComponent},
   { path: 'listing/:id', component:ListingDetailsComponent},
