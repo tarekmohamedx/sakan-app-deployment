@@ -11,6 +11,7 @@ import { ChatConfirmationModalComponent } from './components/chat-confirmation-m
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { NoChatsComponent } from './components/app-no-chats/app-no-chats.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chat',
@@ -27,7 +28,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     private chatHubService: ChatHubService,
     private authService: AuthService,
     private dialog: MatDialog,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router : Router
   ) {}
 
   // ngAfterViewChecked() {
@@ -94,6 +96,20 @@ export class ChatComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.chatHubService.bookingRequest$.subscribe((data) => {
+      console.log("Booking info received in component:", data);
+    
+      this.selectedChat = {
+        ...this.selectedChat,
+        listingId: data.request.listingId,
+        listingTitle: data.request.listingTitle,
+        hostId: data.request.hostId,
+        hostName: data.request.hostName,
+        guestId: data.request.guestId,
+        guestName: data.request.guestName
+      };
+    });
+
     // Get chats
     this.chatService.getUserChats(this.currentUserId).subscribe({
       next: async (chats) => {
@@ -111,11 +127,11 @@ export class ChatComponent implements OnInit, OnDestroy {
           const hostId = params['hostId'];
           const listingId = params['listingId'];
 
-          this.currentUserId = this.authService
-            .getUserIdFromToken()
-            ?.toString()
-            .trim();
-
+          console.log('Query params:', params);
+          
+        
+          this.currentUserId = this.authService.getUserIdFromToken()?.toString().trim();
+        
           if (hostId && listingId) {
             try {
               const chat = await this.chatService.createChatIfNotExists(
@@ -124,22 +140,31 @@ export class ChatComponent implements OnInit, OnDestroy {
                 +listingId
               );
 
+        
               if (chat) {
-                this.DisplayConfirmationDialog();
+
+                await this.DisplayConfirmationDialog();
+        
                 this.selectedChat = {
                   ...chat,
                   receiverID: hostId,
                 };
                 await this.loadChatHistory(chat.chatId);
+                await this.chatHubService.invokeChatWithHost(+listingId, this.currentUserId);
+                this.router.navigate([], {
+                  relativeTo: this.route,
+                  queryParams: {},
+                  replaceUrl: true,
+                });
               }
             } catch (error) {
               console.error('Error creating chat:', error);
             }
+          } else {
+            this.getChatsByUserId(this.currentUserId);
           }
-
-          this.getChatsByUserId(this.currentUserId);
-          this.chatHubService.startConnection(this.currentUserId);
         });
+        
       },
       error: (err) => {
         console.error('Error fetching chats', err);
