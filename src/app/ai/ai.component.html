@@ -1,19 +1,58 @@
-<div class="ai-container">
-  <h2>AI Response Assistant</h2>
-
-  <textarea
-    [(ngModel)]="inputText"
-    rows="5"
-    placeholder="Enter review, complaint, or message..."
-    class="input-box"
-  ></textarea>
-
-  <button (click)="getAiResponse()" [disabled]="isLoading" class="btn">
-    {{ isLoading ? 'Thinking...' : 'Generate Response' }}
+<div class="main-layout">
+  <!-- Sidebar -->
+  <button class="mobile-menu-btn" (click)="toggleSidebar()">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <circle cx="5" cy="12" r="2" />
+      <circle cx="12" cy="12" r="2" />
+      <circle cx="19" cy="12" r="2" />
+    </svg>
   </button>
+  <div class="sidebar-overlay" (click)="closeSidebar()"></div>
 
-  <div *ngIf="generatedResponse" class="result-box">
-    <h4>Suggested Response:</h4>
-    <p>{{ generatedResponse }}</p>
+  <aside class="sidebar">
+    <h2>Last Chats</h2>
+    <ul class="chat-history-list">
+      <!-- <li *ngFor="let chat of sessionList" [class.selected]="chat.id === currentSessionId">
+        <span (click)="loadSession(chat.id)" style="cursor: pointer;">{{ chat.title }}</span>
+        <button style="float: right; background: none; border: none; color: #f99;" title="Delete"
+                (click)="deleteChat(chat.id, $event)">🗑️</button>
+      </li> -->
+        <li *ngFor="let chat of sessionList"
+            [class.selected]="chat.id === currentSessionId"
+            (click)="loadSession(chat.id)">
+          {{ chat.title }}
+          <button class="delete-btn" (click)="deleteChat(chat.id, $event)">❌</button>
+        </li>
+    </ul>
+  </aside>
+
+
+
+
+  <!-- Chat Area -->
+  <div class="chat-container">
+    <h1>AI Chat</h1>
+    <button id="new-chat-btn" (click)="newChat()">New Chat</button>
+
+    <div class="chat-box">
+      <div *ngFor="let msg of chatHistory" [ngClass]="msg.sender" class="message">
+        <strong *ngIf="msg.sender === 'user'">You:</strong>
+        <strong *ngIf="msg.sender === 'ai'">AI:</strong>
+        <pre>{{ msg.text }}</pre>
+      </div>
+    </div>
+
+    <form (ngSubmit)="sendMessage()" class="chat-form">
+      <input
+        type="text"
+        [(ngModel)]="inputText"
+        name="user-input"
+        id="user-input"
+        placeholder="Type your question..."
+        autocomplete="off"
+        required
+      />
+      <button type="submit" [disabled]="isLoading" class="buttonSend">Send</button>
+    </form>
   </div>
 </div>
