@@ -349,7 +349,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     try {
       const result = await this.chatService.approveBooking(this.selectedChat.chatId, isHost);
   
-      // حسب الحالة، عدل الـ UI
       switch (result.status) {
         case "GoToPayment":
           // Show Go to Payment button
@@ -368,7 +367,10 @@ export class ChatComponent implements OnInit, OnDestroy {
           break;
       }
       this.approvalStatus = result.status;
+      console.log("Approval status updated:", this.approvalStatus);
+      
       console.log("Booking approved:", result);
+
     } catch (error) {
       console.error("Approval failed", error);
     }
