@@ -31,6 +31,7 @@ import { AdminEditlistingComponent } from './admin/admin-editlisting/admin-editl
 import { UserReviewComponent } from './features/UserReviews/user-review/user-review.component';
 import { AiComponent } from './ai/ai.component';
 import { BecomeHostComponent } from './features/become-host/become-host.component';
+import { AdminHostsApproveComponent } from './admin/admin-hosts-approve/admin-hosts-approve.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -67,6 +68,7 @@ export const routes: Routes = [
     {path: 'listings', component: AdminListingsComponent},
     { path: 'editlisting/:id', component: AdminEditlistingComponent },
     { path: 'approvelistings', component: AdminApproveListingsComponent },
+    { path: 'approveHost', component: AdminHostsApproveComponent },
   ]},
 
   { path: '**', component: NotfoundComponent },
