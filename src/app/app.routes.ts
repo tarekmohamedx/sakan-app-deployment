@@ -16,7 +16,6 @@ import { DashboardComponent } from './host/dashboard/dashboard.component';
 import { HostListingsComponent } from './host/host-listings/host-listings.component';
 import { EditHostListingComponent } from './host/edit-host-listings/edit-host-listings.component';
 import { HostRoomsComponent } from './host/host-rooms/host-rooms.component';
-import path from 'path';
 import { AddApartmentComponent } from './host/host-add-apartment/add-apartment.component';
 import { HostBookingComponent } from './host/host-booking/host-booking.component';
 import { HostUserReviewsComponent } from './host/host-user-reviews/host-user-reviews.component';
@@ -25,15 +24,32 @@ import { BookingRequestsComponent } from './host/booking-requests/booking-reques
 import { LayoutComponent } from '../app/Admin/layout/layout.component';
 import { AdminDashboardComponent } from '../app/Admin/admin-dashboard/admin-dashboard.component';
 import { AdminListingsComponent } from '../app/Admin/admin-listings/admin-listings.component';
-import { AdminEditlistingComponent } from '../app/Admin/admin-editlisting/admin-editlisting.component';
 import { AboutComponent } from './about/about.component';
+//import { AdminApproveListingsComponent } from '../app/Admin/admin-listings/admin-listings.component';
+import { AdminEditlistingComponent } from '../app/Admin/admin-editlisting/admin-editlisting.component';
+import { UserReviewComponent } from './features/UserReviews/user-review/user-review.component';
+import { AiComponent } from './ai/ai.component';
+import { BecomeHostComponent } from './features/become-host/become-host.component';
 import { AdminHostsApproveComponent } from '../app/Admin/admin-hosts-approve/admin-hosts-approve.component';
-import { profileEnd } from 'console';
-import { ProfileComponent } from './features/auth/profile/components/profile/profile.component';
+import { GoogleCallbackComponent } from './features/auth/google-callback/google-callback.component';
+import { ForgetPasswordComponent } from './features/auth/forget-password/forget-password.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
   { path: 'about', component: AboutComponent },
+  {
+    path: 'forget-password',
+    component: ForgetPasswordComponent,
+  },
+  { path: 'auth/google/callback', component: GoogleCallbackComponent },
+  {
+    path: 'reset-password',
+    loadComponent: () =>
+      import(
+        '../app/features/auth/reset-password/reset-password.component'
+      ).then((m) => m.ResetPasswordComponent),
+  },
+
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'listings', component: ListingsPageComponent },
   { path: 'register', component: RegisterComponent },
@@ -43,7 +59,8 @@ export const routes: Routes = [
   { path: 'listing/:id', component: ListingDetailsComponent },
   { path: 'room/:id', component: RoomDetailsComponent },
   { path: 'chat', component: ChatComponent },
-  {path:'Profile/:id' ,component:ProfileComponent },
+  { path: 'becomeHost', component: BecomeHostComponent },
+  { path: 'review', component: UserReviewComponent },
   {
     path: 'host',
     component: HostLayoutComponent,
@@ -70,7 +87,8 @@ export const routes: Routes = [
       { path: 'dashboard', component: AdminDashboardComponent },
       { path: 'listings', component: AdminListingsComponent },
       { path: 'editlisting/:id', component: AdminEditlistingComponent },
-      { path: 'approvelistings', component: AdminHostsApproveComponent },
+      //{ path: 'approvelistings', component: AdminApproveListingsComponent },
+      { path: 'approveHost', component: AdminHostsApproveComponent },
     ],
   },
 

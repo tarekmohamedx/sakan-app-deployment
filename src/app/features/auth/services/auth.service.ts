@@ -43,9 +43,15 @@ export class AuthService {
   Login(login: Login): Observable<any> {
     return this.httpclient.post<any>(`${environment.apiurlauth}/Login`, login);
   }
-  externalLogin() {
+  externalLogin(idtoken: string) {
     // This backend endpoint should initiate Google login (e.g. /signin-google)
-    window.location.href = `${environment.apiurlauth}/externallogin/google`;
+    // window.location.href = `${environment.apiurlauth}/externallogin/google`;
+    return this.httpclient.post<{ token: string }>(
+      'https://localhost:7188/api/Account/google-auth',
+      { Token: idtoken },
+      //{withCredentials: true},
+      { headers: { 'Content-Type': 'application/json' } }
+    );
   }
 
   getuserdata(): {
@@ -74,6 +80,21 @@ export class AuthService {
       };
     }
     return null;
+  }
+
+  forgotPassword(data: { email: string }) {
+    return this.httpclient.post(
+      'https://localhost:7188/api/Account/forgot-password',
+      data
+    );
+  }
+
+  resetPassword(data: any) {
+    return this.httpclient.post<{ message: string }>(
+      'https://localhost:7188/api/Account/reset-password',
+      data,
+      { headers: { 'Content-Type': 'application/json' } }
+    );
   }
 
   //jwt
