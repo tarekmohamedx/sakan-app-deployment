@@ -16,7 +16,6 @@ import { DashboardComponent } from './host/dashboard/dashboard.component';
 import { HostListingsComponent } from './host/host-listings/host-listings.component';
 import { EditHostListingComponent } from './host/edit-host-listings/edit-host-listings.component';
 import { HostRoomsComponent } from './host/host-rooms/host-rooms.component';
-import path from 'path';
 import { AddApartmentComponent } from './host/host-add-apartment/add-apartment.component';
 import { HostBookingComponent } from './host/host-booking/host-booking.component';
 import { HostUserReviewsComponent } from './host/host-user-reviews/host-user-reviews.component';
