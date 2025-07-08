@@ -272,9 +272,12 @@ export class ChatComponent implements OnInit, OnDestroy {
   
     if (result === 'confirm') {
       console.log('User confirmed');
+
     } else if (result === 'cancel') {
       console.log('User cancelled');
     }
+    return result;
+    
   }
 
   async DisplayConfirmationDialog() {
@@ -357,42 +360,49 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   async onApproveClick() {
     console.log("Approve Button Clicked");
-    await this.DisplayApproveDialog();
-    
-    // if (!this.selectedChat) return;
   
-    // const isHost = this.selectedChat?.isHost ?? false;
+    const result = await this.DisplayApproveDialog();
+    console.log(result, "Dialog result");
   
-    // try {
-    //   const result = await this.chatService.approveBooking(this.selectedChat.chatId, isHost);
+    if (result === 'confirm') {
+      if (!this.selectedChat) return;
   
-    //   switch (result.status) {
-    //     case "GoToPayment":
-    //       // Show Go to Payment button
-    //       break;
-    //     case "PendingHost":
-    //       // Show "Pending host approval"
-    //       break;
-    //     case "PendingGuest":
-    //       // Show "Pending guest approval"
-    //       break;
-    //     case "PendingUserBooking":
-    //       // Show "Waiting for guest to book"
-    //       break;
-    //     default:
-    //       // Handle other states if needed
-    //       break;
-    //   }
-    //   this.approvalStatus = result.status;
-    //   console.log("Approval status updated:", this.approvalStatus);
-      
-    //   console.log("Booking approved:", result);
-
-    // } catch (error) {
-    //   console.error("Approval failed", error);
-    // }
+      const isHost = this.selectedChat?.isHost ?? false;
+  
+      try {
+        const approvalResult = await this.chatService.approveBooking(31, 89, false);
+  
+        this.approvalStatus = approvalResult.status;
+        console.log("Approval status updated:", this.approvalStatus);
+  
+        switch (this.approvalStatus) {
+          case "GoToPayment":
+            // show "Pay Now" button
+            break;
+          case "PendingHost":
+            // show "Waiting for host approval"
+            break;
+          case "PendingGuest":
+            // show "Waiting for guest approval"
+            break;
+          case "PendingUserBooking":
+            // show "Guest needs to book"
+            break;
+          case "Approved":
+            // show "Booking Confirmed"
+            break;
+          default:
+            // handle other states
+            break;
+        }
+  
+      } catch (error) {
+        console.error("Approval failed", error);
+      }
+    } else {
+      console.log("User cancelled approval.");
+    }
   }
-
   
 
 

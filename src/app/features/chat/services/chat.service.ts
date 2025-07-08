@@ -36,11 +36,10 @@ export class ChatService {
     return firstValueFrom(this.http.post<UserChatSummary>(`${this.baseUrl}/CreateChatIfNotExists`, body));
   }
 
-  approveBooking(chatId: number, isHost: boolean): Promise<any> {
-    const body = { chatId, isHost };
-    return firstValueFrom(this.http.post(`${this.baseUrl}/approve`, body));
+  approveBooking(chatId: number, bookingId: number, isHost: boolean): Promise<any> {
+    const body = { bookingId, isHost };
+    return firstValueFrom(this.http.post(`${this.baseUrl}/approve-booking`, body));
   }
-
   
   
 }
