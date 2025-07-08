@@ -7,6 +7,7 @@ import { environment } from '../../../environments/environment';
 import { Login } from '../../../core/models/Login';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { Jwtpayloadd } from '../../../core/models/Jwtpayload';
+import { UserProfileDTO } from '../../../core/models/UserProfileDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -121,5 +122,28 @@ export class AuthService {
 
   checkLogin(): void {
     this.isLoggedInSubject.next(this.hasToken());
+  }
+  getProfile(userId: string): Observable<UserProfileDTO> {
+    return this.httpclient.get<UserProfileDTO>(
+      `${environment.apiurlprofile}/${userId}`
+    );
+  }
+
+  updateProfile(id: string, body: Partial<UserProfileDTO>): Observable<any> {
+    return this.httpclient.put(`${environment.apiurlprofile}/Edit/${id}`, body);
+  }
+
+  deleteProfile(id: string): Observable<any> {
+    return this.httpclient.patch(
+      `${environment.apiurlprofile}/soft-delete/${id}`,
+      null
+    );
+  }
+
+  uploadUserPhoto(id: string, formData: FormData): Observable<any> {
+    return this.httpclient.post(
+      `${environment.apiurlprofile}/upload-photo/${id}`,
+      formData
+    );
   }
 }

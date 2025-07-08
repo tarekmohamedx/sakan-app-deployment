@@ -51,7 +51,7 @@ export class LoginComponent {
         next: (response) => {
           console.log('Login successful', response);
           // Navigate to home page after successful login
-          sessionStorage.setItem('token', response.token);
+          this.loginservice.setLogin(response.token);
           console.log('Token saved to sessionStorage:', response.token);
 
           this.router.navigateByUrl('home');

@@ -12,4 +12,5 @@ export interface CreateListingDTO {
   isBookableAsWhole: boolean;
   listingPhotos: File[];
   rooms: RoomDTO[];
+  amenityIds: number[];
 }

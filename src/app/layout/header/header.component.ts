@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Router } from 'express';
@@ -9,22 +16,23 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterModule,CommonModule,FormsModule],
+  imports: [RouterModule, CommonModule, FormsModule],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  styleUrl: './header.component.css',
 })
-export class HeaderComponent implements OnInit, OnDestroy{
+export class HeaderComponent implements OnInit, OnDestroy {
   @ViewChild('dropdownContainer') dropdownContainer?: ElementRef;
 
   isLoggedIn = false;
   private subscription!: Subscription;
+  public userid:string = '';
 
   // isLoggedIn = true;
   isMobileMenuOpen = false;
   isDropdownOpen = false;
   user = {
-    name: "",
-    profilePictureUrl: ""
+    name: '',
+    profilePictureUrl: '',
   };
 
   constructor(private authService: AuthService) {}
@@ -35,21 +43,24 @@ export class HeaderComponent implements OnInit, OnDestroy{
   //   });
   // }
 
-    ngOnInit(): void {
+  ngOnInit(): void {
     const userData = this.authService.getuserdata();
     if (userData) {
+      this.userid = userData.id;
+      console.log('User ID:', this.userid);
       this.isLoggedIn = true;
       this.user = {
         name: userData.name,
-        profilePictureUrl: 'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png'  // Optional: Replace if you have user photo
+        profilePictureUrl:
+          'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png', // Optional: Replace if you have user photo
       };
     }
-        this.subscription = this.authService.isLoggedIn$.subscribe(status => {
+    this.subscription = this.authService.isLoggedIn$.subscribe((status) => {
       this.isLoggedIn = status;
     });
   }
 
-    logout(): void {
+  logout(): void {
     this.authService.logout();
   }
 
@@ -69,7 +80,10 @@ export class HeaderComponent implements OnInit, OnDestroy{
   @HostListener('document:click', ['$event'])
   clickOutside(event: Event) {
     // إذا كانت القائمة مفتوحة والنقرة حدثت خارج حاوية القائمة، قم بإغلاقها
-    if (this.isDropdownOpen && !this.dropdownContainer?.nativeElement.contains(event.target)) {
+    if (
+      this.isDropdownOpen &&
+      !this.dropdownContainer?.nativeElement.contains(event.target)
+    ) {
       this.closeDropdown();
     }
   }
@@ -81,5 +95,4 @@ export class HeaderComponent implements OnInit, OnDestroy{
     this.isMobileMenuOpen = false;
     // this.isDropdownOpen = false; // إذا كان لديك dropdown للديسكتوب
   }
-
 }

@@ -12,7 +12,6 @@
         <div class="form-group">
           <label for="title">Title</label>
           <input id="title" formControlName="title" placeholder="Enter title" />
-         
         </div>
 
         <div class="form-group">
@@ -31,11 +30,29 @@
             <option *ngFor="let gov of governorates" [value]="gov">{{ gov }}</option>
           </select>
         </div>
+
+        <div class="form-group">
+          <label for="district">District</label>
+          <input id="district" formControlName="district" placeholder="Enter district" />
+        </div>
       </div>
+
+      <!-- Amenities Multi-Select -->
       <div class="form-group">
-        <label for="district">district</label>
-        <input id="district" formControlName="district" placeholder="Enter district" />
+        <label for="amenities">Select Amenities</label>
+        <select
+          id="amenities"
+          multiple
+          [(ngModel)]="selectedAmenities"
+          name="amenities"
+          class="form-control"
+        >
+          <option *ngFor="let amenity of amenities" [value]="amenity.id">
+            {{ amenity.name }}
+          </option>
+        </select>
       </div>
+
       <!-- Map Section -->
       <div class="form-section map-section">
         <div class="section-title">Map Placeholder</div>
@@ -52,30 +69,29 @@
           <span class="plus-icon">➕</span> Add Room
         </button>
       </div>
+
       <div *ngIf="rooms.length > 0" class="room-list-preview">
         <h4>Added Rooms:</h4>
         <ul>
           <li *ngFor="let room of rooms">{{ room.name }} - {{ room.type }}</li>
         </ul>
       </div>
-      
 
-     <!-- File Upload -->
-<div class="form-section file-upload-section">
-  <div class="file-upload-area" (click)="triggerFileUpload()">
-    <div class="upload-icon">📁</div>
-    <p><strong>Click to upload</strong> or drag and drop apartment photos</p>
-  </div>
-  <!-- Move input outside clickable area -->
-  <input type="file" #fileInput multiple hidden (change)="onPhotoUpload($event)" />
-</div>
+      <!-- File Upload -->
+      <div class="form-section file-upload-section">
+        <div class="file-upload-area" (click)="triggerFileUpload()">
+          <div class="upload-icon">📁</div>
+          <p><strong>Click to upload</strong> or drag and drop apartment photos</p>
+        </div>
+        <input type="file" #fileInput multiple hidden (change)="onPhotoUpload($event)" />
+      </div>
 
-<div *ngIf="listingPhotos.length > 0" class="preview-area">
-  <h4>Uploaded Photos:</h4>
-  <ul>
-    <li *ngFor="let photo of listingPhotos">{{ photo.name }}</li>
-  </ul>
-</div>
+      <div *ngIf="listingPhotos.length > 0" class="preview-area">
+        <h4>Uploaded Photos:</h4>
+        <ul>
+          <li *ngFor="let photo of listingPhotos">{{ photo.name }}</li>
+        </ul>
+      </div>
 
       <!-- Actions -->
       <div class="form-actions">

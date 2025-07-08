@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { adminListingService } from '../services/admin-listing.service';
+import { AdminListingService } from '../../Admin/services/admin-listing.service';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -25,7 +25,7 @@ export class AdminEditlistingComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private adminListingService: adminListingService,
+    private adminListingService: AdminListingService,
     private toastr: ToastrService,
     private http: HttpClient
   ) {

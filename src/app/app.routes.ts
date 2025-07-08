@@ -27,38 +27,51 @@ import { AdminDashboardComponent } from '../app/Admin/admin-dashboard/admin-dash
 import { AdminListingsComponent } from '../app/Admin/admin-listings/admin-listings.component';
 import { AdminEditlistingComponent } from '../app/Admin/admin-editlisting/admin-editlisting.component';
 import { AboutComponent } from './about/about.component';
-import { AdminApproveListingsComponent } from './admin/listing/listings.component';
+import { AdminApproveListingsComponent } from '../app/Admin/listing/listings.component';
+import { ProfileComponent } from './features/auth/profile/components/profile/profile.component';
 
 export const routes: Routes = [
-  {path  : '', redirectTo: 'host', pathMatch: 'full' },
+  { path: 'home', component: HomePageComponent },
+  { path: 'about', component: AboutComponent },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'listings', component: ListingsPageComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'wishlist', component: WishlistPageComponent},
-  { path: 'payment', component: PaymentFormComponent},
-  { path: 'listing/:id', component:ListingDetailsComponent},
-  { path: 'room/:id', component:RoomDetailsComponent},
+  { path: 'wishlist', component: WishlistPageComponent },
+  { path: 'payment', component: PaymentFormComponent },
+  { path: 'listing/:id', component: ListingDetailsComponent },
+  { path: 'room/:id', component: RoomDetailsComponent },
+  { path: 'profile/:id', component: ProfileComponent },
   { path: 'chat', component: ChatComponent },
-  { path: 'host', component: HostLayoutComponent, children: [
-    {path : '', redirectTo: 'dashboard', pathMatch: 'full' },
-    { path: 'dashboard', component: DashboardComponent },
-    { path: 'listings', component: HostListingsComponent },
-    {path:'addapartment' , component:AddApartmentComponent},
-    { path: 'editlisting/:id', component: EditHostListingComponent },
-    { path: 'listings/:listingId/rooms', component: HostRoomsComponent },
-    { path: 'chat', component: ChatComponent },
-    { path: 'booking', component: HostBookingComponent },
-    { path: 'reviews', component: HostUserReviewsComponent },
-    { path: 'myReviews', component: HostMyReviewsComponent },
-    { path: 'requests', component: BookingRequestsComponent },
-  ]},
+  {
+    path: 'host',
+    component: HostLayoutComponent,
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'listings', component: HostListingsComponent },
+      { path: 'addapartment', component: AddApartmentComponent },
+      { path: 'editlisting/:id', component: EditHostListingComponent },
+      { path: 'listings/:listingId/rooms', component: HostRoomsComponent },
+      { path: 'chat', component: ChatComponent },
+      { path: 'booking', component: HostBookingComponent },
+      { path: 'reviews', component: HostUserReviewsComponent },
+      { path: 'myReviews', component: HostMyReviewsComponent },
+      { path: 'requests', component: BookingRequestsComponent },
+    ],
+  },
 
-  { path: 'admin', component: LayoutComponent,  children:[
-    {path : '', redirectTo: 'dashboard', pathMatch: 'full' },
-    {path:'dashboard', component:AdminDashboardComponent},
-    {path: 'listings', component: AdminListingsComponent},
-    { path: 'editlisting/:id', component: AdminEditlistingComponent },
-    { path: 'approvelistings', component: AdminApproveListingsComponent },
-  ]},
+  {
+    path: 'admin',
+    component: LayoutComponent,
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: AdminDashboardComponent },
+      { path: 'listings', component: AdminListingsComponent },
+      { path: 'editlisting/:id', component: AdminEditlistingComponent },
+      { path: 'approvelistings', component: AdminApproveListingsComponent },
+    ],
+  },
 
   { path: '**', component: NotfoundComponent },
   { path: 'signin-google', component: CallbackComponent },

@@ -9,19 +9,24 @@ import { AuthService } from '../../features/auth/services/auth.service';
   providedIn: 'root',
 })
 export class CreatelistingserviceService {
-  
   constructor(private http: HttpClient, private authserice: AuthService) {}
 
   createListing(dto: CreateListingDTO): Observable<any> {
-    const token = sessionStorage.getItem('token'); 
+    const token = sessionStorage.getItem('token');
+    const hostId = this.authserice.getuserdata()?.id ?? '';
+    const tk = this.authserice.getToken();
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${tk}`,
     });
     // const hostId = this.authserice.getuserdata()?.id ?? '';
     const formData = this.buildFormData(dto);
-    return this.http.post<any>(`${environment.apiurllisting}`, formData, {
-      headers: headers,
-    });
+    return this.http.post<any>(
+      `${environment.apiurllisting}/${hostId}`,
+      formData,
+      {
+        headers: headers,
+      }
+    );
   }
 
   private buildFormData(dto: CreateListingDTO): FormData {
