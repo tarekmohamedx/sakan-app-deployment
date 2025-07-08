@@ -13,6 +13,8 @@ import { firstValueFrom } from 'rxjs';
 import { NoChatsComponent } from './components/app-no-chats/app-no-chats.component';
 import { Router } from '@angular/router';
 import { ApproveConfirmationModalComponent } from './components/approve-confirmation-modal/approve-confirmation-modal';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-chat',
@@ -30,7 +32,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private router : Router
+    private router : Router,
+    private toastr : ToastrService
   ) {}
 
   // ngAfterViewChecked() {
@@ -72,6 +75,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   };
 
   async ngOnInit() {
+alert('Toast should have appeared!');
+    this.toastr.success('Toastr is working!', 'Test');
     this.currentUserId = this.authService
       .getUserIdFromToken()
       ?.toString()
@@ -171,6 +176,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         console.error('Error fetching chats', err);
       },
     });
+    await this.BookingApproveNotify();
   }
 
   ngOnDestroy() {
@@ -370,7 +376,18 @@ export class ChatComponent implements OnInit, OnDestroy {
       const isHost = this.selectedChat?.isHost ?? false;
   
       try {
-        const approvalResult = await this.chatService.approveBooking(31, 89, false);
+        // const chatId = this.selectedChat?.id;
+        const chatId = this.messages[0]?.chatId;
+        console.log("Chat Id: " + chatId);
+        
+        if (!chatId) return;
+        
+        const bookingId = await firstValueFrom(this.chatService.getBookingId(chatId));
+        console.log("Booking Id: " + bookingId);
+        
+        const isHost = this.selectedChat?.isHost ?? false;
+        
+        const approvalResult = await this.chatService.approveBooking(chatId,bookingId, isHost);
   
         this.approvalStatus = approvalResult.status;
         console.log("Approval status updated:", this.approvalStatus);
@@ -404,6 +421,23 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
   }
   
+  async BookingApproveNotify(){
+    this.chatHubService.bookingRequest$.subscribe((data) => {
+      console.log('[SignalR] Booking status update received:', data);
+  
+      const message = `${data.userName} ${
+        data.status === 'GoToPayment'
+          ? 'approved the booking, please proceed to payment.'
+          : data.status === 'PendingHost'
+          ? 'approved the request. Waiting for host confirmation.'
+          : data.status === 'PendingGuest'
+          ? 'approved the request. Waiting for guest confirmation.'
+          : 'updated booking status.'
+      }`;
+  
+      this.toastr.info(message, data.listingTitle);
+    });
+  }
 
 
 }
