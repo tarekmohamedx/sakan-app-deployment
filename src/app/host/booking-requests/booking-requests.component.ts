@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BookingRequestsService, BookingRequest } from '../services/BookingRequests.service';
-import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -17,8 +17,7 @@ export class BookingRequestsComponent implements OnInit {
   pageSize = 10;
 
   constructor(
-    private bookingRequestsService: BookingRequestsService,
-    private toastr: ToastrService
+    private bookingRequestsService: BookingRequestsService
   ) {}
 
   ngOnInit(): void {
@@ -29,17 +28,18 @@ export class BookingRequestsComponent implements OnInit {
     this.loading = true;
     this.bookingRequestsService.getBookingRequests().subscribe({
       next: res => { this.requests = res; this.loading = false; },
-      error: () => { this.toastr.error('Failed to load requests'); this.loading = false; }
+      error: () => { Swal.fire('Error', 'Failed to load requests ❌', 'error');
+        this.loading = false; }
     });
   }
 
   updateRequest(requestId: number, isAccepted: boolean): void {
     this.bookingRequestsService.updateBookingRequest(requestId, isAccepted).subscribe({
       next: () => {
-        this.toastr.success(isAccepted ? 'Request approved' : 'Request rejected');
+        Swal.fire('Success', isAccepted ? 'Request approved ✅' : 'Request rejected 🚫', 'success');
         this.loadRequests();
       },
-      error: () => this.toastr.error('Failed to update request')
+      error: () => Swal.fire('Error', 'Failed to update request ❌', 'error')
     });
   }
 

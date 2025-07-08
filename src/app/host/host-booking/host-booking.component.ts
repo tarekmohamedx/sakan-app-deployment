@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
 import { HostListingService } from '../services/HostListing.service';
 import { HostBooking } from '../../core/models/HostBooking';
 
@@ -18,8 +18,7 @@ export class HostBookingComponent implements OnInit {
   pageSize = 5;
  
   constructor(
-    private bookingService: HostListingService,
-    private toastr: ToastrService
+    private bookingService: HostListingService
   ) {}
 
   ngOnInit(): void {
@@ -33,7 +32,7 @@ export class HostBookingComponent implements OnInit {
         this.isLoading = false;
       },
       error: () => {
-        this.toastr.error('Failed to load bookings.');
+        Swal.fire('Error', 'Failed to load bookings.', 'error');
         this.isLoading = false;
       }
     });
