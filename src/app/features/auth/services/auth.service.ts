@@ -54,6 +54,48 @@ export class AuthService {
     );
   }
 
+  // getuserdata(): {
+  //   name: string;
+  //   email: string;
+  //   id: string;
+  //   // role: string;
+  //   role:string[];
+  // } | null {
+  //   const token = sessionStorage.getItem('token');
+  //   if (token) {
+  //     const decoded: any = jwtDecode(token);
+  //     return {
+  //       name: decoded[
+  //         'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'
+  //       ],
+  //       email:
+  //         decoded[
+  //           'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'
+  //         ],
+  //       id: decoded[
+  //         'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'
+  //       ],
+  //       role: decoded[
+  //         'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+  //       ],
+  //     };
+  //   }
+  //   return null;
+  // }
+
+  // getRoleFromToken(): string | null {
+  //   const token = this.getToken();
+  //   if (!token) return null;
+
+  //   const decoded = jwtDecode(token) as { [key: string]: any };
+  //   const role =
+  //     decoded[
+  //       'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+  //     ];
+
+  //   return role;
+  // }
+
   getuserdata(): {
     name: string;
     email: string;
@@ -82,21 +124,6 @@ export class AuthService {
     return null;
   }
 
-  forgotPassword(data: { email: string }) {
-    return this.httpclient.post(
-      'https://localhost:7188/api/Account/forgot-password',
-      data
-    );
-  }
-
-  resetPassword(data: any) {
-    return this.httpclient.post<{ message: string }>(
-      'https://localhost:7188/api/Account/reset-password',
-      data,
-      { headers: { 'Content-Type': 'application/json' } }
-    );
-  }
-
   //jwt
   getToken(): string | null {
     return sessionStorage.getItem('token');
@@ -113,6 +140,21 @@ export class AuthService {
       ];
 
     return userId;
+  }
+
+  forgetPassword(email: string) {
+    return this.httpclient.post(
+      'https://localhost:7188/api/Account/forgot-password',
+      { email }
+    );
+  }
+
+  resetPassword(data: any) {
+    return this.httpclient.post<{ message: string }>(
+      'https://localhost:7188/api/Account/reset-password',
+      data,
+      { headers: { 'Content-Type': 'application/json' } }
+    );
   }
 
   getRoleFromToken(): string | null {

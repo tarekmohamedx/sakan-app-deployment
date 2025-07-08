@@ -27,7 +27,7 @@ export class ForgetPasswordComponent {
 
   submit() {
     if (this.form.valid) {
-      this.authService.forgotPassword(this.form.value).subscribe({
+      this.authService.forgetPassword(this.form.value).subscribe({
         next: (res: any) => {
           Swal.fire({
             icon: 'success',

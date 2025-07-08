@@ -77,8 +77,10 @@ export class LoginComponent implements OnInit {
 
   renderGoogleSignInButton(): void {
     google.accounts.id.initialize({
-      client_id: '748134783269-d8b8i4lht8h89k703o4tkrkmq0jfrm51.apps.googleusercontent.com',
+      client_id:
+        '748134783269-d8b8i4lht8h89k703o4tkrkmq0jfrm51.apps.googleusercontent.com',
       callback: this.handleCredentialResponse.bind(this),
+      locale: 'en',
     });
 
     google.accounts.id.renderButton(
