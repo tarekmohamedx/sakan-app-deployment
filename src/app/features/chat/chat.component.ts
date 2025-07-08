@@ -65,7 +65,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   ListingID: string = '4';
   approvalStatus: string = '';
   hostApproved: boolean = false;
-  guestApproved: boolean = false; 
+  guestApproved: boolean = false;
+  newchats: ChatDto[] = [];
 
   message: MessageDto = {
     senderID: '',
@@ -119,16 +120,22 @@ alert('Toast should have appeared!');
     // Get chats
     this.chatService.getUserChats(this.currentUserId).subscribe({
       next: async (chats) => {
-        this.chats = chats;
+        this.newchats = chats;
         // console.log("Get User Chats: ", this.chats);
         console.log("User id : " + this.currentUserId);
         console.log("IS HOST: ", this.isHost());
 
         
         
-        this.chats.forEach((chat) => {
+        this.newchats.forEach((chat) => {
          this.chatService.getBookingId(chat.chatId, this.currentUserId).subscribe((bookingId) => {
             console.log('Booking ID for chat', chat.chatId, ':', bookingId);
+
+            this.chatService.getApprovalStatus(bookingId, this.currentUserId, this.isHost())
+            .subscribe((approvalStatus) => {
+              chat.listingStatus = approvalStatus.status;
+              console.log(chat.listingStatus, 'Approval status for chat', chat.listingStatus);
+            });
             
          });
          

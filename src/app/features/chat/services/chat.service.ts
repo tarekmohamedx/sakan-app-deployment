@@ -51,15 +51,14 @@ export class ChatService {
   }
   
 
-  // getApprovalStatus(chatId: number, userId: string, isHost: boolean): Promise<any> {
-  //   const params = {
-  //     chatId: chatId.toString(),
-  //     userId,
-  //     isHost: isHost.toString()
-  //   };
+  getApprovalStatus(bookingId: number, userId: string, isHost: boolean): Observable<any> {
+    const params = {
+      bookingId: bookingId.toString(),
+      userId,
+      isHost: isHost.toString()
+    };
   
-  //   return firstValueFrom(this.http.get(`${this.baseUrl}/approval-status`, { params }));
-  // }
-  
+    return this.http.get<any>(`${this.baseUrl}/approval-status`, { params });
+  }
   
 }
