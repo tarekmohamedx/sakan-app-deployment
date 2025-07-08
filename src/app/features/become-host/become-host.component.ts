@@ -3,12 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { jwtDecode } from 'jwt-decode';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 // import { Modal } from 'bootstrap';
 
 @Component({
   selector: 'app-become-host',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, FormsModule],
   templateUrl: './become-host.component.html',
   styleUrl: './become-host.component.css'
 })
