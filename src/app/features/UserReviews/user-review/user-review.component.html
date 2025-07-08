@@ -1,0 +1,60 @@
+<table class="table modern-table">
+    <thead>
+        <tr>
+            <th>Listing</th>
+            <th>Period</th>
+            <th>Rating</th>
+            <th>Comment</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let booking of bookings">
+            <td>{{ booking.listingTitle }}</td>
+            <td>{{ booking.fromDate }} → {{ booking.toDate }}</td>
+            <td>
+                <span class="rating">
+                    <ng-container *ngFor="let star of [1,2,3,4,5]; let i = index">
+                        <span class="star" [class.filled]="booking.rating! >= star">★</span>
+                    </ng-container>
+                </span>
+            </td>
+            <td>{{ booking.comment || 'No comment provided' }}</td>
+            <td>
+                <button (click)="showReviewForm(booking)">
+                    <span class="icon-star">★</span> Rate
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<div *ngIf="showFormForBookingId !== null" class="review-form modern-form">
+    <h4>Submit Review</h4>
+    <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
+        <div class="form-row">
+            <label>Rating:</label>
+            <div class="star-rating">
+                <ng-container *ngFor="let star of [1,2,3,4,5]; let i = index">
+                    <span
+                        class="star"
+                        [class.filled]="reviewForm.value.rating >= star"
+                        (click)="setRating(star)"
+                        tabindex="0"
+                        (keydown.enter)="setRating(star)"
+                        >★</span>
+
+                </ng-container>
+            </div>
+        </div>
+        <div class="form-row">
+            <label>Comment:</label>
+            <textarea formControlName="comment" placeholder="Share your experience..."></textarea>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Submit</button>
+            <button type="button" class="btn-secondary" (click)="showFormForBookingId = null">Cancel</button>
+        </div>
+    </form>
+</div>
+

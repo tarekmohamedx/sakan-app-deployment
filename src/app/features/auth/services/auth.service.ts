@@ -8,6 +8,7 @@ import { Login } from '../../../core/models/Login';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { Jwtpayloadd } from '../../../core/models/Jwtpayload';
 import { UserProfileDTO } from '../../../core/models/UserProfileDTO';
+import { updateProfile } from '../../../core/models/UpdateUserProfile';
 
 @Injectable({
   providedIn: 'root',
@@ -129,7 +130,7 @@ export class AuthService {
     );
   }
 
-  updateProfile(id: string, body: Partial<UserProfileDTO>): Observable<any> {
+  updateProfile(id: string, body: Partial<updateProfile>): Observable<any> {
     return this.httpclient.put(`${environment.apiurlprofile}/Edit/${id}`, body);
   }
 

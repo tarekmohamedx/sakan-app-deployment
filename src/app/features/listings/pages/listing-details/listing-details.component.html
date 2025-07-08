@@ -1,14 +1,22 @@
-<div class="listing-container">
-  
+<div class="listing-container" *ngIf="listing">
+  <!-- Title -->
   <h1>{{ listing.title }}</h1>
-  <div class="gallery">
-  <img [src]="listing.photos[0]" class="main-photo" alt="Main" (click)="openImageModal(listing.photos[0])" />
-  <div class="thumbs">
-    <img *ngFor="let photo of listing.photos.slice(1, 5)" [src]="photo" class="thumb" (click)="openImageModal(photo)" alt="listing image"/>
-  </div>
+
+  <!-- Gallery -->
+  <div class="gallery" *ngIf="listing.photos?.length">
+    <img [src]="listing.photos[0]" class="main-photo" alt="Main" (click)="openImageModal(listing.photos[0])" />
+    <div class="thumbs">
+      <img
+        *ngFor="let photo of listing.photos.slice(1, 5)"
+        [src]="photo"
+        class="thumb"
+        (click)="openImageModal(photo)"
+        alt="listing image"
+      />
+    </div>
   </div>
 
-  <!-- Image Popup Modal -->
+  <!-- Image Modal -->
   <div class="modal-overlay" *ngIf="selectedImage" (click)="closeModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <img [src]="selectedImage" alt="Full size" class="modal-image" />
@@ -16,173 +24,145 @@
     </div>
   </div>
 
-
+  <!-- Details Section -->
   <div class="details-layout">
-  <!-- Left section -->
-  <div class="description">
-    <h2>{{ listing.location }}</h2>
-    <div class="icons">
-    <span>🛏 {{ listing.bedrooms }} bedroom</span>
-    <span>🛁{{ listing.bathrooms }} bath</span>
-    <br>
-    <!-- <h4>Hosted By {{ listing.host.name }}</h4> -->
-    <div class="host-summary">
-      <div class="avatar-circle">
-      {{ listing.host.name.charAt(0) | uppercase }}
+    <!-- Left -->
+    <div class="description">
+      <h2>{{ listing.location }}</h2>
+      <div class="icons">
+        <span>🛏 {{ listing.bedrooms }} bedroom</span>
+        <span>🛁 {{ listing.bathrooms }} bath</span>
+        <br />
+        <div class="host-summary" *ngIf="listing.host">
+          <div class="avatar-circle">
+            {{ listing.host.name?.charAt(0) | uppercase }}
+          </div>
+          <h3>Hosted by {{ listing.host.name }}</h3>
+        </div>
       </div>
-      <h3>Hosted by {{ listing.host.name }}</h3>
-    </div>
-    </div>
 
-    <h3>Description</h3>
-    <p>{{ listing.description }}</p>
-  </div>
-
-
-  <!-- Right booking card -->
-  <div class="booking-card">
-    <h2>£{{ listing.pricePerMonth }} / Month</h2>
-
-    <div class="booking-dates">
-     <div *ngIf="monthRanges.length > 0">
-    <label>Booking Ranges:</label>
-    <ul>
-      <li *ngFor="let r of monthRanges">
-      {{ r.start }} → {{ r.end }}
-      </li>
-    </ul>
+      <h3>Description</h3>
+      <p>{{ listing.description }}</p>
     </div>
 
-    </div>
+    <!-- Right Booking Card -->
+    <div class="booking-card">
+      <h2>£{{ listing.pricePerMonth }} / Month</h2>
 
-    <div class="guests">
-    <label>👤 Guests</label>
-    <div class="guest-controls">
-      <button [disabled]="guests <= 1" (click)="decreaseGuests()">-</button>
-      <span>{{ guests }}</span>
-      <button (click)="increaseGuests()">+</button>
-    </div>
-    </div>
+      <!-- Booking ranges -->
+      <div class="booking-dates" *ngIf="monthRanges.length > 0">
+        <label>Booking Ranges:</label>
+        <ul>
+          <li *ngFor="let r of monthRanges">
+            {{ r.start }} → {{ r.end }}
+          </li>
+        </ul>
+      </div>
 
-    <p class="small-muted">All utilities are included</p>
+      <!-- Guests -->
+      <div class="guests">
+        <label>👤 Guests</label>
+        <div class="guest-controls">
+          <button [disabled]="guests <= 1" (click)="decreaseGuests()">-</button>
+          <span>{{ guests }}</span>
+          <button (click)="increaseGuests()">+</button>
+        </div>
+      </div>
 
-    <div class="price-breakdown">
-    <!-- <div class="row">
-    <span>Average monthly rent</span>
-    <span>£{{ listing.pricePerMonth }}</span>
-    </div> -->
-    <div class="row">
-    <span>Selected room(s) total</span>
-    <span>£{{ selectedRoomsTotal }}</span>
-    </div>
-    <div class="row">
-    <span>Number of rooms booked</span>
-    <span>{{ selectedRoomCount }}</span>
-    </div>
+      <p class="small-muted">All utilities are included</p>
 
-    <div class="row total">
-    <span>Total costs</span>
-    <span>£{{ totalCost.toFixed(2) }}</span>
-    </div>
-    <div class="row" *ngIf="allRoomsSelected">
-    <span>You Select all rooms (The hole apartment)</span>
-    </div>
+      <!-- Price breakdown -->
+      <div class="price-breakdown">
+        <div class="row">
+          <span>Selected room(s) total</span>
+          <span>£{{ selectedRoomsTotal ?? 0 }}</span>
+        </div>
+        <div class="row">
+          <span>Number of rooms booked</span>
+          <span>{{ selectedRoomCount ?? 0 }}</span>
+        </div>
+        <div class="row total">
+          <span>Total costs</span>
+          <span>£{{ totalCost?.toFixed(2) ?? '0.00' }}</span>
+        </div>
+        <div class="row" *ngIf="allRoomsSelected">
+          <span>You selected all rooms (the whole apartment)</span>
+        </div>
+      </div>
 
-  </div>
-    <div class="text-center mt-3">
-      <button *ngIf="!requestSent" (click)="sendBookingRequest()" class="book-now">Send Booking Request</button>
+      <!-- Action button -->
+      <div class="text-center mt-3">
+        <button *ngIf="!requestSent" (click)="sendBookingRequest()" class="book-now">Send Booking Request</button>
 
-      <!-- <a *ngIf="requestSent" [routerLink]="['/chat', hostId]" class="book-now">Chat with Host</a> -->
-      <a 
-      *ngIf="requestSent" 
-      [routerLink]="['/chat']" 
-      [queryParams]="{ hostId: hostId, listingId: listing.id}"
-      class="book-now">
-      Chat with Host
-    </a>
-    </div>
-    <p class="notice">When you book this apartment, your reservation will be confirmed instantly</p>
-  </div>
-
-  </div>
-
-
-   <br><hr /><br>
-
-<h3 style="text-align: center;">Select check-in month</h3>
-<div class="calendar-year-selector">
-  <button (click)="previousYear()">&#8592;</button>
-  <strong>{{ currentYear }}</strong>
-  <button (click)="nextYear()">&#8594;</button>
-</div>
-
-<div class="months-grid">
-<div *ngFor="let m of monthsShort; let i = index"
-   (click)="selectMonth(i + 1)"
-   class="month-tile"
-   [class.selected]="isMonthSelected(i + 1)"
-   [class.booked]="isMonthBooked(currentYear, i + 1)"
-   [attr.aria-pressed]="isMonthSelected(i + 1)"
-   role="button">
-  {{ m }}
-</div>
-
-</div>
-
-<div *ngIf="selectedMonths.length" class="summary">
-  <p>You selected : {{selectedMonths.length}} month(s)</p>
-  <p>{{ moveIn }} → {{ moveOut }}</p>
-</div>
-
- <br><hr /><br>
-
-<h3 class="mt-5 mb-3">🛏 Bedrooms</h3>
-<div class="room-grid">
-  <div class="room-card" *ngFor="let room of listing.bedroomList">
-  <img [src]="room.photos[0]" alt="Room Image" (click)="goToRoom(room.id)" />
-  <div class="info">
-    <h4>{{ room.name }}</h4>
-    <p>£{{ room.pricePerNight ?? 'N/A' }} / Month</p>
-    <div class="room-select">
-    <label>
-      <input type="checkbox" [(ngModel)]="room.selected" />
-      Select Room
-    </label>
+        <a
+          *ngIf="requestSent"
+          [routerLink]="['/chat']"
+          [queryParams]="{ hostId: hostId, listingId: listing.id }"
+          class="book-now"
+        >
+          Chat with Host
+        </a>
+      </div>
+      <p class="notice">When you book this apartment, your reservation will be confirmed instantly</p>
     </div>
   </div>
+
+  <br /><hr /><br />
+
+  <!-- Calendar -->
+  <h3 style="text-align: center;">Select check-in month</h3>
+  <div class="calendar-year-selector">
+    <button (click)="previousYear()">&#8592;</button>
+    <strong>{{ currentYear }}</strong>
+    <button (click)="nextYear()">&#8594;</button>
   </div>
-</div>
+
+  <div class="months-grid">
+    <div
+      *ngFor="let m of monthsShort; let i = index"
+      class="month-tile"
+      [class.selected]="isMonthSelected(i + 1)"
+      [class.booked]="isMonthBooked(currentYear, i + 1)"
+      [attr.aria-pressed]="isMonthSelected(i + 1)"
+      role="button"
+      (click)="selectMonth(i + 1)"
+    >
+      {{ m }}
+    </div>
+  </div>
+
+  <div *ngIf="selectedMonths.length" class="summary">
+    <p>You selected: {{ selectedMonths.length }} month(s)</p>
+    <p>{{ moveIn }} → {{ moveOut }}</p>
+  </div>
+
+  <br /><hr /><br />
+
+  <!-- Bedrooms -->
+  <h3 class="mt-5 mb-3">🛏 Bedrooms</h3>
+  <div class="room-grid">
+    <div class="room-card" *ngFor="let room of listing.bedroomList">
+      <img *ngIf="room.photos?.length" [src]="room.photos[0]" alt="Room Image" (click)="goToRoom(room.id)" />
+      <div class="info">
+        <h4>{{ room.name }}</h4>
+        <p>£{{ room.pricePerNight ?? 'N/A' }} / Month</p>
+        <div class="room-select">
+          <label>
+            <input type="checkbox" [(ngModel)]="room.selected" />
+            Select Room
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <ng-template #noBedrooms>
-  <p>No bedrooms available in this listing.</p>
+    <p>No bedrooms available in this listing.</p>
   </ng-template>
 
-<!-- ------------- -->
- <br><hr /><br>
-<h3>Where you’ll be</h3>
-<div id="map" style="height: 400px;"></div>
+  <br /><hr /><br />
 
- <!-- <br><hr /><br>
-<h3>Meet your host</h3>
-<div class="host-section">
-  <div class="host-card">
-  <img [src]="listing.host.photoUrl" alt="Host photo" />
-  <h4>{{ listing.host.name }}</h4>
-  <p>{{ listing.host.reviews }}<br />Reviews</p>
-  <p>{{ listing.host.rating }}<br />Rating</p>
-  <p>{{ listing.host.monthsHosting }}<br />Month hosting</p>
-  </div>
-
-  <div class="host-details">
-  <h4>Host Details</h4>
-  <p>Response rate: {{ listing.host.responseRate }}%</p>
-  <p>Responds {{ listing.host.responseTime }}</p>
-  <p>Lives in {{ listing.host.location }}</p>
-  <p>Speaks {{ listing.host.languages.join(', ') }}</p>
-  <button class="message-button">Message Host</button>
-  </div>
-</div> -->
-
-
-
+  <!-- Map -->
+  <h3>Where you’ll be</h3>
+  <div id="map" style="height: 400px;"></div>
 </div>

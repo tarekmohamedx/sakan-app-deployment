@@ -12,7 +12,7 @@ export interface BookingRequest {
   listingLocation: string;
   fromDate: string;
   toDate: string;
-  isApproved: boolean;
+  isApproved: string; // Changed to string to match API response
 }
 
 @Injectable({ providedIn: 'root' })
@@ -47,7 +47,7 @@ export class BookingRequestsService {
   }
 
   updateBookingRequest(requestId: number, isAccepted: boolean): Observable<any> {
-    return this.http.post(`${this.apiUrl}/update/${requestId}`, isAccepted, {
+    return this.http.post(`${this.apiUrl}/update/${requestId}/${isAccepted}`,  {
       headers: this.getAuthHeaders()
     });
   }

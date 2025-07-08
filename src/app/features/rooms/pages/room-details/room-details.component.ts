@@ -65,16 +65,19 @@ export class RoomDetailsComponent implements OnInit {
   previousYear() { this.currentYear--; }
 
   selectMonth(month: number) {
-    const exists = this.selectedMonths.find(m => m.year === this.currentYear && m.month === month);
-    if (exists) {
-      this.selectedMonths = this.selectedMonths.filter(m => !(m.year === this.currentYear && m.month === month));
-    } else {
-      if (!this.isMonthBooked(this.currentYear, month)) {
-        this.selectedMonths.push({ year: this.currentYear, month });
-      }
-    }
-    this.updateMoveDatesFromSelection();
+  if (this.isMonthBooked(this.currentYear, month)) {
+    return; // Prevent selection
   }
+
+  const exists = this.selectedMonths.find(m => m.year === this.currentYear && m.month === month);
+  if (exists) {
+    this.selectedMonths = this.selectedMonths.filter(m => !(m.year === this.currentYear && m.month === month));
+  } else {
+    this.selectedMonths.push({ year: this.currentYear, month });
+  }
+
+  this.updateMoveDatesFromSelection();
+}
 
   updateMoveDatesFromSelection() {
     if (this.selectedMonths.length === 0) {
@@ -191,7 +194,7 @@ get selectedBedIds(): number[] {
     this.selectedImage = null;
   }
 
-  sendBookingRequest(): void {
+sendBookingRequest(): void {
   const selectedBeds = this.room.beds.filter(bed => bed.selected);
   const guestId = this.listingService.getCurrentUserId();
 
@@ -200,40 +203,34 @@ get selectedBedIds(): number[] {
     return;
   }
 
-  if (selectedBeds.length === 0) {
-    // Booking the whole room (send all beds in room)
+    const hasUnavailableBed = this.room.beds.some(b => !b.isAvailable);
+    const isWholeRoomBooking = selectedBeds.length === 0 || selectedBeds.length === this.room.beds.length;
+
+    if (isWholeRoomBooking && hasUnavailableBed) {
+      alert("❌ You cannot book the entire room because one or more beds are already occupied.");
+      return;
+    }
+
+
     const dto: BookingRequestDto = {
       guestId: guestId!,
       listingId: this.room.listingId,
       roomId: this.room.id,
-      bedIds: this.room.beds.map(b => b.id).filter(id => id !== null) as number[],
+      bedIds: isWholeRoomBooking ? null : selectedBeds.map(b => b.id as number),
       fromDate: new Date(this.moveIn).toISOString(),
       toDate: new Date(this.moveOut).toISOString()
     };
 
-    this.listingService.createRequest(dto).subscribe(res => {
-      this.requestSent = true;
-      this.hostId = res.hostId;
-      alert('Your request has been sent successfully!');
-    });
-  } else {
-    // Booking selected beds in this room
-    const dto: BookingRequestDto = {
-      guestId: guestId!,
-      listingId: this.room.listingId,
-      roomId: this.room.id,
-      bedIds: selectedBeds.map(b => b.id as number),
-      fromDate: new Date(this.moveIn).toISOString(),
-      toDate: new Date(this.moveOut).toISOString()
-    };
 
-    this.listingService.createRequest(dto).subscribe(res => {
-      this.requestSent = true;
-      this.hostId = res.hostId;
-      alert('Your request has been sent successfully!');
-    });
-  }
+  this.listingService.createRequest(dto).subscribe(res => {
+    this.requestSent = true;
+    this.hostId = res.hostId;
+    alert('Your request has been sent successfully!');
+  });
 }
+
+
+
 
 }
 

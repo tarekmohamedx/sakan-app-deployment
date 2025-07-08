@@ -12,11 +12,20 @@ import { RouterModule } from '@angular/router';
 import { Router } from 'express';
 import { AuthService } from '../../features/auth/services/auth.service';
 import { Subscription } from 'rxjs';
+import { UserBookingRequestsComponent } from '../../features/bookings/components/user-booking-requests.component';
+import { HttpClient } from '@angular/common/http';
+import { jwtDecode } from 'jwt-decode';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterModule, CommonModule, FormsModule],
+  imports: [
+    RouterModule,
+    CommonModule,
+    FormsModule,
+    UserBookingRequestsComponent,
+  ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
@@ -25,39 +34,156 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   isLoggedIn = false;
   private subscription!: Subscription;
-  public userid:string = '';
 
   // isLoggedIn = true;
   isMobileMenuOpen = false;
   isDropdownOpen = false;
+  showUserRequestsPopup = false;
   user = {
     name: '',
     profilePictureUrl: '',
   };
 
-  constructor(private authService: AuthService) {}
+  hostStatus: string | null = null;
+  isPopupVisible = false;
+  userid!: string;
+  statusPopupMessage = '';
 
-  // ngOnInit(): void {
-  //   this.subscription = this.authService.isLoggedIn$.subscribe(status => {
-  //     this.isLoggedIn = status;
+  constructor(private authService: AuthService, private http: HttpClient) {}
+
+  ngOnInit(): void {
+    this.userid = this.authService.getuserdata()?.id || '';
+    this.subscription = this.authService.isLoggedIn$.subscribe((status) => {
+      this.isLoggedIn = status;
+
+      if (status) {
+        const userData = this.authService.getuserdata();
+        this.user = {
+          name: userData?.name || 'Guest',
+          profilePictureUrl:
+            'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png',
+        };
+
+        this.loadHostStatus(); // ✅ Only call after login confirmed
+      } else {
+        this.user = {
+          name: '',
+          profilePictureUrl: '',
+        };
+        this.hostStatus = null; // ✅ Clear host status on logout
+      }
+    });
+  }
+
+  //     ngOnInit(): void {
+  //       this.loadHostStatus();
+  //       console.log('HOST STATUS:', this.hostStatus);
+  //       this.subscription = this.authService.isLoggedIn$.subscribe(status => {
+  //       this.isLoggedIn = status;
+
+  //     if (status) {
+  //       const userData = this.authService.getuserdata();
+  //       this.user = {
+  //         name: userData?.name || 'Guest',
+  //         profilePictureUrl: 'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png'
+  //       };
+  //     } else {
+  //       this.user = {
+  //         name: '',
+  //         profilePictureUrl: ''
+  //       };
+  //     }
   //   });
   // }
 
-  ngOnInit(): void {
-    const userData = this.authService.getuserdata();
-    if (userData) {
-      this.userid = userData.id;
-      console.log('User ID:', this.userid);
-      this.isLoggedIn = true;
-      this.user = {
-        name: userData.name,
-        profilePictureUrl:
-          'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png', // Optional: Replace if you have user photo
-      };
+  getToken(): string | null {
+    return sessionStorage.getItem('token');
+  }
+
+  getCurrentUserId(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    const decoded = jwtDecode(token) as { [key: string]: any };
+    const userId =
+      decoded[
+        'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'
+      ];
+
+    return userId;
+  }
+
+  loadHostStatus() {
+    const userId = this.getCurrentUserId();
+    if (!userId) return;
+
+    this.http
+      .get<{ status: string }>(
+        `https://localhost:7188/api/users/host-status/${userId}`
+      )
+      .subscribe({
+        next: (res) => {
+          this.hostStatus = res.status;
+        },
+        error: () => {
+          this.hostStatus = null;
+        },
+      });
+  }
+
+  onBecomeHostClick() {
+    const status = this.hostStatus?.toLowerCase();
+    if (!status || status === 'null' || status === 'undefined') {
+      this.isPopupVisible = true; // Show modal for new host
+    } else if (status === 'pending') {
+      Swal.fire(
+        'Pending',
+        'Your request is pending. Please wait for admin approval.',
+        'info'
+      );
+    } else if (status === 'accepted') {
+      window.location.href = '/host/dashboard';
+    } else if (status === 'rejected') {
+      Swal.fire(
+        'Rejected',
+        'Sorry, your request to become a host was rejected.',
+        'error'
+      );
+    } else {
+      this.isPopupVisible = true; // fallback
     }
-    this.subscription = this.authService.isLoggedIn$.subscribe((status) => {
-      this.isLoggedIn = status;
-    });
+  }
+
+  confirmBecomeHost() {
+    const userId = this.getCurrentUserId();
+    if (!userId) {
+      Swal.fire('Error', 'User not authenticated.', 'error');
+      return;
+    }
+
+    this.http
+      .post('https://localhost:7188/api/users/become-host', { userId })
+      .subscribe({
+        next: () => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Request Submitted',
+            text: 'Please wait for admin approval.',
+            confirmButtonColor: '#3085d6',
+          }).then(() => {
+            this.isPopupVisible = false;
+            this.loadHostStatus(); // reload status
+          });
+        },
+        error: (err) => {
+          console.error('Host request failed', err);
+          Swal.fire('Error', 'Something went wrong.', 'error');
+        },
+      });
+  }
+
+  closePopup() {
+    this.isPopupVisible = false;
   }
 
   logout(): void {
@@ -74,6 +200,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   closeDropdown(): void {
     this.isDropdownOpen = false;
+  }
+
+  openUserRequestsPopup() {
+    this.showUserRequestsPopup = true;
+  }
+
+  closeUserRequestsPopup() {
+    this.showUserRequestsPopup = false;
   }
 
   // للاستماع لأي نقرة في الصفحة

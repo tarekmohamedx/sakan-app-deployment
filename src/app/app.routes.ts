@@ -27,7 +27,8 @@ import { AdminDashboardComponent } from '../app/Admin/admin-dashboard/admin-dash
 import { AdminListingsComponent } from '../app/Admin/admin-listings/admin-listings.component';
 import { AdminEditlistingComponent } from '../app/Admin/admin-editlisting/admin-editlisting.component';
 import { AboutComponent } from './about/about.component';
-import { AdminApproveListingsComponent } from '../app/Admin/listing/listings.component';
+import { AdminHostsApproveComponent } from '../app/Admin/admin-hosts-approve/admin-hosts-approve.component';
+import { profileEnd } from 'console';
 import { ProfileComponent } from './features/auth/profile/components/profile/profile.component';
 
 export const routes: Routes = [
@@ -41,8 +42,8 @@ export const routes: Routes = [
   { path: 'payment', component: PaymentFormComponent },
   { path: 'listing/:id', component: ListingDetailsComponent },
   { path: 'room/:id', component: RoomDetailsComponent },
-  { path: 'profile/:id', component: ProfileComponent },
   { path: 'chat', component: ChatComponent },
+  {path:'Profile/:id' ,component:ProfileComponent },
   {
     path: 'host',
     component: HostLayoutComponent,
@@ -69,7 +70,7 @@ export const routes: Routes = [
       { path: 'dashboard', component: AdminDashboardComponent },
       { path: 'listings', component: AdminListingsComponent },
       { path: 'editlisting/:id', component: AdminEditlistingComponent },
-      { path: 'approvelistings', component: AdminApproveListingsComponent },
+      { path: 'approvelistings', component: AdminHostsApproveComponent },
     ],
   },
 

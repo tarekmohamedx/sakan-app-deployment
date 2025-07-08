@@ -7,6 +7,7 @@
           <th>Guest Name</th>
           <th>Listing Title</th>
           <th>Room Title</th>
+          <th>Bed Title</th>
           <th>Listing Location</th>
           <th>From</th>
           <th>To</th>
@@ -15,22 +16,40 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let req of requests">
+        <!-- <tr *ngFor="let req of requests"> -->
+        <tr *ngFor="let req of paginatedReviews">
           <td>{{ req.guestName }}</td>
           <td>{{ req.listingTitle }}</td>
           <td>{{ req.roomTitle }}</td>
+          <td>{{ req.bedTitle }}</td>
           <td>{{ req.listingLocation }}</td>
           <td>{{ req.fromDate | date:'yyyy/MM/dd' }}</td>
           <td>{{ req.toDate | date:'yyyy/MM/dd' }}</td>
           <td>
-            <span [ngClass]="{'approved': req.isApproved, 'pending': req.isApproved === false}">
-              {{ req.isApproved === null ? 'Pending' : (req.isApproved ? 'Approved' : 'Rejected') }}
+            <!-- <span [ngClass]="{'approved': req.isApproved==='Accepted', 'pending': req.isApproved === 'Pending'}"> -->
+              <!-- {{ req.isApproved === null ? 'Pending' : (req.isApproved ? 'Approved' : 'Rejected') }} -->
+                <span [ngClass]="{'approved': req.isApproved === 'Accepted', 'rejected': req.isApproved === 'Rejected', 'pending': req.isApproved === 'Pending'}">
+                    {{ req.isApproved }}
             </span>
           </td>
-          <td>
-            <button class="action-button approve" [disabled]="req.isApproved === true" (click)="updateRequest(req.bookingRequestId, true)">Approve</button>
-            <button class="action-button reject" [disabled]="req.isApproved === false" (click)="updateRequest(req.bookingRequestId, false)">Reject</button>
-          </td>
+        <td class="action-icons">
+            <button 
+                class="icon-btn approve" 
+                [disabled]="req.isApproved === 'Accepted'" 
+                (click)="updateRequest(req.bookingRequestId, true)" 
+                title="Approve"
+            >
+                <i class="fa fa-check-circle" aria-hidden="true"></i>
+            </button>
+            <button 
+                class="icon-btn reject" 
+                [disabled]="req.isApproved === 'Rejected'" 
+                (click)="updateRequest(req.bookingRequestId, false)" 
+                title="Reject"
+            >
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+        </td>
         </tr>
       </tbody>
     </table>
@@ -38,4 +57,31 @@
       <p class="dashboard-subtitle">No booking requests found.</p>
     </ng-template>
   </div>
+</div>
+
+<!-- Pagination Controls -->
+<div class="pagination" *ngIf="requests.length > 0">
+  <button 
+    class="pagination-btn" 
+    (click)="changePage(currentPage - 1)" 
+    [disabled]="currentPage === 1">
+    ← 
+  </button>
+
+  <span class="page-numbers">
+    <button 
+      *ngFor="let page of getPageNumbers()" 
+      class="page-btn" 
+      [class.active]="page === currentPage" 
+      (click)="changePage(page)">
+      {{ page }}
+    </button>
+  </span>
+
+  <button 
+    class="pagination-btn" 
+    (click)="changePage(currentPage + 1)" 
+    [disabled]="currentPage === totalPages">
+     →
+  </button>
 </div>

@@ -39,7 +39,7 @@ private getHostIdFromToken(): string | null {
       Authorization: `Bearer ${token}`
     });
   }
-
+ 
   // Get listings for current host
   getMyListings(page: number, pageSize: number, searchTerm: string = ''): Observable<any> {
     const hostId = this.getHostIdFromToken();  
@@ -80,10 +80,10 @@ private getHostIdFromToken(): string | null {
   }
 
   getHostBookings(): Observable<HostBooking[]> {
-  const hostId = this.getHostIdFromToken(); // or get from backend auth
-  const headers = this.getAuthHeaders();
-  return this.http.get<HostBooking[]>(`https://localhost:7188/api/HostBooking/host/bookings?hostId=${hostId}`, { headers });
-}
+    const hostId = this.getHostIdFromToken();
+    const headers = this.getAuthHeaders();
+    return this.http.get<HostBooking[]>(`https://localhost:7188/api/HostBooking/host/bookings?hostId=${hostId}`, { headers });
+  }
 
 
 }

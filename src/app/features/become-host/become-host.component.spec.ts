@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ChatComponent } from './chat.component';
+import { BecomeHostComponent } from './become-host.component';
 
-describe('ChatComponent', () => {
-  let component: ChatComponent;
-  let fixture: ComponentFixture<ChatComponent>;
+describe('BecomeHostComponent', () => {
+  let component: BecomeHostComponent;
+  let fixture: ComponentFixture<BecomeHostComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ChatComponent]
+      imports: [BecomeHostComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ChatComponent);
+    fixture = TestBed.createComponent(BecomeHostComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

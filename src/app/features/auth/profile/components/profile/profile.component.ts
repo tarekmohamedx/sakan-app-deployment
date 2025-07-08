@@ -32,15 +32,29 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.userid = this.route.snapshot.paramMap.get('id') || '';
     console.log('User ID from route: ' + this.userid);
-    this.userrole = this.authservice.getuserdata()?.role || '';
     this.loadProfile();
+    this.userrole = this.authservice.getuserdata()?.role || '';
     console.log('profile data = = ' + this.profileData);
   }
 
   loadProfile(): void {
     this.authservice.getProfile(this.userid).subscribe({
-      next: (data) => (this.profileData = data),
-      error: () => Swal.fire('Error', 'Failed to load profile', 'error'),
+      next: (data) => {
+        if (!data || !data.userName) {
+          Swal.fire(
+            'Error',
+            'Invalid profile data returned from server',
+            'error'
+          );
+          return;
+        }
+
+        this.profileData = data;
+      },
+      error: (err) => {
+        console.error(err);
+        Swal.fire('Error', 'Failed to load profile', 'error');
+      },
     });
   }
 
@@ -53,11 +67,14 @@ export class ProfileComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.authservice.updateProfile(this.userid, result).subscribe({
-          next: () => {
-            Swal.fire('Updated!', 'Profile updated successfully', 'success');
+          next: (res) => {
+            Swal.fire('Updated!', res.message, 'success'); // res.message is expected
             this.loadProfile();
           },
-          error: () => Swal.fire('Error', 'Update failed', 'error'),
+          error: (err) => {
+            console.error('Update error:', err);
+            Swal.fire('Error', err?.error?.message || 'Update failed', 'error');
+          },
         });
       }
     });

@@ -5,13 +5,6 @@ export interface MessageDto {
   timestamp?: Date;
   chatId?: number;
 }
-export interface MessageModel {
-  senderID: string;
-  receiverID: string;
-  content: string;
-  timestamp: Date;
-  chatId: number;
-}
 
 export interface UserChatSummary {
   chatId: number;
@@ -20,5 +13,5 @@ export interface UserChatSummary {
   listingStatus: string;
   hostName: string;
   userName: string;
-  lastMessage: MessageModel;
+  lastMessage: MessageDto;
 }

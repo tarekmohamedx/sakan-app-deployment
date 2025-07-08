@@ -28,10 +28,11 @@ export interface BookingRequestDto {
   guestId: string;
   listingId?: number;
   roomId?: number;
-  bedIds?: number[];
+  bedIds: number[] | null;
   fromDate: string;
   toDate: string;
 }
+
 
 export interface HostInfo {
   name: string;
