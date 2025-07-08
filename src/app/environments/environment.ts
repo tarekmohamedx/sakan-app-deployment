@@ -3,6 +3,7 @@ export const environment = {
   apiurllisting: `https://localhost:7188/api/listing`,
   apiurllistings: `https://localhost:7188/api/listings`,
   apiurlAmenities: `https://localhost:7188/api/amenities`,
+  apiurlprofile: `https://localhost:7188/api/Profile`,
   apiurlfavorites: `https://localhost:7188/api/favorites`,
   googleAuthUrl: 'https://localhost:7188/api/Account/externallogin/google',
   googleCallbackUrl: 'https://localhost:7188/signin-google',

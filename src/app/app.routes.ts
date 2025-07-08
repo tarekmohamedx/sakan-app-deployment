@@ -21,56 +21,82 @@ import { HostBookingComponent } from './host/host-booking/host-booking.component
 import { HostUserReviewsComponent } from './host/host-user-reviews/host-user-reviews.component';
 import { HostMyReviewsComponent } from './host/host-my-reviews/host-my-reviews.component';
 import { BookingRequestsComponent } from './host/booking-requests/booking-requests.component';
-import { LayoutComponent } from './admin/layout/layout.component';
-import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
-import { AdminListingsComponent } from './admin/admin-listings/admin-listings.component';
+import { LayoutComponent } from '../app/Admin/layout/layout.component';
+import { AdminDashboardComponent } from '../app/Admin/admin-dashboard/admin-dashboard.component';
+import { AdminListingsComponent } from '../app/Admin/admin-listings/admin-listings.component';
 import { AboutComponent } from './about/about.component';
-import { AdminApproveListingsComponent } from './admin/listing/listings.component';
-import { AdminEditlistingComponent } from './admin/admin-editlisting/admin-editlisting.component';
+//import { AdminApproveListingsComponent } from '../app/Admin/admin-listings/admin-listings.component';
+import { AdminEditlistingComponent } from '../app/Admin/admin-editlisting/admin-editlisting.component';
 import { UserReviewComponent } from './features/UserReviews/user-review/user-review.component';
 import { AiComponent } from './ai/ai.component';
 import { BecomeHostComponent } from './features/become-host/become-host.component';
-import { AdminHostsApproveComponent } from './admin/admin-hosts-approve/admin-hosts-approve.component';
+import { AdminHostsApproveComponent } from '../app/Admin/admin-hosts-approve/admin-hosts-approve.component';
+import { GoogleCallbackComponent } from './features/auth/google-callback/google-callback.component';
+import { ForgetPasswordComponent } from './features/auth/forget-password/forget-password.component';
 import { HostGuard } from './guards/host.guard';
 import { AdminGuard } from './guards/admin.guard';
+
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
   { path: 'about', component: AboutComponent },
-  {path  : '', redirectTo: 'home', pathMatch: 'full' },
+  {
+    path: 'forget-password',
+    component: ForgetPasswordComponent,
+  },
+  { path: 'auth/google/callback', component: GoogleCallbackComponent },
+  {
+    path: 'reset-password',
+    loadComponent: () =>
+      import(
+        '../app/features/auth/reset-password/reset-password.component'
+      ).then((m) => m.ResetPasswordComponent),
+  },
+
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'listings', component: ListingsPageComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   { path: 'ai', component: AiComponent },
-  { path: 'wishlist', component: WishlistPageComponent},
-  { path: 'payment', component: PaymentFormComponent},
-  { path: 'listing/:id', component:ListingDetailsComponent},
-  { path: 'room/:id', component:RoomDetailsComponent},
+  { path: 'wishlist', component: WishlistPageComponent },
+  { path: 'payment', component: PaymentFormComponent },
+  { path: 'listing/:id', component: ListingDetailsComponent },
+  { path: 'room/:id', component: RoomDetailsComponent },
   { path: 'chat', component: ChatComponent },
   { path: 'becomeHost', component: BecomeHostComponent },
   { path: 'review', component: UserReviewComponent },
-  { path: 'host', canActivate: [HostGuard]  , component: HostLayoutComponent, children: [
-    {path : '', redirectTo: 'dashboard', pathMatch: 'full' },
-    { path: 'dashboard', component: DashboardComponent },
-    { path: 'listings', component: HostListingsComponent },
-    {path:'addapartment' , component:AddApartmentComponent},
-    { path: 'editlisting/:id', component: EditHostListingComponent },
-    { path: 'listings/:listingId/rooms', component: HostRoomsComponent },
-    { path: 'chat', component: ChatComponent },
-    { path: 'booking', component: HostBookingComponent },
-    { path: 'reviews', component: HostUserReviewsComponent },
-    { path: 'myReviews', component: HostMyReviewsComponent },
-    { path: 'requests', component: BookingRequestsComponent },
-  ]},
+  {
+    path: 'host',
+    canActivate: [HostGuard],
+    component: HostLayoutComponent,
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'listings', component: HostListingsComponent },
+      { path: 'addapartment', component: AddApartmentComponent },
+      { path: 'editlisting/:id', component: EditHostListingComponent },
+      { path: 'listings/:listingId/rooms', component: HostRoomsComponent },
+      { path: 'chat', component: ChatComponent },
+      { path: 'booking', component: HostBookingComponent },
+      { path: 'reviews', component: HostUserReviewsComponent },
+      { path: 'myReviews', component: HostMyReviewsComponent },
+      { path: 'requests', component: BookingRequestsComponent },
+    ],
+  },
 
-  { path: 'admin', canActivate: [AdminGuard] , component: LayoutComponent,  children:[
-    {path : '', redirectTo: 'dashboard', pathMatch: 'full' },
-    {path:'dashboard', component:AdminDashboardComponent},
-    {path: 'listings', component: AdminListingsComponent},
-    { path: 'editlisting/:id', component: AdminEditlistingComponent },
-    { path: 'approvelistings', component: AdminApproveListingsComponent },
-    { path: 'approveHost', component: AdminHostsApproveComponent },
-  ]},
+  {
+    path: 'admin',
+    canActivate: [AdminGuard],
+    component: LayoutComponent,
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: AdminDashboardComponent },
+      { path: 'listings', component: AdminListingsComponent },
+      { path: 'editlisting/:id', component: AdminEditlistingComponent },
+      //{ path: 'approvelistings', component: AdminApproveListingsComponent },
+      { path: 'approveHost', component: AdminHostsApproveComponent },
+    ],
+  },
 
   { path: '**', component: NotfoundComponent },
   { path: 'signin-google', component: CallbackComponent },

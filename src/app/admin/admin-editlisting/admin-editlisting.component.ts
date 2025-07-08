@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { adminListingService } from '../services/admin-listing.service';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2'; 
+import { AdminListingService } from '../services/admin-listing.service';
+// import { AdminListingService } from '../services/admin-listing.service';
 
 @Component({
   selector: 'app-admin-editlisting',
@@ -25,7 +26,7 @@ export class AdminEditlistingComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private adminListingService: adminListingService,
+    private adminListingService: AdminListingService,
     private http: HttpClient
   ) {
     this.listingForm = this.fb.group({

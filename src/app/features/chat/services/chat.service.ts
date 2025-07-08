@@ -41,9 +41,24 @@ export class ChatService {
     return firstValueFrom(this.http.post(`${this.baseUrl}/approve-booking`, body));
   }
 
-  getBookingId(chatId: number): Observable<number> {
-    return this.http.get<number>(`${this.baseUrl}/get-booking-id?chatId=${chatId}`);
+  getBookingId(chatId: number, guestId: string): Observable<number> {
+    const params = {
+      chatId: chatId.toString(),
+      guestId
+    };
+  
+    return this.http.get<number>(`${this.baseUrl}/get-booking-id`, { params });
   }
   
+
+  getApprovalStatus(bookingId: number, userId: string, isHost: boolean): Observable<any> {
+    const params = {
+      bookingId: bookingId.toString(),
+      userId,
+      isHost: isHost.toString()
+    };
+  
+    return this.http.get<any>(`${this.baseUrl}/approval-status`, { params });
+  }
   
 }

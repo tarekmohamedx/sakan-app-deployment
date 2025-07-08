@@ -1,49 +1,62 @@
 <div class="login-container">
-  <form class="login-form" #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)" novalidate>
-    <h2>Login</h2>
-      <div *ngIf="apiError" class="alert alert-danger">
-        {{ apiError }}
-      </div>
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input
-          id="email"
-          type="email"
-          name="Email"
-          placeholder="Enter your email"
-          required
-          email
-          [(ngModel)]="model.email"
-          #email="ngModel"
-        />
-        <div class="text-danger" *ngIf="email.invalid && email.touched">
-          Valid email is required.
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          name="Password"
-          placeholder="Enter your password"
-          required
-          [(ngModel)]="model.password"
-          #password="ngModel"
-        />
-        <div class="text-danger" *ngIf="password.invalid && password.touched">
-          Password is required.
-        </div>
-      </div>
-      <button type="submit" class="login-btn" [disabled]="loginForm.invalid">
-        Login
-      </button>
-      <button type="button" class="login-btn google" (click)="externalLogin()">
-        <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo" style="width: 18px; vertical-align: middle; margin-right: 8px;">
-        Login with Google
-      </button>
-      <div class="register-link">
-        Don't have an account? <a routerLink="/register">Register</a>
-      </div>
-    </form>
-  </div>
+  <form
+    class="login-form"
+    #loginForm="ngForm"
+    (ngSubmit)="onSubmit(loginForm)"
+    novalidate
+  >
+    <h2>Welcome Back</h2>
+
+    <div *ngIf="apiError" class="alert alert-danger">{{ apiError }}</div>
+
+    <div class="form-group">
+      <label for="email">Email Address</label>
+      <input
+        id="email"
+        name="Email"
+        type="email"
+        [(ngModel)]="model.email"
+        required
+        placeholder="Enter your email"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        id="password"
+        name="Password"
+        type="password"
+        [(ngModel)]="model.password"
+        required
+        placeholder="Enter your password"
+      />
+    </div>
+    <button type="submit" [disabled]="loginForm.invalid || isLoading">
+      <ng-container *ngIf="!isLoading; else loadingTpl">Login</ng-container>
+      <ng-template #loadingTpl>
+        <span
+          class="spinner-border spinner-border-sm me-2"
+          role="status"
+          aria-hidden="true"
+        ></span>
+        Logging in...
+      </ng-template>
+    </button>
+
+    <!-- <button type="button" class="google enhanced" (click)="externalLogin()">
+      Continue with Google
+    </button> -->
+    <div id="googleSignInDiv" style="margin-top: 16px"></div>
+
+    <div style="text-align: right; margin-bottom: 10px">
+      <a routerLink="/forget-password" style="font-size: 14px"
+        >Forgot Password?</a
+      >
+    </div>
+
+    <div class="register-link">
+      Don't have an account? <a routerLink="/register">Create one here</a>
+    </div>
+  </form>
+</div>

@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Router } from 'express';
@@ -13,11 +20,16 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterModule,CommonModule,FormsModule,UserBookingRequestsComponent],
+  imports: [
+    RouterModule,
+    CommonModule,
+    FormsModule,
+    UserBookingRequestsComponent,
+  ],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  styleUrl: './header.component.css',
 })
-export class HeaderComponent implements OnInit, OnDestroy{
+export class HeaderComponent implements OnInit, OnDestroy {
   @ViewChild('dropdownContainer') dropdownContainer?: ElementRef;
 
   isLoggedIn = false;
@@ -28,17 +40,18 @@ export class HeaderComponent implements OnInit, OnDestroy{
   isDropdownOpen = false;
   showUserRequestsPopup = false;
   user = {
-    name: "",
-    profilePictureUrl: ""
+    name: '',
+    profilePictureUrl: '',
   };
 
   hostStatus: string | null = null;
   isPopupVisible = false;
+  userid!: string;
   statusPopupMessage = '';
 
-  constructor(private authService: AuthService, private http: HttpClient) {}
+  constructor(private authService: AuthService , private http:HttpClient) {}
 
-  ngOnInit(): void {
+    ngOnInit(): void {
   this.subscription = this.authService.isLoggedIn$.subscribe(status => {
     this.isLoggedIn = status;
 
@@ -48,44 +61,40 @@ export class HeaderComponent implements OnInit, OnDestroy{
         name: userData?.name || 'Guest',
         profilePictureUrl: 'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png'
       };
-
-      this.loadHostStatus(); // ✅ Only call after login confirmed
     } else {
       this.user = {
         name: '',
         profilePictureUrl: ''
       };
-      this.hostStatus = null; // ✅ Clear host status on logout
     }
   });
 }
 
+  //     ngOnInit(): void {
+  //       this.loadHostStatus();
+  //       console.log('HOST STATUS:', this.hostStatus);
+  //       this.subscription = this.authService.isLoggedIn$.subscribe(status => {
+  //       this.isLoggedIn = status;
 
-//     ngOnInit(): void {
-//       this.loadHostStatus();
-//       console.log('HOST STATUS:', this.hostStatus);
-//       this.subscription = this.authService.isLoggedIn$.subscribe(status => {
-//       this.isLoggedIn = status;
-
-//     if (status) {
-//       const userData = this.authService.getuserdata();
-//       this.user = {
-//         name: userData?.name || 'Guest',
-//         profilePictureUrl: 'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png'
-//       };
-//     } else {
-//       this.user = {
-//         name: '',
-//         profilePictureUrl: ''
-//       };
-//     }
-//   });
-// }
+  //     if (status) {
+  //       const userData = this.authService.getuserdata();
+  //       this.user = {
+  //         name: userData?.name || 'Guest',
+  //         profilePictureUrl: 'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png'
+  //       };
+  //     } else {
+  //       this.user = {
+  //         name: '',
+  //         profilePictureUrl: ''
+  //       };
+  //     }
+  //   });
+  // }
 
   getToken(): string | null {
     return sessionStorage.getItem('token');
   }
-  
+
   getCurrentUserId(): string | null {
     const token = this.getToken();
     if (!token) return null;
@@ -99,70 +108,78 @@ export class HeaderComponent implements OnInit, OnDestroy{
     return userId;
   }
 
+  loadHostStatus() {
+    const userId = this.getCurrentUserId();
+    if (!userId) return;
 
-loadHostStatus() {
-  const userId = this.getCurrentUserId();
-  if (!userId) return;
-
-  this.http.get<{ status: string }>(`https://localhost:7188/api/users/host-status/${userId}`)
-    .subscribe({
-      next: (res) => {
-        this.hostStatus = res.status;
-      },
-      error: () => {
-        this.hostStatus = null;
-      }
-    });
-}
-
-
-onBecomeHostClick() {
-  const status = this.hostStatus?.toLowerCase();
-  if (!status || status === 'null' || status === 'undefined') {
-    this.isPopupVisible = true; // Show modal for new host
-  } else if (status === 'pending') {
-    Swal.fire('Pending', 'Your request is pending. Please wait for admin approval.', 'info');
-  } else if (status === 'accepted') {
-    window.location.href = '/host/dashboard';
-  } else if (status === 'rejected') {
-    Swal.fire('Rejected', 'Sorry, your request to become a host was rejected.', 'error');
-  } else {
-    this.isPopupVisible = true; // fallback
-  }
-}
-
-
-confirmBecomeHost() {
-  const userId = this.getCurrentUserId();
-  if (!userId) {
-    Swal.fire('Error', 'User not authenticated.', 'error');
-    return;
-  }
-
-  this.http.post('https://localhost:7188/api/users/become-host', { userId }).subscribe({
-    next: () => {
-      Swal.fire({
-        icon: 'success',
-        title: 'Request Submitted',
-        text: 'Please wait for admin approval.',
-        confirmButtonColor: '#3085d6'
-      }).then(() => {
-        this.isPopupVisible = false;
-        this.loadHostStatus(); // reload status
+    this.http
+      .get<{ status: string }>(
+        `https://localhost:7188/api/users/host-status/${userId}`
+      )
+      .subscribe({
+        next: (res) => {
+          this.hostStatus = res.status;
+        },
+        error: () => {
+          this.hostStatus = null;
+        },
       });
-    },
-    error: err => {
-      console.error('Host request failed', err);
-      Swal.fire('Error', 'Something went wrong.', 'error');
+  }
+
+  onBecomeHostClick() {
+    const status = this.hostStatus?.toLowerCase();
+    if (!status || status === 'null' || status === 'undefined') {
+      this.isPopupVisible = true; // Show modal for new host
+    } else if (status === 'pending') {
+      Swal.fire(
+        'Pending',
+        'Your request is pending. Please wait for admin approval.',
+        'info'
+      );
+    } else if (status === 'accepted') {
+      window.location.href = '/host/dashboard';
+    } else if (status === 'rejected') {
+      Swal.fire(
+        'Rejected',
+        'Sorry, your request to become a host was rejected.',
+        'error'
+      );
+    } else {
+      this.isPopupVisible = true; // fallback
     }
-  });
-}
+  }
 
-closePopup() {
-  this.isPopupVisible = false;
-}
+  confirmBecomeHost() {
+    const userId = this.getCurrentUserId();
+    if (!userId) {
+      Swal.fire('Error', 'User not authenticated.', 'error');
+      return;
+    }
 
+    this.http
+      .post('https://localhost:7188/api/users/become-host', { userId })
+      .subscribe({
+        next: () => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Request Submitted',
+            text: 'Please wait for admin approval.',
+            confirmButtonColor: '#3085d6',
+          }).then(() => {
+            this.isPopupVisible = false;
+            this.loadHostStatus(); // reload status
+          });
+        },
+        error: (err) => {
+          console.error('Host request failed', err);
+          Swal.fire('Error', 'Something went wrong.', 'error');
+        },
+      });
+  }
 
+  closePopup() {
+    this.isPopupVisible = false;
+  }
 
   logout(): void {
     this.authService.logout();
@@ -192,7 +209,10 @@ closePopup() {
   @HostListener('document:click', ['$event'])
   clickOutside(event: Event) {
     // إذا كانت القائمة مفتوحة والنقرة حدثت خارج حاوية القائمة، قم بإغلاقها
-    if (this.isDropdownOpen && !this.dropdownContainer?.nativeElement.contains(event.target)) {
+    if (
+      this.isDropdownOpen &&
+      !this.dropdownContainer?.nativeElement.contains(event.target)
+    ) {
       this.closeDropdown();
     }
   }
@@ -204,5 +224,4 @@ closePopup() {
     this.isMobileMenuOpen = false;
     // this.isDropdownOpen = false; // إذا كان لديك dropdown للديسكتوب
   }
-
 }

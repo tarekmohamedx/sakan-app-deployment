@@ -7,7 +7,7 @@
       </div>
       <div class="chat-list">
         <div
-          *ngFor="let chat of chats"
+          *ngFor="let chat of newchats"
           [class.active]="selectedChat?.chatId === chat.chatId"
           class="chat-item"
           (click)="selectChat(chat)"
@@ -17,7 +17,7 @@
             <div class="chat-item-details">
               <div class="chat-header-row">
                 <h5 class="chat-username">{{ getUserName(chat) }}</h5>
-                <span class="status-badge" [ngClass]="chat.listingStatus?.toLowerCase()">
+                <span class="status-badge" *ngIf="chat.listingStatus" [ngClass]="chat.listingStatus.toLowerCase()">
                   {{ chat.listingStatus }}
                 </span>
               </div>

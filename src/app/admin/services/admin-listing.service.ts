@@ -6,7 +6,7 @@ import { ActivityLogDto, DashboardSummaryDto } from '../../core/models/admin-das
 @Injectable({
     providedIn: 'root'
 })
-export class adminListingService {
+export class AdminListingService {
   private apiUrl = 'https://localhost:7188/api/admin/list';
   private adminApproveUrl = 'https://localhost:7188/api/adminapprove';
 

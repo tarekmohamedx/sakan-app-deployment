@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { adminListingService } from '../services/admin-listing.service';
+import { AdminListingService } from '../services/admin-listing.service';
 
 @Component({
   selector: 'app-host-listings',
@@ -21,7 +21,7 @@ export class AdminApproveListingsComponent implements OnInit {
   searchTerm: string = '';
   loadingListingIds: number[] = [];
   constructor(
-    private listingService: adminListingService,
+    private listingService: AdminListingService,
     private router: Router
   ) {}
 

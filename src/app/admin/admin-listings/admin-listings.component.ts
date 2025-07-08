@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { adminListingService } from '../services/admin-listing.service';
+import { AdminListingService } from '../services/admin-listing.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -19,7 +19,7 @@ export class AdminListingsComponent implements OnInit {
   searchTerm = '';
   loading = false;
 
-  constructor(private listingService: adminListingService, private router: Router) {}
+  constructor(private listingService: AdminListingService, private router: Router) {}
 
   ngOnInit(): void {
     this.fetchListings();
