@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ReviewDto, UserReview } from '../../core/models/HostReview';
 import { HostReviewService } from '../services/HostReview.service';
-import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -23,8 +23,7 @@ export class HostUserReviewsComponent implements OnInit {
   };
 
   constructor(
-    private reviewService: HostReviewService,
-    private toastr: ToastrService
+    private reviewService: HostReviewService
   ) {}
 
   ngOnInit(): void {
@@ -34,7 +33,7 @@ export class HostUserReviewsComponent implements OnInit {
   loadReviews(): void {
     this.reviewService.getUserReviews().subscribe({
       next: res => this.reviews = res,
-      error: () => this.toastr.error('Failed to load reviews')
+      error: () => Swal.fire('Error', 'Failed to load reviews', 'error')
     });
   }
 
@@ -70,11 +69,11 @@ export class HostUserReviewsComponent implements OnInit {
 
     this.reviewService.submitReview(reviewDto).subscribe({
       next: () => {
-        this.toastr.success('Review submitted successfully');
+        Swal.fire('Success', 'Review submitted successfully', 'success');
         this.closeModal();
         this.loadReviews();
       },
-      error: () => this.toastr.error('Failed to submit review')
+      error: () => Swal.fire('Error', 'Failed to submit review', 'error')
     });
   }
 

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HostListingService } from '../services/HostListing.service';
-import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-host-listings',
@@ -22,8 +22,7 @@ export class HostListingsComponent implements OnInit {
 
   constructor(
     private listingService: HostListingService,
-    private router: Router,
-    private toastr: ToastrService
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -69,15 +68,26 @@ export class HostListingsComponent implements OnInit {
   }
 
   deleteListing(id: number): void {
-    if (confirm('Are you sure you want to delete this listing?')) {
-      this.listingService.deleteListing(id).subscribe({
-        next: () => {
-          this.loadListings();
-          this.toastr.success('Listing deleted successfully');
-        },
-        error: (err) => this.toastr.error('Delete failed: ' + err.message)
-      });
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'This listing will be permanently deleted.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.listingService.deleteListing(id).subscribe({
+          next: () => {
+            this.loadListings();
+            Swal.fire('Deleted!', 'Listing deleted successfully.', 'success');
+          },
+          error: (err) => {
+            Swal.fire('Error', 'Delete failed: ' + err.message, 'error');
+          }
+        });
+      }
+    });
   }
 
   goToRooms(listingId: number): void {

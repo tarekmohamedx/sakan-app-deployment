@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ReviewDto, UserReview } from '../../core/models/HostReview';
 import { HostReviewService } from '../services/HostReview.service';
-import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -22,24 +22,12 @@ export class HostMyReviewsComponent implements OnInit {
   pageSize = 5;
 
   constructor(
-    private reviewService: HostReviewService,
-    private toastr: ToastrService
+    private reviewService: HostReviewService
   ) {}
 
   ngOnInit(): void {
     this.loadReviews();
   }
-
-//   loadReviews(): void {
-//     console.log('Total reviews:', this.reviews.length);
-// console.log('Page size:', this.pageSize);
-// console.log('Total pages:', this.totalPages);
-
-//     this.reviewService.getmyReviews().subscribe({
-//       next: res => this.reviews = res,
-//       error: () => this.toastr.error('Failed to load reviews')
-//     });
-//   }
 
 loadReviews(): void {
   this.reviewService.getmyReviews().subscribe({
@@ -48,7 +36,7 @@ loadReviews(): void {
       this.reviews = res;
       console.log('Total reviews:', this.reviews.length); // Confirm actual count
     },
-    error: () => this.toastr.error('Failed to load reviews')
+    error: () => Swal.fire('Error', 'Failed to load reviews', 'error')
   });
 }
 
@@ -82,11 +70,11 @@ submitReview(): void {
 
   this.reviewService.createReview(reviewDto).subscribe({
     next: () => {
-      this.toastr.success('Review submitted');
+      Swal.fire('Success', 'Review submitted', 'success');
       this.closeModal();
       this.loadReviews();
     },
-    error: () => this.toastr.error('Failed to submit review')
+    error: () => Swal.fire('Error', 'Failed to submit review', 'error')
   });
 }
 

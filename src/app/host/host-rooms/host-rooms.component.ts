@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { HostRoomService } from '../services/HostRoom.service';
@@ -33,7 +33,6 @@ export class HostRoomsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private roomService: HostRoomService,
-    private toastr: ToastrService,
     private http: HttpClient
   ) {}
 
@@ -48,7 +47,7 @@ export class HostRoomsComponent implements OnInit {
         this.rooms = res.rooms;
         this.totalCount = res.totalCount;
       },
-      error: () => this.toastr.error('Failed to load rooms')
+      error: () => Swal.fire('Error', 'Failed to load rooms', 'error')
     });
   }
 
@@ -103,9 +102,9 @@ uploadRoomPhotos(): void {
       }
       this.editForm.photoUrls.push(...urls);
       this.roomPhotoFiles = []; // Clear after upload
-      this.toastr.success('Room photos uploaded');
+      Swal.fire('Success', 'Room photos uploaded', 'success');
     },
-    error: () => this.toastr.error('Room photo upload failed')
+    error: () => Swal.fire('Error', 'Room photo upload failed', 'error')
   });
 }
 
@@ -123,9 +122,9 @@ uploadRoomPhotos(): void {
         if (!this.editForm.beds![bedIndex].bedPhotos) this.editForm.beds![bedIndex].bedPhotos = [];
         this.editForm.beds![bedIndex].bedPhotos!.push(...urls);
         this.bedPhotoFiles[bedIndex] = [];
-        this.toastr.success(`Photos for Bed ${bedIndex + 1} uploaded`);
+         Swal.fire('Success', `Photos for Bed ${bedIndex + 1} uploaded`, 'success');
       },
-      error: () => this.toastr.error('Bed photo upload failed')
+      error: () => Swal.fire('Error', 'Bed photo upload failed', 'error')
     });
   }
 
@@ -150,12 +149,12 @@ uploadRoomPhotos(): void {
   deleteRoom(id: number): void {
     if (confirm('Are you sure you want to archive this room?')) {
       this.roomService.deleteRoom(id).subscribe({
-        next: () => {
-          this.toastr.success('Room deleted successfully (soft delete)');
-          this.loadRooms();
-        },
-        error: () => this.toastr.error('Failed to delete room')
-      });
+         next: () => {
+            Swal.fire('Archived', 'Room deleted successfully', 'success');
+            this.loadRooms();
+          },
+          error: () => Swal.fire('Error', 'Failed to delete room', 'error')
+        });
     }
   }
 
@@ -186,12 +185,12 @@ saveEdit(): void {
 
   this.roomService.updateRoom(this.editRoom.id, this.editForm).subscribe({
     next: () => {
-      this.toastr.success('Room updated successfully');
-      this.editRoom = null;
-      this.loadRooms();
-    },
-    error: () => this.toastr.error('Failed to update room')
-  });
+        Swal.fire('Success', 'Room updated successfully', 'success');
+        this.editRoom = null;
+        this.loadRooms();
+      },
+      error: () => Swal.fire('Error', 'Failed to update room', 'error')
+    });
 }
 
 }

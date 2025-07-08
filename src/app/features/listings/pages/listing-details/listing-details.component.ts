@@ -7,19 +7,17 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslationService } from '../../../../core/services/translation.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, TranslateModule, FormsModule, RouterModule ],
+  imports: [CommonModule, TranslateModule, FormsModule, RouterModule],
   selector: 'app-listing-details',
   templateUrl: './listing-details.component.html',
   styleUrls: ['./listing-details.component.css']
 })
 export class ListingDetailsComponent implements OnInit {
-  // Data models
   listing!: ListingDetailsDto;
-
-  // State
   moveIn: string = '';
   moveOut: string = '';
   hostId: string = '';
@@ -31,8 +29,6 @@ export class ListingDetailsComponent implements OnInit {
   selectedMonths: { year: number; month: number }[] = [];
   currentYear = new Date().getFullYear();
   monthsShort = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-  // Map
   listingLatitude: number = 0;
   listingLongitude: number = 0;
 
@@ -52,40 +48,29 @@ export class ListingDetailsComponent implements OnInit {
     const id = +this.route.snapshot.paramMap.get('id')!;
     this.listingService.getListingDetails(id).subscribe((data) => {
       this.listing = data;
-
-      // Set coordinates dynamically
       this.listingLatitude = this.listing.latitude;
       this.listingLongitude = this.listing.longitude;
-
-      // Initialize the map after coordinates are set
-       setTimeout(() => {
-          this.initMap();
-        }, 0);
+      setTimeout(() => {
+        this.initMap();
+      }, 0);
     });
 
     this.listingService.getBookedMonths(id).subscribe(data => {
       this.bookedMonths = data;
-       console.log('📅 Booked Months:', this.bookedMonths);
+      console.log('📅 Booked Months:', this.bookedMonths);
     });
   }
 
-  //------------------------------------------------------
-
-  // Guest controls
   increaseGuests() { this.guests++; }
   decreaseGuests() { this.guests = Math.max(1, this.guests - 1); }
-  // Calendar controls
   nextYear() { this.currentYear++; }
   previousYear() { this.currentYear--; }
 
-  //------------------------------------------------------
-
-  // Translations
   currentLang = localStorage.getItem('lang') || 'en';
   switchLanguage() {
     this.currentLang = this.currentLang === 'en' ? 'ar' : 'en';
     localStorage.setItem('lang', this.currentLang);
-    location.reload(); // reload to fetch translated data from backend
+    location.reload();
   }
   translateData() {
     const lang = localStorage.getItem('lang') || 'en';
@@ -99,7 +84,7 @@ export class ListingDetailsComponent implements OnInit {
     });
   }
 
-    selectedImage: string | null = null;
+  selectedImage: string | null = null;
 
   openImageModal(imageUrl: string) {
     this.selectedImage = imageUrl;
@@ -109,24 +94,16 @@ export class ListingDetailsComponent implements OnInit {
     this.selectedImage = null;
   }
 
-  //------------------------------------------------------
-  // Month selection (calendar)
-
   selectMonth(month: number) {
-  if (this.isMonthBooked(this.currentYear, month)) {
-    return; // Prevent selection
+    if (this.isMonthBooked(this.currentYear, month)) return;
+    const exists = this.selectedMonths.find(m => m.year === this.currentYear && m.month === month);
+    if (exists) {
+      this.selectedMonths = this.selectedMonths.filter(m => !(m.year === this.currentYear && m.month === month));
+    } else {
+      this.selectedMonths.push({ year: this.currentYear, month });
+    }
+    this.updateMoveDatesFromSelection();
   }
-
-  const exists = this.selectedMonths.find(m => m.year === this.currentYear && m.month === month);
-  if (exists) {
-    this.selectedMonths = this.selectedMonths.filter(m => !(m.year === this.currentYear && m.month === month));
-  } else {
-    this.selectedMonths.push({ year: this.currentYear, month });
-  }
-
-  this.updateMoveDatesFromSelection();
-}
-
 
   updateMoveDatesFromSelection() {
     if (this.selectedMonths.length === 0) {
@@ -134,9 +111,7 @@ export class ListingDetailsComponent implements OnInit {
       this.moveOut = '';
       return;
     }
-    const sorted = [...this.selectedMonths].sort((a, b) =>
-      a.year !== b.year ? a.year - b.year : a.month - b.month
-    );
+    const sorted = [...this.selectedMonths].sort((a, b) => a.year !== b.year ? a.year - b.year : a.month - b.month);
     const first = sorted[0];
     const last = sorted[sorted.length - 1];
     const firstMonthStr = first.month.toString().padStart(2, '0');
@@ -156,30 +131,21 @@ export class ListingDetailsComponent implements OnInit {
 
   get monthRanges(): { start: string, end: string }[] {
     if (this.selectedMonths.length === 0) return [];
-    const sorted = [...this.selectedMonths].sort((a, b) =>
-      a.year !== b.year ? a.year - b.year : a.month - b.month
-    );
+    const sorted = [...this.selectedMonths].sort((a, b) => a.year !== b.year ? a.year - b.year : a.month - b.month);
     const ranges: { start: string, end: string }[] = [];
     let rangeStart = sorted[0];
     let prev = sorted[0];
     for (let i = 1; i < sorted.length; i++) {
       const current = sorted[i];
-      const isConsecutive =
-        (current.year === prev.year && current.month === prev.month + 1) ||
+      const isConsecutive = (current.year === prev.year && current.month === prev.month + 1) ||
         (current.year === prev.year + 1 && prev.month === 12 && current.month === 1);
       if (!isConsecutive) {
-        ranges.push({
-          start: this.formatMonth(rangeStart),
-          end: this.formatMonth(prev),
-        });
+        ranges.push({ start: this.formatMonth(rangeStart), end: this.formatMonth(prev) });
         rangeStart = current;
       }
       prev = current;
     }
-    ranges.push({
-      start: this.formatMonth(rangeStart),
-      end: this.formatMonth(prev),
-    });
+    ranges.push({ start: this.formatMonth(rangeStart), end: this.formatMonth(prev) });
     return ranges;
   }
 
@@ -188,9 +154,6 @@ export class ListingDetailsComponent implements OnInit {
     return date.toLocaleString('default', { month: 'short', year: 'numeric' });
   }
 
-  //------------------------------------------------------
-
-  // Map
   initMap(): void {
     const map = L.map('map').setView([this.listingLatitude, this.listingLongitude], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -201,9 +164,6 @@ export class ListingDetailsComponent implements OnInit {
       .openPopup();
   }
 
-  //------------------------------------------------------
-
-  // Room selection and cost
   get selectedRoomCount(): number {
     return this.listing.bedroomList?.filter(r => r.selected)?.length || 0;
   }
@@ -214,19 +174,15 @@ export class ListingDetailsComponent implements OnInit {
       .reduce((acc, r) => acc + (r.pricePerNight || 0), 0) || 0;
   }
 
-    get totalCost(): number {
-      const totalRooms = this.listing.bedroomList?.length || 0;
-      const selectedRooms = this.listing.bedroomList?.filter(r => r.selected) || [];
-
-      // ✅ if ALL rooms are selected, show full listing price
-      const allRoomsSelected = selectedRooms.length === totalRooms && totalRooms > 0;
-      if (allRoomsSelected) {
-        return this.listing.pricePerMonth || 0;
-      }
-
-      // 🔹 Otherwise, sum individual room prices
-      return selectedRooms.reduce((acc, r) => acc + (r.pricePerNight || 0), 0) || this.listing.pricePerMonth ;
+  get totalCost(): number {
+    const totalRooms = this.listing.bedroomList?.length || 0;
+    const selectedRooms = this.listing.bedroomList?.filter(r => r.selected) || [];
+    const allRoomsSelected = selectedRooms.length === totalRooms && totalRooms > 0;
+    if (allRoomsSelected) {
+      return this.listing.pricePerMonth || 0;
     }
+    return selectedRooms.reduce((acc, r) => acc + (r.pricePerNight || 0), 0) || this.listing.pricePerMonth;
+  }
 
   get selectedRooms() {
     return this.listing?.bedroomList?.filter(r => r.selected);
@@ -237,79 +193,61 @@ export class ListingDetailsComponent implements OnInit {
   }
 
   get allRoomsSelected(): boolean {
-  const totalRooms = this.listing.bedroomList?.length || 0;
-  const selectedRooms = this.listing.bedroomList?.filter(r => r.selected) || [];
-  return selectedRooms.length === totalRooms && totalRooms > 0;
-}
+    const totalRooms = this.listing.bedroomList?.length || 0;
+    const selectedRooms = this.listing.bedroomList?.filter(r => r.selected) || [];
+    return selectedRooms.length === totalRooms && totalRooms > 0;
+  }
 
-  //------------------------------------------------------
-
-  // Booking
-  
   sendBookingRequest(): void {
-  const selectedRooms = this.listing.bedroomList.filter(room => room.selected);
-  const guestId = this.listingService.getCurrentUserId();
+    const selectedRooms = this.listing.bedroomList.filter(room => room.selected);
+    const guestId = this.listingService.getCurrentUserId();
 
-  if (!this.moveIn || !this.moveOut) {
-    alert('Please select check-in and check-out months.');
-    return;
+    if (!this.moveIn || !this.moveOut) {
+      Swal.fire('Missing Dates', 'Please select check-in and check-out months.', 'warning');
+      return;
+    }
+
+    if (selectedRooms.length === 0) {
+      const hasUnavailableBed = this.listing.bedroomList.some(room =>
+        room.beds?.some(bed => !bed.isAvailable)
+      );
+
+      if (hasUnavailableBed) {
+        Swal.fire('Unavailable Beds', "Sorry, you can't book the entire apartment because a room or bed is already booked.\nPlease choose a specific room to proceed.", 'error');
+        return;
+      }
+
+      const dto: BookingRequestDto = {
+        guestId: guestId!,
+        listingId: this.listing.id,
+        bedIds: [],
+        fromDate: new Date(this.moveIn).toISOString(),
+        toDate: new Date(this.moveOut).toISOString()
+      };
+
+      this.listingService.createRequest(dto).subscribe(res => {
+        this.requestSent = true;
+        this.hostId = res.hostId;
+        Swal.fire('Success', 'Your request has been sent successfully!', 'success');
+      });
+    } else {
+      selectedRooms.forEach(room => {
+        const dto: BookingRequestDto = {
+          guestId: guestId!,
+          listingId: this.listing.id,
+          roomId: room.id,
+          // bedIds: room.beds?.map((b: any) => b.id).filter((id: any): id is number => id !== null) ?? [],
+          bedIds: [],
+          fromDate: new Date(this.moveIn).toISOString(),
+          toDate: new Date(this.moveOut).toISOString()
+        };
+
+        this.listingService.createRequest(dto).subscribe(res => {
+          this.requestSent = true;
+          this.hostId = res.hostId;
+          Swal.fire('Success', 'Your request has been sent successfully!', 'success');
+        });
+      });
+    }
   }
-
-  console.log('Selected rooms:', selectedRooms);
-
-if (selectedRooms.length === 0) {
-  // Booking the whole apartment: check if any bed is unavailable
-  const hasUnavailableBed = this.listing.bedroomList.some(room =>
-    room.beds?.some(bed => !bed.isAvailable)
-  );
-  console.log('🔍 Booking entire apartment');
-  console.log('Checking for unavailable beds:', hasUnavailableBed);
-
-  if (hasUnavailableBed) {
-    alert(
-      "Sorry, you can't book the entire apartment because a room or bed is already booked.\nPlease choose a specific room to proceed."
-    );
-    return;
-  }
-
-  // Proceed with booking the entire apartment
-  const dto: BookingRequestDto = {
-    guestId: guestId!,
-    listingId: this.listing.id,
-    bedIds: [],
-    fromDate: new Date(this.moveIn).toISOString(),
-    toDate: new Date(this.moveOut).toISOString()
-  };
-
-  this.listingService.createRequest(dto).subscribe(res => {
-    this.requestSent = true;
-    this.hostId = res.hostId;
-    alert('Your request has been sent successfully!');
-  });
-}
-
-
-   else {
-    console.log('✅ Booking specific rooms:', selectedRooms);
-  selectedRooms.forEach(room => {
-    const dto: BookingRequestDto = {
-      guestId: guestId!,
-      listingId: this.listing.id,
-      roomId: room.id,
-      bedIds: room.beds?.map((b: any) => b.id).filter((id: any): id is number => id !== null) ?? [],
-      fromDate: new Date(this.moveIn).toISOString(),
-      toDate: new Date(this.moveOut).toISOString()
-    };
-
-    this.listingService.createRequest(dto).subscribe(res => {
-      this.requestSent = true;
-      this.hostId = res.hostId;
-      alert('Your request has been sent successfully!');
-    });
-  });
-}
-
-}
-
-
 }
