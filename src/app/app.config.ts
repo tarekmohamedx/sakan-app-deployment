@@ -5,7 +5,7 @@ import {
   LOCALE_ID,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { routes } from './app.routes';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideClientHydration } from '@angular/platform-browser';
@@ -21,6 +21,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { AuthService } from './features/auth/services/auth.service';
+import { authInterceptorFn } from '../app/interceptor/auth-interceptor.service';
 
 registerLocaleData(localeAr);
 
@@ -58,6 +59,10 @@ export const appConfig: ApplicationConfig = {
         minWidth: '400px',
         panelClass: 'custom-dialog-container',
       },
+    },
+    {
+      provide: withInterceptors([authInterceptorFn]),
+      useValue: authInterceptorFn,
     },
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,

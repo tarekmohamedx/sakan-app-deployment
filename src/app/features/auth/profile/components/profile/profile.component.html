@@ -1,0 +1,32 @@
+<div class="profile-picture-container">
+    <div class="profile-picture">
+      <img [src]="defaultImage" alt="User Photo" />
+      <label for="upload-photo" class="upload-button">
+        <span>+</span>
+      </label>
+      <input type="file" id="upload-photo" (change)="uploadPhoto($event)" hidden />
+    </div>
+  </div>
+  
+<div class="profile-container" *ngIf="profileData">
+  <div class="card">
+    <h2>{{ profileData.userName }}</h2>
+    <p><strong>Email:</strong> {{ profileData.email }}</p>
+    <p><strong>Phone:</strong> {{ profileData.phoneNumber }}</p>
+
+    <!-- Show only for customers -->
+    <ng-container *ngIf="userrole === 'Customer'">
+      <p>
+        <strong>Reserved Type:</strong>
+        {{ profileData.title ? "Listing" : "None" }}
+      </p>
+      <p><strong>Listing Title:</strong> {{ profileData.title || "—" }}</p>
+      <p><strong>Listing Price:</strong> {{ profileData.price }} EGP</p>
+    </ng-container>
+
+    <div class="btn-group">
+      <button class="edit-btn" (click)="openEditDialog()">✏️ Edit</button>
+      <button class="delete-btn" (click)="confirmDelete()">🗑️ Delete</button>
+    </div>
+  </div>
+</div>
