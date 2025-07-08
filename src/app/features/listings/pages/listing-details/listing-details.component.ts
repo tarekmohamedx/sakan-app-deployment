@@ -236,7 +236,8 @@ export class ListingDetailsComponent implements OnInit {
           guestId: guestId!,
           listingId: this.listing.id,
           roomId: room.id,
-          bedIds: room.beds?.map((b: any) => b.id).filter((id: any): id is number => id !== null) ?? [],
+          // bedIds: room.beds?.map((b: any) => b.id).filter((id: any): id is number => id !== null) ?? [],
+          bedIds: [],
           fromDate: new Date(this.moveIn).toISOString(),
           toDate: new Date(this.moveOut).toISOString()
         };
