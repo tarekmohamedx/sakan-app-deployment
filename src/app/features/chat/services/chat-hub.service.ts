@@ -3,6 +3,7 @@ import * as signalR from '@microsoft/signalr';
 import { Subject } from 'rxjs';
 import { MessageDto } from '../../../core/models/messageDto';
 import { environment } from '../../../environments/environment';
+import Swal from 'sweetalert2';
 
 @Injectable({
   providedIn: 'root',
@@ -61,7 +62,26 @@ public bookingRequest$ = this.bookingRequestSubject.asObservable();
 
     this.hubConnection.on('ReceiveBookingStatusUpdate', (data: any) => {
       console.log('[SignalR] Booking status update received:', data);
+      // alert(`Booking status updated: ${data.status} for ${data.listingTitle} by ${data.userName}`);
+      this.showBookingStatusAlert(data);
     });
+
+    /* bject
+guestApproved
+: 
+true
+hostApproved
+: 
+false
+listingTitle
+: 
+"Mansoura Student Room"
+status
+: 
+"PendingHost"
+userName
+: 
+"guest1"*/
 
     this.isInitialized = true;
 
@@ -125,5 +145,38 @@ public bookingRequest$ = this.bookingRequestSubject.asObservable();
       throw error;
     }
   }
+
+
+
+async showBookingStatusAlert(data: {
+  guestApproved: boolean;
+  hostApproved: boolean;
+  listingTitle: string;
+  status: string;
+  userName: string;
+}) {
+  const statusMessage = {
+    GoToPayment: "Booking approved! Please proceed to payment.",
+    PendingHost: "Guest approved. Waiting for host confirmation.",
+    PendingGuest: "Host approved. Waiting for guest confirmation.",
+    Approved: "Booking fully approved!",
+    PendingUserBooking: "Guest needs to book first.",
+  };
+
+  Swal.fire({
+    title: `Booking Update - ${data.listingTitle}`,
+    html: `
+      <strong>${data.userName}</strong> updated the booking status.<br><br>
+      <b>Status:</b> ${data.status}<br>
+      <b>Guest Approved:</b> ${data.guestApproved ? '✅ Yes' : '❌ No'}<br>
+      <b>Host Approved:</b> ${data.hostApproved ? '✅ Yes' : '❌ No'}
+    `,
+    icon: 'info',
+    confirmButtonText: 'OK',
+    timer: 7000,
+    timerProgressBar: true
+  });
+}
+
   
 }
