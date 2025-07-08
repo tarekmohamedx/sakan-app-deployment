@@ -141,6 +141,17 @@ getRoleFromToken(): string[] {
   }
 }
 
+  // getRoleFromToken(): string | null {
+  //   const token = this.getToken();
+  //   if (!token) return null;
+
+  //   const decoded = jwtDecode(token) as { [key: string]: any };
+  //   const role =
+  //     decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+
+  //   return role;
+  // }
+
 
   //jwt
   getToken(): string | null {
@@ -173,17 +184,6 @@ getRoleFromToken(): string[] {
       data,
       { headers: { 'Content-Type': 'application/json' } }
     );
-  }
-
-  getRoleFromToken(): string | null {
-    const token = this.getToken();
-    if (!token) return null;
-
-    const decoded = jwtDecode(token) as { [key: string]: any };
-    const role =
-      decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-
-    return role;
   }
 
   // Call this after login success

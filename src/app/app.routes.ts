@@ -21,20 +21,19 @@ import { HostBookingComponent } from './host/host-booking/host-booking.component
 import { HostUserReviewsComponent } from './host/host-user-reviews/host-user-reviews.component';
 import { HostMyReviewsComponent } from './host/host-my-reviews/host-my-reviews.component';
 import { BookingRequestsComponent } from './host/booking-requests/booking-requests.component';
-import { LayoutComponent } from '../app/Admin/layout/layout.component';
-import { AdminDashboardComponent } from '../app/Admin/admin-dashboard/admin-dashboard.component';
-import { AdminListingsComponent } from '../app/Admin/admin-listings/admin-listings.component';
 import { AboutComponent } from './about/about.component';
-//import { AdminApproveListingsComponent } from '../app/Admin/admin-listings/admin-listings.component';
-import { AdminEditlistingComponent } from '../app/Admin/admin-editlisting/admin-editlisting.component';
 import { UserReviewComponent } from './features/UserReviews/user-review/user-review.component';
 import { AiComponent } from './ai/ai.component';
 import { BecomeHostComponent } from './features/become-host/become-host.component';
-import { AdminHostsApproveComponent } from '../app/Admin/admin-hosts-approve/admin-hosts-approve.component';
 import { GoogleCallbackComponent } from './features/auth/google-callback/google-callback.component';
 import { ForgetPasswordComponent } from './features/auth/forget-password/forget-password.component';
 import { HostGuard } from './guards/host.guard';
 import { AdminGuard } from './guards/admin.guard';
+import { LayoutComponent } from './admin/layout/layout.component';
+import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
+import { AdminListingsComponent } from './admin/admin-listings/admin-listings.component';
+import { AdminEditlistingComponent } from './admin/admin-editlisting/admin-editlisting.component';
+import { AdminHostsApproveComponent } from './admin/admin-hosts-approve/admin-hosts-approve.component';
 
 
 export const routes: Routes = [
@@ -93,7 +92,6 @@ export const routes: Routes = [
       { path: 'dashboard', component: AdminDashboardComponent },
       { path: 'listings', component: AdminListingsComponent },
       { path: 'editlisting/:id', component: AdminEditlistingComponent },
-      //{ path: 'approvelistings', component: AdminApproveListingsComponent },
       { path: 'approveHost', component: AdminHostsApproveComponent },
     ],
   },
