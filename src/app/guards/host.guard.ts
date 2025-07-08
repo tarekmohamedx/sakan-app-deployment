@@ -9,8 +9,8 @@ export class HostGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(): boolean {
-    const role = this.authService.getRoleFromToken();
-    if (role === 'host') {
+    const roles = this.authService.getRoleFromToken();
+    if (roles.includes('Host')) {
       return true;
     }
 

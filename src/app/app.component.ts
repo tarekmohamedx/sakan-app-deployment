@@ -20,17 +20,20 @@ import { FooterComponent } from './layout/footer/footer.component';
   styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
-  role = '';
+  // role = '';
+  role: string[] = [];
   constructor(
     private router: Router,
     private authService : AuthService
   ) { 
  
   }
+
+
   ngOnInit(): void {
     // this.router.navigate(['/home']);
     console.log('Role', this.authService.getuserdata()?.role);
-    this.role = this.authService.getuserdata()?.role || '';
+    this.role = this.authService.getuserdata()?.role || [];
     
   }
   title = 'sakan-app';
