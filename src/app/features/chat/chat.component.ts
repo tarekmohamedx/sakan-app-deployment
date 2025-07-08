@@ -14,6 +14,7 @@ import { NoChatsComponent } from './components/app-no-chats/app-no-chats.compone
 import { Router } from '@angular/router';
 import { ApproveConfirmationModalComponent } from './components/approve-confirmation-modal/approve-confirmation-modal';
 import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -77,7 +78,9 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
 alert('Toast should have appeared!');
-    this.toastr.success('Toastr is working!', 'Test');
+    // this.toastr.success('Toastr is working!', 'Test');
+    // Swal.fire('Hello!', 'This is a simple alert', 'success');
+
     this.currentUserId = this.authService
       .getUserIdFromToken()
       ?.toString()
@@ -128,18 +131,25 @@ alert('Toast should have appeared!');
         
         
         this.newchats.forEach((chat) => {
-         this.chatService.getBookingId(chat.chatId, this.currentUserId).subscribe((bookingId) => {
+          // استخدم guestId المناسب
+          const guestId = this.isHost()
+            ? (chat.lastMessage?.senderID === this.currentUserId
+                ? chat?.lastMessage?.receiverID
+                : chat?.lastMessage?.senderID)
+            : this.currentUserId;
+        
+          this.chatService.getBookingId(chat.chatId, guestId).subscribe((bookingId) => {
             console.log('Booking ID for chat', chat.chatId, ':', bookingId);
-
-            this.chatService.getApprovalStatus(bookingId, this.currentUserId, this.isHost())
-            .subscribe((approvalStatus) => {
-              chat.listingStatus = approvalStatus.status;
-              console.log(chat.listingStatus, 'Approval status for chat', chat.listingStatus);
-            });
-            
-         });
-         
-        })
+        
+            this.chatService
+              .getApprovalStatus(bookingId, guestId, this.isHost())
+              .subscribe((approvalStatus) => {
+                chat.listingStatus = approvalStatus.status;
+                console.log(chat.chatId, 'Approval status:', chat.listingStatus);
+              });
+          });
+        });
+        
         if (
           chats.length === 0 &&
           !this.route.snapshot.queryParams['hostId'] &&
@@ -390,8 +400,10 @@ alert('Toast should have appeared!');
     if (roles) {
       console.log(roles[0]);
       userRole = roles[0];
+      return userRole === 'Host';
     }
-    return userRole === 'Host';
+    return false;
+    
   }
   async onApproveClick() {
     console.log("Approve Button Clicked");
@@ -472,7 +484,7 @@ alert('Toast should have appeared!');
   async BookingApproveNotify(){
     this.chatHubService.bookingRequest$.subscribe((data) => {
       console.log('[SignalR] Booking status update received:', data);
-  
+      alert("User Has Been Approved! " + data);
       const message = `${data.userName} ${
         data.status === 'GoToPayment'
           ? 'approved the booking, please proceed to payment.'
@@ -483,7 +495,7 @@ alert('Toast should have appeared!');
           : 'updated booking status.'
       }`;
   
-      this.toastr.info(message, data.listingTitle);
+     
     });
   }
 
