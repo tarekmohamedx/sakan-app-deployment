@@ -373,24 +373,40 @@ alert('Toast should have appeared!');
     if (result === 'confirm') {
       if (!this.selectedChat) return;
   
-      const isHost = this.selectedChat?.isHost ?? false;
+
   
       try {
         // const chatId = this.selectedChat?.id;
+        
         const chatId = this.messages[0]?.chatId;
         console.log("Chat Id: " + chatId);
+        
         
         if (!chatId) return;
         
         const bookingId = await firstValueFrom(this.chatService.getBookingId(chatId));
         console.log("Booking Id: " + bookingId);
         
-        const isHost = this.selectedChat?.isHost ?? false;
+    
+        let userRole;
+        const roles = this.authService.getRoleFromToken();
+        if (roles) {
+          console.log(roles[0]);
+          userRole = roles[0];
+        }
+         const isHost = userRole === 'Host';
+         console.log(`Is user a host? ${isHost}`);
+         
         
-        const approvalResult = await this.chatService.approveBooking(chatId,bookingId, isHost);
-  
-        this.approvalStatus = approvalResult.status;
-        console.log("Approval status updated:", this.approvalStatus);
+
+        
+         const approvalResult = await this.chatService.approveBooking(chatId, bookingId, isHost);
+
+         this.approvalStatus = approvalResult?.status;
+         console.log("Approval status updated:", this.approvalStatus);
+         
+        
+        // console.log("Approval status updated:", this.approvalStatus);
   
         switch (this.approvalStatus) {
           case "GoToPayment":
@@ -398,6 +414,7 @@ alert('Toast should have appeared!');
             break;
           case "PendingHost":
             // show "Waiting for host approval"
+            
             break;
           case "PendingGuest":
             // show "Waiting for guest approval"
@@ -439,5 +456,27 @@ alert('Toast should have appeared!');
     });
   }
 
+
+  getApprovalMessage(): string {
+    switch (this.approvalStatus) {
+      case "GoToPayment":
+        return 'Booking approved! Proceed to payment.';
+      case "PendingHost":
+        return 'You approved the request. Waiting for host confirmation.';
+      case "PendingGuest":
+        return 'You approved the request. Waiting for guest confirmation.';
+      case "PendingUserBooking":
+        return 'Guest needs to complete the booking.';
+      case "Approved":
+        return 'Booking confirmed!';
+      default:
+        return '';
+    }
+  }
+  goToPayment() {
+    this.router.navigate(['/payment']);
+    //still need to implement the payment logic
+  }
+  
 
 }
