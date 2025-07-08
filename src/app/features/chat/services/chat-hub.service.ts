@@ -58,7 +58,13 @@ public bookingRequest$ = this.bookingRequestSubject.asObservable();
       console.log('Received booking info:', data);
       this.bookingRequestSubject.next(data); 
     });
+
+    this.hubConnection.on('ReceiveBookingStatusUpdate', (data: any) => {
+      console.log('[SignalR] Booking status update received:', data);
+    });
+
     this.isInitialized = true;
+
   }
 
   /**

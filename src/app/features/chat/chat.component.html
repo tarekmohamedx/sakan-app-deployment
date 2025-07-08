@@ -44,26 +44,38 @@
         </h2>
 
         <ng-container [ngSwitch]="approvalStatus">
-          <button *ngSwitchCase="'GoToPayment'" class="btn success">
+  
+          <button
+            *ngSwitchCase="'GoToPayment'"
+            class="btn success"
+            (click)="goToPayment()"
+          >
             Go to Payment
           </button>
-
-          <span *ngSwitchCase="'PendingHost'" class="status-msg">
+        
+          <span *ngSwitchCase="'PendingHost'" class="status-msg pending">
             Waiting for host approval
           </span>
-
-          <span *ngSwitchCase="'PendingGuest'" class="status-msg">
+        
+          <span *ngSwitchCase="'PendingGuest'" class="status-msg pending">
             Waiting for guest approval
           </span>
-
-          <span *ngSwitchCase="'PendingUserBooking'" class="status-msg">
+        
+          <span *ngSwitchCase="'PendingUserBooking'" class="status-msg pending">
             Waiting for guest to complete booking
           </span>
-
-          <button *ngSwitchDefault class="approve-btn" (click)="onApproveClick()">
+        
+          <button
+            *ngSwitchDefault
+            class="approve-btn"
+            (click)="onApproveClick()"
+          >
             Approve
           </button>
         </ng-container>
+        
+        
+        
       </div>
 
       <!-- No Chat Selected -->

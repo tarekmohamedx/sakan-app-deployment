@@ -12,6 +12,9 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { NoChatsComponent } from './components/app-no-chats/app-no-chats.component';
 import { Router } from '@angular/router';
+import { ApproveConfirmationModalComponent } from './components/approve-confirmation-modal/approve-confirmation-modal';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-chat',
@@ -29,7 +32,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private router : Router
+    private router : Router,
+    private toastr : ToastrService
   ) {}
 
   // ngAfterViewChecked() {
@@ -71,6 +75,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   };
 
   async ngOnInit() {
+alert('Toast should have appeared!');
+    this.toastr.success('Toastr is working!', 'Test');
     this.currentUserId = this.authService
       .getUserIdFromToken()
       ?.toString()
@@ -170,6 +176,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         console.error('Error fetching chats', err);
       },
     });
+    await this.BookingApproveNotify();
   }
 
   ngOnDestroy() {
@@ -259,8 +266,24 @@ export class ChatComponent implements OnInit, OnDestroy {
     const confirmed = await dialogRef.afterClosed().toPromise();
     if (!confirmed) {
       console.log('No chats confirmation cancelled');
+      
+      this.router.navigate(['/home']);
       return;
     }
+  }
+
+  async DisplayApproveDialog() {
+    const dialogRef = this.dialog.open(ApproveConfirmationModalComponent);
+    const result = await dialogRef.afterClosed().toPromise();
+  
+    if (result === 'confirm') {
+      console.log('User confirmed');
+
+    } else if (result === 'cancel') {
+      console.log('User cancelled');
+    }
+    return result;
+    
   }
 
   async DisplayConfirmationDialog() {
@@ -342,39 +365,118 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   async onApproveClick() {
-    if (!this.selectedChat) return;
+    console.log("Approve Button Clicked");
   
-    const isHost = this.selectedChat?.isHost ?? false;
+    const result = await this.DisplayApproveDialog();
+    console.log(result, "Dialog result");
   
-    try {
-      const result = await this.chatService.approveBooking(this.selectedChat.chatId, isHost);
+    if (result === 'confirm') {
+      if (!this.selectedChat) return;
   
-      // حسب الحالة، عدل الـ UI
-      switch (result.status) {
-        case "GoToPayment":
-          // Show Go to Payment button
-          break;
-        case "PendingHost":
-          // Show "Pending host approval"
-          break;
-        case "PendingGuest":
-          // Show "Pending guest approval"
-          break;
-        case "PendingUserBooking":
-          // Show "Waiting for guest to book"
-          break;
-        default:
-          // Handle other states if needed
-          break;
+
+  
+      try {
+        // const chatId = this.selectedChat?.id;
+        
+        const chatId = this.messages[0]?.chatId;
+        console.log("Chat Id: " + chatId);
+        
+        
+        if (!chatId) return;
+        
+        const bookingId = await firstValueFrom(this.chatService.getBookingId(chatId));
+        console.log("Booking Id: " + bookingId);
+        
+    
+        let userRole;
+        const roles = this.authService.getRoleFromToken();
+        if (roles) {
+          console.log(roles[0]);
+          userRole = roles[0];
+        }
+         const isHost = userRole === 'Host';
+         console.log(`Is user a host? ${isHost}`);
+         
+        
+
+        
+         const approvalResult = await this.chatService.approveBooking(chatId, bookingId, isHost);
+
+         this.approvalStatus = approvalResult?.status;
+         console.log("Approval status updated:", this.approvalStatus);
+         
+        
+        // console.log("Approval status updated:", this.approvalStatus);
+  
+        switch (this.approvalStatus) {
+          case "GoToPayment":
+            // show "Pay Now" button
+            break;
+          case "PendingHost":
+            // show "Waiting for host approval"
+            
+            break;
+          case "PendingGuest":
+            // show "Waiting for guest approval"
+            break;
+          case "PendingUserBooking":
+            // show "Guest needs to book"
+            break;
+          case "Approved":
+            // show "Booking Confirmed"
+            break;
+          default:
+            // handle other states
+            break;
+        }
+  
+      } catch (error) {
+        console.error("Approval failed", error);
       }
-      this.approvalStatus = result.status;
-      console.log("Booking approved:", result);
-    } catch (error) {
-      console.error("Approval failed", error);
+    } else {
+      console.log("User cancelled approval.");
     }
   }
-
   
+  async BookingApproveNotify(){
+    this.chatHubService.bookingRequest$.subscribe((data) => {
+      console.log('[SignalR] Booking status update received:', data);
+  
+      const message = `${data.userName} ${
+        data.status === 'GoToPayment'
+          ? 'approved the booking, please proceed to payment.'
+          : data.status === 'PendingHost'
+          ? 'approved the request. Waiting for host confirmation.'
+          : data.status === 'PendingGuest'
+          ? 'approved the request. Waiting for guest confirmation.'
+          : 'updated booking status.'
+      }`;
+  
+      this.toastr.info(message, data.listingTitle);
+    });
+  }
 
+
+  getApprovalMessage(): string {
+    switch (this.approvalStatus) {
+      case "GoToPayment":
+        return 'Booking approved! Proceed to payment.';
+      case "PendingHost":
+        return 'You approved the request. Waiting for host confirmation.';
+      case "PendingGuest":
+        return 'You approved the request. Waiting for guest confirmation.';
+      case "PendingUserBooking":
+        return 'Guest needs to complete the booking.';
+      case "Approved":
+        return 'Booking confirmed!';
+      default:
+        return '';
+    }
+  }
+  goToPayment() {
+    this.router.navigate(['/payment']);
+    //still need to implement the payment logic
+  }
+  
 
 }
