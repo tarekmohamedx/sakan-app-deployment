@@ -120,6 +120,19 @@ alert('Toast should have appeared!');
     this.chatService.getUserChats(this.currentUserId).subscribe({
       next: async (chats) => {
         this.chats = chats;
+        // console.log("Get User Chats: ", this.chats);
+        console.log("User id : " + this.currentUserId);
+        console.log("IS HOST: ", this.isHost());
+
+        
+        
+        this.chats.forEach((chat) => {
+         this.chatService.getBookingId(chat.chatId, this.currentUserId).subscribe((bookingId) => {
+            console.log('Booking ID for chat', chat.chatId, ':', bookingId);
+            
+         });
+         
+        })
         if (
           chats.length === 0 &&
           !this.route.snapshot.queryParams['hostId'] &&
@@ -364,6 +377,15 @@ alert('Toast should have appeared!');
     return chat.userName || 'No messages yet';
   }
 
+  isHost(): boolean {
+    let userRole;
+    const roles = this.authService.getRoleFromToken();
+    if (roles) {
+      console.log(roles[0]);
+      userRole = roles[0];
+    }
+    return userRole === 'Host';
+  }
   async onApproveClick() {
     console.log("Approve Button Clicked");
   
@@ -380,11 +402,13 @@ alert('Toast should have appeared!');
         
         const chatId = this.messages[0]?.chatId;
         console.log("Chat Id: " + chatId);
+     
+        
         
         
         if (!chatId) return;
         
-        const bookingId = await firstValueFrom(this.chatService.getBookingId(chatId));
+        const bookingId = await firstValueFrom(this.chatService.getBookingId(chatId, this.currentUserId));
         console.log("Booking Id: " + bookingId);
         
     
