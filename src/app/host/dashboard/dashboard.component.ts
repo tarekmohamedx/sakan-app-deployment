@@ -92,7 +92,7 @@ export class DashboardComponent implements OnInit {
   }
 
   formatCurrency(amount: number): string {
-    return new Intl.NumberFormat('ar-EG', {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'EGP'
     }).format(amount);

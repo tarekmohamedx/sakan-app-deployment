@@ -58,11 +58,14 @@ export class ListingDetailsComponent implements OnInit {
       this.listingLongitude = this.listing.longitude;
 
       // Initialize the map after coordinates are set
-      this.initMap();
+       setTimeout(() => {
+          this.initMap();
+        }, 0);
     });
 
     this.listingService.getBookedMonths(id).subscribe(data => {
       this.bookedMonths = data;
+       console.log('📅 Booked Months:', this.bookedMonths);
     });
   }
 
@@ -96,20 +99,34 @@ export class ListingDetailsComponent implements OnInit {
     });
   }
 
+    selectedImage: string | null = null;
+
+  openImageModal(imageUrl: string) {
+    this.selectedImage = imageUrl;
+  }
+
+  closeModal() {
+    this.selectedImage = null;
+  }
+
   //------------------------------------------------------
   // Month selection (calendar)
 
   selectMonth(month: number) {
-    const exists = this.selectedMonths.find(m => m.year === this.currentYear && m.month === month);
-    if (exists) {
-      this.selectedMonths = this.selectedMonths.filter(m => !(m.year === this.currentYear && m.month === month));
-    } else {
-      if (!this.isMonthBooked(this.currentYear, month)) {
-        this.selectedMonths.push({ year: this.currentYear, month });
-      }
-    }
-    this.updateMoveDatesFromSelection();
+  if (this.isMonthBooked(this.currentYear, month)) {
+    return; // Prevent selection
   }
+
+  const exists = this.selectedMonths.find(m => m.year === this.currentYear && m.month === month);
+  if (exists) {
+    this.selectedMonths = this.selectedMonths.filter(m => !(m.year === this.currentYear && m.month === month));
+  } else {
+    this.selectedMonths.push({ year: this.currentYear, month });
+  }
+
+  this.updateMoveDatesFromSelection();
+}
+
 
   updateMoveDatesFromSelection() {
     if (this.selectedMonths.length === 0) {
@@ -197,20 +214,19 @@ export class ListingDetailsComponent implements OnInit {
       .reduce((acc, r) => acc + (r.pricePerNight || 0), 0) || 0;
   }
 
-  get totalCost(): number {
-    const totalRooms = this.listing.bedroomList?.length || 0;
-    const selectedRooms = this.listing.bedroomList?.filter(r => r.selected) || [];
-    const allRoomsSelected = selectedRooms.length === totalRooms;
-    if (allRoomsSelected && totalRooms > 0) {
-      return (this.listing.pricePerMonth || 0);
-    }
-    const selectedRoomSum = selectedRooms.reduce((acc, r) => acc + (r.pricePerNight || 0), 0);
-    return selectedRoomSum;
-  }
+    get totalCost(): number {
+      const totalRooms = this.listing.bedroomList?.length || 0;
+      const selectedRooms = this.listing.bedroomList?.filter(r => r.selected) || [];
 
-  get allRoomsSelected(): boolean {
-    return this.listing.bedroomList?.every(r => r.selected) || false;
-  }
+      // ✅ if ALL rooms are selected, show full listing price
+      const allRoomsSelected = selectedRooms.length === totalRooms && totalRooms > 0;
+      if (allRoomsSelected) {
+        return this.listing.pricePerMonth || 0;
+      }
+
+      // 🔹 Otherwise, sum individual room prices
+      return selectedRooms.reduce((acc, r) => acc + (r.pricePerNight || 0), 0) || this.listing.pricePerMonth ;
+    }
 
   get selectedRooms() {
     return this.listing?.bedroomList?.filter(r => r.selected);
@@ -220,45 +236,80 @@ export class ListingDetailsComponent implements OnInit {
     this.router.navigate(['/room', roomId]);
   }
 
+  get allRoomsSelected(): boolean {
+  const totalRooms = this.listing.bedroomList?.length || 0;
+  const selectedRooms = this.listing.bedroomList?.filter(r => r.selected) || [];
+  return selectedRooms.length === totalRooms && totalRooms > 0;
+}
+
   //------------------------------------------------------
 
   // Booking
+  
   sendBookingRequest(): void {
-    const selectedRooms = this.listing.bedroomList.filter(room => room.selected);
-    const guestId = this.listingService.getCurrentUserId();
-    if (!this.moveIn || !this.moveOut) {
-      alert('Please select check-in and check-out months.');
-      return;
-    }
-    if (selectedRooms.length === 0) {
-      // Booking the whole apartment
-      const dto: BookingRequestDto = {
-        guestId,
-        listingId: this.listing.id,
-        fromDate: new Date(this.moveIn).toISOString(),
-        toDate: new Date(this.moveOut).toISOString()
-      };
-      this.listingService.createRequest(dto).subscribe(res => {
-        this.requestSent = true;
-        this.hostId = res.hostId;
-        alert('Your request has been sent successfully!');
-      });
-    } else {
-      // Booking individual rooms
-      selectedRooms.forEach(room => {
-        const dto: BookingRequestDto = {
-          guestId,
-          listingId: this.listing.id,
-          roomId: room.id,
-          fromDate: new Date(this.moveIn).toISOString(),
-          toDate: new Date(this.moveOut).toISOString()
-        };
-        this.listingService.createRequest(dto).subscribe(res => {
-          this.requestSent = true;
-          this.hostId = res.hostId;
-          alert('Your request has been sent successfully!');
-        });
-      });
-    }
+  const selectedRooms = this.listing.bedroomList.filter(room => room.selected);
+  const guestId = this.listingService.getCurrentUserId();
+
+  if (!this.moveIn || !this.moveOut) {
+    alert('Please select check-in and check-out months.');
+    return;
   }
+
+  console.log('Selected rooms:', selectedRooms);
+
+if (selectedRooms.length === 0) {
+  // Booking the whole apartment: check if any bed is unavailable
+  const hasUnavailableBed = this.listing.bedroomList.some(room =>
+    room.beds?.some(bed => !bed.isAvailable)
+  );
+  console.log('🔍 Booking entire apartment');
+  console.log('Checking for unavailable beds:', hasUnavailableBed);
+
+  if (hasUnavailableBed) {
+    alert(
+      "Sorry, you can't book the entire apartment because a room or bed is already booked.\nPlease choose a specific room to proceed."
+    );
+    return;
+  }
+
+  // Proceed with booking the entire apartment
+  const dto: BookingRequestDto = {
+    guestId: guestId!,
+    listingId: this.listing.id,
+    bedIds: [],
+    fromDate: new Date(this.moveIn).toISOString(),
+    toDate: new Date(this.moveOut).toISOString()
+  };
+
+  this.listingService.createRequest(dto).subscribe(res => {
+    this.requestSent = true;
+    this.hostId = res.hostId;
+    alert('Your request has been sent successfully!');
+  });
+}
+
+
+   else {
+    console.log('✅ Booking specific rooms:', selectedRooms);
+  selectedRooms.forEach(room => {
+    const dto: BookingRequestDto = {
+      guestId: guestId!,
+      listingId: this.listing.id,
+      roomId: room.id,
+      bedIds: room.beds?.map((b: any) => b.id).filter((id: any): id is number => id !== null) ?? [],
+      fromDate: new Date(this.moveIn).toISOString(),
+      toDate: new Date(this.moveOut).toISOString()
+    };
+
+    this.listingService.createRequest(dto).subscribe(res => {
+      this.requestSent = true;
+      this.hostId = res.hostId;
+      alert('Your request has been sent successfully!');
+    });
+  });
+}
+
+}
+
+
 }

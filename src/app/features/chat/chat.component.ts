@@ -8,38 +8,52 @@ import { ChatDto } from '../../core/models/chatDto';
 import { AuthService } from '../auth/services/auth.service'; 
 import { MatDialog } from '@angular/material/dialog';
 import { ChatConfirmationModalComponent } from './components/chat-confirmation-modal/chat-confirmation-modal.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { NoChatsComponent } from './components/app-no-chats/app-no-chats.component';
+import { Router } from '@angular/router';
+import { ApproveConfirmationModalComponent } from './components/approve-confirmation-modal/approve-confirmation-modal';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css'],
 })
 export class ChatComponent implements OnInit, OnDestroy {
-  @ViewChild('scrollAnchor') private scrollAnchor!: ElementRef;
+  @ViewChild('chatMessagesContainer') private chatMessagesContainer!: ElementRef;
 
   constructor(
     private chatService: ChatService,
     private chatHubService: ChatHubService,
     private authService: AuthService,
     private dialog: MatDialog,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router : Router,
+    private toastr : ToastrService
   ) {}
 
-  ngAfterViewChecked() {
-    this.scrollToBottom();
-  }
+  // ngAfterViewChecked() {
+  //   this.scrollToBottom();
+  // }
+
 
   scrollToBottom(): void {
-    if (this.scrollAnchor) {
-      this.scrollAnchor.nativeElement.scrollIntoView({ behavior: 'smooth' });
-    }
+    setTimeout(() => {
+      try {
+        const container = this.chatMessagesContainer?.nativeElement;
+        if (container) {
+          container.scrollTop = container.scrollHeight;
+        }
+      } catch (err) {
+        console.error('Scroll failed', err);
+      }
+    }, 100);
   }
-
+  
   chats: ChatDto[] = [];
   selectedChat: any = null;
   messages: MessageDto[] = [];
@@ -49,6 +63,9 @@ export class ChatComponent implements OnInit, OnDestroy {
   listingTitle: string = 'Default Listing Title';
   HostID: string = 'host-123';
   ListingID: string = '4';
+  approvalStatus: string = '';
+  hostApproved: boolean = false;
+  guestApproved: boolean = false; 
 
   message: MessageDto = {
     senderID: '',
@@ -58,6 +75,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   };
 
   async ngOnInit() {
+alert('Toast should have appeared!');
+    this.toastr.success('Toastr is working!', 'Test');
     this.currentUserId = this.authService
       .getUserIdFromToken()
       ?.toString()
@@ -78,8 +97,23 @@ export class ChatComponent implements OnInit, OnDestroy {
         );
         if (!exists) {
           this.messages.push(message);
+          this.scrollToBottom();
         }
       }
+    });
+
+    this.chatHubService.bookingRequest$.subscribe((data) => {
+      console.log("Booking info received in component:", data);
+    
+      this.selectedChat = {
+        ...this.selectedChat,
+        listingId: data.request.listingId,
+        listingTitle: data.request.listingTitle,
+        hostId: data.request.hostId,
+        hostName: data.request.hostName,
+        guestId: data.request.guestId,
+        guestName: data.request.guestName
+      };
     });
 
     // Get chats
@@ -99,11 +133,11 @@ export class ChatComponent implements OnInit, OnDestroy {
           const hostId = params['hostId'];
           const listingId = params['listingId'];
 
-          this.currentUserId = this.authService
-            .getUserIdFromToken()
-            ?.toString()
-            .trim();
-
+          console.log('Query params:', params);
+          
+        
+          this.currentUserId = this.authService.getUserIdFromToken()?.toString().trim();
+        
           if (hostId && listingId) {
             try {
               const chat = await this.chatService.createChatIfNotExists(
@@ -112,27 +146,37 @@ export class ChatComponent implements OnInit, OnDestroy {
                 +listingId
               );
 
+        
               if (chat) {
-                this.DisplayConfirmationDialog();
+
+                await this.DisplayConfirmationDialog();
+        
                 this.selectedChat = {
                   ...chat,
                   receiverID: hostId,
                 };
                 await this.loadChatHistory(chat.chatId);
+                await this.chatHubService.invokeChatWithHost(+listingId, this.currentUserId);
+                this.router.navigate([], {
+                  relativeTo: this.route,
+                  queryParams: {},
+                  replaceUrl: true,
+                });
               }
             } catch (error) {
               console.error('Error creating chat:', error);
             }
+          } else {
+            this.getChatsByUserId(this.currentUserId);
           }
-
-          this.getChatsByUserId(this.currentUserId);
-          this.chatHubService.startConnection(this.currentUserId);
         });
+        
       },
       error: (err) => {
         console.error('Error fetching chats', err);
       },
     });
+    await this.BookingApproveNotify();
   }
 
   ngOnDestroy() {
@@ -159,6 +203,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       });
 
       this.newMessage = '';
+      this.scrollToBottom();
 
       // Send via SignalR
       await this.chatHubService.sendMessage(messageDto);
@@ -212,7 +257,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       ...chat,
       receiverID,
     };
-
+    this.approvalStatus = chat?.status ?? '';
     await this.loadChatHistory(chat.chatId);
   }
 
@@ -221,8 +266,24 @@ export class ChatComponent implements OnInit, OnDestroy {
     const confirmed = await dialogRef.afterClosed().toPromise();
     if (!confirmed) {
       console.log('No chats confirmation cancelled');
+      
+      this.router.navigate(['/home']);
       return;
     }
+  }
+
+  async DisplayApproveDialog() {
+    const dialogRef = this.dialog.open(ApproveConfirmationModalComponent);
+    const result = await dialogRef.afterClosed().toPromise();
+  
+    if (result === 'confirm') {
+      console.log('User confirmed');
+
+    } else if (result === 'cancel') {
+      console.log('User cancelled');
+    }
+    return result;
+    
   }
 
   async DisplayConfirmationDialog() {
@@ -252,6 +313,8 @@ export class ChatComponent implements OnInit, OnDestroy {
       }));
 
       console.log(this.messages, 'Chat history loaded:', this.messages);
+
+      this.scrollToBottom();
     } catch (error) {
       console.error('Error loading chat history:', error);
       this.messages = [];
@@ -292,7 +355,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   getListingTitle(chat: ChatDto): string {
     if (!chat.lastMessage) return 'Unknown';
 
-    return chat.ListingTitle || 'No messages yet';
+    return chat.listingTitle || 'No messages yet';
   }
 
   getUserName(chat: ChatDto): string {
@@ -300,4 +363,120 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     return chat.userName || 'No messages yet';
   }
+
+  async onApproveClick() {
+    console.log("Approve Button Clicked");
+  
+    const result = await this.DisplayApproveDialog();
+    console.log(result, "Dialog result");
+  
+    if (result === 'confirm') {
+      if (!this.selectedChat) return;
+  
+
+  
+      try {
+        // const chatId = this.selectedChat?.id;
+        
+        const chatId = this.messages[0]?.chatId;
+        console.log("Chat Id: " + chatId);
+        
+        
+        if (!chatId) return;
+        
+        const bookingId = await firstValueFrom(this.chatService.getBookingId(chatId));
+        console.log("Booking Id: " + bookingId);
+        
+    
+        let userRole;
+        const roles = this.authService.getRoleFromToken();
+        if (roles) {
+          console.log(roles[0]);
+          userRole = roles[0];
+        }
+         const isHost = userRole === 'Host';
+         console.log(`Is user a host? ${isHost}`);
+         
+        
+
+        
+         const approvalResult = await this.chatService.approveBooking(chatId, bookingId, isHost);
+
+         this.approvalStatus = approvalResult?.status;
+         console.log("Approval status updated:", this.approvalStatus);
+         
+        
+        // console.log("Approval status updated:", this.approvalStatus);
+  
+        switch (this.approvalStatus) {
+          case "GoToPayment":
+            // show "Pay Now" button
+            break;
+          case "PendingHost":
+            // show "Waiting for host approval"
+            
+            break;
+          case "PendingGuest":
+            // show "Waiting for guest approval"
+            break;
+          case "PendingUserBooking":
+            // show "Guest needs to book"
+            break;
+          case "Approved":
+            // show "Booking Confirmed"
+            break;
+          default:
+            // handle other states
+            break;
+        }
+  
+      } catch (error) {
+        console.error("Approval failed", error);
+      }
+    } else {
+      console.log("User cancelled approval.");
+    }
+  }
+  
+  async BookingApproveNotify(){
+    this.chatHubService.bookingRequest$.subscribe((data) => {
+      console.log('[SignalR] Booking status update received:', data);
+  
+      const message = `${data.userName} ${
+        data.status === 'GoToPayment'
+          ? 'approved the booking, please proceed to payment.'
+          : data.status === 'PendingHost'
+          ? 'approved the request. Waiting for host confirmation.'
+          : data.status === 'PendingGuest'
+          ? 'approved the request. Waiting for guest confirmation.'
+          : 'updated booking status.'
+      }`;
+  
+      this.toastr.info(message, data.listingTitle);
+    });
+  }
+
+
+  getApprovalMessage(): string {
+    switch (this.approvalStatus) {
+      case "GoToPayment":
+        return 'Booking approved! Proceed to payment.';
+      case "PendingHost":
+        return 'You approved the request. Waiting for host confirmation.';
+      case "PendingGuest":
+        return 'You approved the request. Waiting for guest confirmation.';
+      case "PendingUserBooking":
+        return 'Guest needs to complete the booking.';
+      case "Approved":
+        return 'Booking confirmed!';
+      default:
+        return '';
+    }
+  }
+  goToPayment() {
+    this.router.navigate(['/payment']);
+    //still need to implement the payment logic
+  }
+  
+
 }

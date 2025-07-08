@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { RegisterComponent } from '../app/features/auth/components/register/register.component';
 import { LoginComponent } from '../app/features/auth/components/login/login.component';
-import { HometestComponent } from './hometest/hometest.component';
 import { HomePageComponent } from './features/home/pages/home-page/home-page.component';
 import { ListingsPageComponent } from './features/listings/pages/listings-page/listings-page.component';
 import { WishlistPageComponent } from './features/wishlist/pages/wishlist-page/wishlist-page.component';
@@ -17,25 +16,40 @@ import { DashboardComponent } from './host/dashboard/dashboard.component';
 import { HostListingsComponent } from './host/host-listings/host-listings.component';
 import { EditHostListingComponent } from './host/edit-host-listings/edit-host-listings.component';
 import { HostRoomsComponent } from './host/host-rooms/host-rooms.component';
-import path from 'path';
-import { AddApartmentComponent } from './features/listings/components/add-apartment/add-apartment.component';
+import { AddApartmentComponent } from './host/host-add-apartment/add-apartment.component';
 import { HostBookingComponent } from './host/host-booking/host-booking.component';
 import { HostUserReviewsComponent } from './host/host-user-reviews/host-user-reviews.component';
 import { HostMyReviewsComponent } from './host/host-my-reviews/host-my-reviews.component';
 import { BookingRequestsComponent } from './host/booking-requests/booking-requests.component';
+import { LayoutComponent } from './admin/layout/layout.component';
+import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
+import { AdminListingsComponent } from './admin/admin-listings/admin-listings.component';
+import { AboutComponent } from './about/about.component';
+import { AdminApproveListingsComponent } from './admin/listing/listings.component';
+import { AdminEditlistingComponent } from './admin/admin-editlisting/admin-editlisting.component';
+import { UserReviewComponent } from './features/UserReviews/user-review/user-review.component';
+import { AiComponent } from './ai/ai.component';
+import { BecomeHostComponent } from './features/become-host/become-host.component';
+import { AdminHostsApproveComponent } from './admin/admin-hosts-approve/admin-hosts-approve.component';
+import { HostGuard } from './guards/host.guard';
+import { AdminGuard } from './guards/admin.guard';
+
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'about', component: AboutComponent },
+  {path  : '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'listings', component: ListingsPageComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'hometest', component: HometestComponent },
+  { path: 'ai', component: AiComponent },
   { path: 'wishlist', component: WishlistPageComponent},
   { path: 'payment', component: PaymentFormComponent},
   { path: 'listing/:id', component:ListingDetailsComponent},
   { path: 'room/:id', component:RoomDetailsComponent},
   { path: 'chat', component: ChatComponent },
-  { path: 'host', component: HostLayoutComponent, children: [
+  { path: 'becomeHost', component: BecomeHostComponent },
+  { path: 'review', component: UserReviewComponent },
+  { path: 'host', canActivate: [HostGuard]  , component: HostLayoutComponent, children: [
     {path : '', redirectTo: 'dashboard', pathMatch: 'full' },
     { path: 'dashboard', component: DashboardComponent },
     { path: 'listings', component: HostListingsComponent },
@@ -46,8 +60,18 @@ export const routes: Routes = [
     { path: 'booking', component: HostBookingComponent },
     { path: 'reviews', component: HostUserReviewsComponent },
     { path: 'myReviews', component: HostMyReviewsComponent },
-    {path: 'requests', component: BookingRequestsComponent},
+    { path: 'requests', component: BookingRequestsComponent },
   ]},
+
+  { path: 'admin', canActivate: [AdminGuard] , component: LayoutComponent,  children:[
+    {path : '', redirectTo: 'dashboard', pathMatch: 'full' },
+    {path:'dashboard', component:AdminDashboardComponent},
+    {path: 'listings', component: AdminListingsComponent},
+    { path: 'editlisting/:id', component: AdminEditlistingComponent },
+    { path: 'approvelistings', component: AdminApproveListingsComponent },
+    { path: 'approveHost', component: AdminHostsApproveComponent },
+  ]},
+
   { path: '**', component: NotfoundComponent },
   { path: 'signin-google', component: CallbackComponent },
 ];

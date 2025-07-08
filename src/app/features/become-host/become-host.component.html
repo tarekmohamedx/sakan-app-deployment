@@ -1,0 +1,48 @@
+<!-- Become a Host Modal -->
+<!-- <div *ngIf="isPopupVisible" class="modal fade show" id="becomeHostModal" style="display: block;" tabindex="-1" aria-modal="true" role="dialog"> -->
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content p-4">
+      <!-- Header -->
+      <div class="modal-header border-0">
+        <h5 class="modal-title">🚀 Join as a Host</h5>
+        <button type="button" class="btn-close" (click)="closePopup()" aria-label="Close"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+        <!-- Benefits -->
+        <section class="benefits-section mb-4">
+          <h6 class="benefits-title mb-2">What You'll Gain</h6>
+          <ul class="benefits-list ps-3">
+            <li>Earn income by renting your space</li>
+            <li>Control your schedule, guests, and prices</li>
+            <li>Reach a growing, trusted guest community</li>
+          </ul>
+        </section>
+
+        <!-- Policies -->
+        <section class="policy-section mb-4">
+          <h6 class="policy-title mb-2">Host Responsibilities</h6>
+          <p class="policy-text">
+            All hosts are expected to provide accurate listing information, maintain safe and clean environments, and respond to guests in a timely manner.
+            Your listing may be reviewed before approval.
+          </p>
+        </section>
+
+        <!-- Final Prompt -->
+        <section class="final-question text-center">
+          <p>Are you ready to join our community as a host?</p>
+        </section>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer border-0 d-flex justify-content-between">
+        <button class="btn btn-secondary" (click)="closePopup()">Cancel</button>
+        <button class="btn btn-primary" (click)="confirmBecomeHost()">Yes, Join</button>
+      </div>
+    </div>
+  </div>
+<!-- </div>
+
+
+<div *ngIf="isPopupVisible" class="modal-backdrop fade show"></div> -->

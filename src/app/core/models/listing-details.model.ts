@@ -1,3 +1,5 @@
+import { BedDto } from "./room-details.model";
+
 export interface ListingDetailsDto {
   id: number;
   title: string;
@@ -17,9 +19,20 @@ export interface RoomDto {
   id: number;
   name: string;
   pricePerNight: number | null;
+  beds: BedDto[];
   photos: string[];
-    selected?: boolean;
+  selected?: boolean;
 }
+
+export interface BookingRequestDto {
+  guestId: string;
+  listingId?: number;
+  roomId?: number;
+  bedIds: number[] | null;
+  fromDate: string;
+  toDate: string;
+}
+
 
 export interface HostInfo {
   name: string;
@@ -33,14 +46,41 @@ export interface HostInfo {
   // languages: string[];
 }
 
-export interface BookingRequestDto {
-  guestId: string;
-  listingId?: number;
-  roomId?: number;
-  bedId?: number | null;
-  fromDate: string; // ISO format
-  toDate: string;
-}
+
+
+// import { BedDTO } from './BedDTO';
+// export interface RoomDTO {
+  //   name: string;
+  //   type: string;
+  //   pricePerNight: number;
+  //   maxGuests: number;
+  //   isBookableAsWhole: boolean;
+//   roomPhotos: File[];
+//   beds: BedDTO[];
+// }
+
+
+
+
+// export interface BookingRequestDto {
+//   guestId: string;
+//   guestName?: string;
+
+//   listingId?: number;
+//   listingTitle?: string;
+
+//   roomId?: number;
+//   roomName?: string;
+
+//   bedId?: number | null;
+//   bedName?: string;
+
+//   fromDate: string; // ISO format
+//   toDate: string;
+// }
+
+
+
 
 
 

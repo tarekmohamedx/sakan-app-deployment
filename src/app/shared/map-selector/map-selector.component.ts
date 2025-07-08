@@ -6,13 +6,15 @@ import * as L from 'leaflet';
   templateUrl: './map-selector.component.html',
   styleUrls: ['./map-selector.component.css'],
 })
-export class MapSelectorComponent implements AfterViewInit {
+export class MapSelectorComponentt implements AfterViewInit {
   private map: any;
+  private marker: L.Marker | null = null;
+
   @Output() coordsSelected = new EventEmitter<{ lat: number; lng: number }>();
 
   ngAfterViewInit(): void {
     this.map = L.map('map', {
-      center: [30.0444, 31.2357], // Default: Cairo
+      center: [30.0444, 31.2357], // Cairo
       zoom: 6,
     });
 
@@ -23,9 +25,25 @@ export class MapSelectorComponent implements AfterViewInit {
     this.map.on('click', (e: any) => {
       const lat = e.latlng.lat;
       const lng = e.latlng.lng;
-      this.coordsSelected.emit({ lat, lng });
 
-      L.marker([lat, lng]).addTo(this.map); // optional marker
+      // 🔁 Remove old marker if it exists
+      if (this.marker) {
+        this.map.removeLayer(this.marker);
+      }
+
+      // 📍 Add new marker
+      this.marker = L.marker([lat, lng]).addTo(this.map);
+
+      // 📤 Emit selected coords
+      this.coordsSelected.emit({ lat, lng });
     });
+  }
+
+  // ✨ New method to clear the marker externally (e.g., after form submit)
+  clearMarker(): void {
+    if (this.marker) {
+      this.map.removeLayer(this.marker);
+      this.marker = null;
+    }
   }
 }

@@ -65,16 +65,19 @@ export class RoomDetailsComponent implements OnInit {
   previousYear() { this.currentYear--; }
 
   selectMonth(month: number) {
-    const exists = this.selectedMonths.find(m => m.year === this.currentYear && m.month === month);
-    if (exists) {
-      this.selectedMonths = this.selectedMonths.filter(m => !(m.year === this.currentYear && m.month === month));
-    } else {
-      if (!this.isMonthBooked(this.currentYear, month)) {
-        this.selectedMonths.push({ year: this.currentYear, month });
-      }
-    }
-    this.updateMoveDatesFromSelection();
+  if (this.isMonthBooked(this.currentYear, month)) {
+    return; // Prevent selection
   }
+
+  const exists = this.selectedMonths.find(m => m.year === this.currentYear && m.month === month);
+  if (exists) {
+    this.selectedMonths = this.selectedMonths.filter(m => !(m.year === this.currentYear && m.month === month));
+  } else {
+    this.selectedMonths.push({ year: this.currentYear, month });
+  }
+
+  this.updateMoveDatesFromSelection();
+}
 
   updateMoveDatesFromSelection() {
     if (this.selectedMonths.length === 0) {
@@ -178,49 +181,56 @@ get selectedBedIds(): number[] {
   get totalCost(): number {
     return this.room?.beds
       .filter(b => b.selected)
-      .reduce((sum, b) => sum + (b.price || 0), 0) || 0;
+      .reduce((sum, b) => sum + (b.price || 0), 0) || this.room.pricePerNight;
   }
 
-  // Booking
-  sendBookingRequest(): void {
-    const selectedBeds = this.room.beds.filter(bed => bed.selected);
-    const guestId = this.listingService.getCurrentUserId();
-    if (!this.moveIn || !this.moveOut) {
-      alert('Please select check-in and check-out months.');
+  selectedImage: string | null = null;
+
+  openImageModal(imageUrl: string) {
+    this.selectedImage = imageUrl;
+  }
+
+  closeModal() {
+    this.selectedImage = null;
+  }
+
+sendBookingRequest(): void {
+  const selectedBeds = this.room.beds.filter(bed => bed.selected);
+  const guestId = this.listingService.getCurrentUserId();
+
+  if (!this.moveIn || !this.moveOut) {
+    alert('Please select check-in and check-out months.');
+    return;
+  }
+
+    const hasUnavailableBed = this.room.beds.some(b => !b.isAvailable);
+    const isWholeRoomBooking = selectedBeds.length === 0 || selectedBeds.length === this.room.beds.length;
+
+    if (isWholeRoomBooking && hasUnavailableBed) {
+      alert("❌ You cannot book the entire room because one or more beds are already occupied.");
       return;
     }
-    if (selectedBeds.length === 0) {
-      // Booking the whole room
-      const dto: BookingRequestDto = {
-        guestId,
-        listingId: this.room.listingId,
-        roomId: this.room.id,
-        fromDate: new Date(this.moveIn).toISOString(),
-        toDate: new Date(this.moveOut).toISOString()
-      };
-      this.listingService.createRequest(dto).subscribe(res => {
-        this.requestSent = true;
-        this.hostId = res.hostId;
-        alert('Your request has been sent successfully!');
-      });
-    } else {
-      // Booking selected beds individually
-      selectedBeds.forEach(bed => {
-        const dto: BookingRequestDto = {
-          guestId,
-          listingId: this.room.listingId,
-          roomId: this.room.id,
-          bedId: bed.id,
-          fromDate: new Date(this.moveIn).toISOString(),
-          toDate: new Date(this.moveOut).toISOString()
-        };
-        this.listingService.createRequest(dto).subscribe(res => {
-          this.requestSent = true;
-          this.hostId = res.hostId;
-          alert('Your request has been sent successfully!');
-        });
-      });
-    }
-  }
+
+
+    const dto: BookingRequestDto = {
+      guestId: guestId!,
+      listingId: this.room.listingId,
+      roomId: this.room.id,
+      bedIds: isWholeRoomBooking ? null : selectedBeds.map(b => b.id as number),
+      fromDate: new Date(this.moveIn).toISOString(),
+      toDate: new Date(this.moveOut).toISOString()
+    };
+
+
+  this.listingService.createRequest(dto).subscribe(res => {
+    this.requestSent = true;
+    this.hostId = res.hostId;
+    alert('Your request has been sent successfully!');
+  });
+}
+
+
+
+
 }
 

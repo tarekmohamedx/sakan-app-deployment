@@ -36,4 +36,14 @@ export class ChatService {
     return firstValueFrom(this.http.post<UserChatSummary>(`${this.baseUrl}/CreateChatIfNotExists`, body));
   }
 
+  approveBooking(chatId: number, bookingId: number, isHost: boolean): Promise<any> {
+    const body = { bookingId, isHost };
+    return firstValueFrom(this.http.post(`${this.baseUrl}/approve-booking`, body));
+  }
+
+  getBookingId(chatId: number): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/get-booking-id?chatId=${chatId}`);
+  }
+  
+  
 }

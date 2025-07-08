@@ -49,7 +49,80 @@
 </ul>
 
     <div class="hidden md:flex items-center space-x-4">
-      <button class="text-brand-primary font-semibold">Become a host</button>
+
+    <!-- <button (click)="onBecomeHostClick()" class="text-brand-primary font-semibold">
+      {{ hostStatus === 'accepted' ? 'Host Dashboard' : 'Become a Host' }}
+    </button> -->
+
+<ng-container *ngIf="isLoggedIn">
+  <button (click)="onBecomeHostClick()" class="text-brand-primary font-semibold">
+    {{ hostStatus === 'accepted' ? 'Host Dashboard' : 'Become a Host' }}
+  </button>
+</ng-container>
+
+
+<!-- Become a Host Modal -->
+<div *ngIf="isPopupVisible" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden animate-fadeIn">
+    <div class="flex justify-between items-center p-6 border-b">
+      <h2 class="text-xl font-bold text-gray-800">🚀 Join as a Host</h2>
+      <button (click)="closePopup()" class="text-gray-500 hover:text-red-600 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+             stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="p-6 space-y-6">
+      <!-- Benefits Section -->
+      <section>
+        <h3 class="text-lg font-semibold text-brand-primary mb-2">What You'll Gain</h3>
+        <ul class="list-disc list-inside text-gray-700 space-y-1">
+          <li>Earn income by renting your space</li>
+          <li>Control your schedule, guests, and prices</li>
+          <li>Reach a growing, trusted guest community</li>
+        </ul>
+      </section>
+
+      <!-- Policy Section -->
+      <section>
+        <h3 class="text-lg font-semibold text-brand-primary mb-2">Host Responsibilities</h3>
+        <p class="text-sm text-gray-600 leading-relaxed">
+          All hosts are expected to provide accurate listing information, maintain safe and clean environments,
+          and respond to guests in a timely manner. Your listing may be reviewed before approval.
+        </p>
+      </section>
+
+      <!-- Final Prompt -->
+      <section class="text-center">
+        <p class="text-gray-800 font-medium">Are you ready to join our community as a host?</p>
+      </section>
+    </div>
+
+    <div class="flex justify-end items-center gap-3 p-6 border-t">
+      <button (click)="closePopup()"
+              class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition">
+        Cancel
+      </button>
+      <button (click)="confirmBecomeHost()"
+              class="px-5 py-2 bg-brand-primary text-white font-semibold rounded-md hover:bg-brand-secondary transition">
+        Yes, Join
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal Backdrop -->
+<div *ngIf="isPopupVisible" class="modal-backdrop fade show"></div>
+
+
+      <!-- <button routerLink="becomeHost" class="text-brand-primary font-semibold">Become a host</button> -->
+
+
+
       <ng-container *ngIf="!isLoggedIn; else userMenu">
         <button routerLink="login" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">Log In</button>
         <button routerLink="register" class="px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-secondary">Sign Up</button>
@@ -83,6 +156,31 @@
             <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
             <span>Messages</span>
           </a>
+          
+          <!-- رابط طلبات الحجز (Booking Requests) -->
+          <a (click)="openUserRequestsPopup(); closeDropdown()" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer" role="menuitem">
+            <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>My Booking Requests</span>
+          </a>
+
+          <a routerLink="/review" (click)="closeDropdown()" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer" role="menuitem">
+            <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm6 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span>My Reviews</span>
+          </a>
+
+          <a routerLink="/ai" (click)="closeDropdown()" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer" role="menuitem">
+            <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2v-6a2 2 0 012-2h2m-2-4h6a2 2 0 012 2v6a2 2 0 01-2 2H9l-4 4V6a2 2 0 012-2z"/>
+            </svg>
+            <span>Chat With Our AI</span>
+          </a>
+
+
 
           <!-- فاصل -->
           <div class="border-t border-gray-100 my-1"></div>
@@ -155,6 +253,25 @@
           <a routerLink="/chat" (click)="closeAllMenus()" 
              class="block px-6 py-2 text-gray-700 hover:bg-gray-100">Messages</a>
         </li>
+        <!-- رابط طلبات الحجز -->
+        <li>
+          <a (click)="openUserRequestsPopup(); closeAllMenus()" class="block px-6 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
+            My Booking Requests
+          </a>
+        </li>
+
+        <li>
+          <a routerLink="/review" (click)="closeAllMenus()" class="block px-6 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
+            My Reviews
+          </a>
+        </li>
+
+        <li>
+          <a routerLink="/ai" (click)="closeAllMenus()" class="block px-6 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
+            Chat With Our AI
+          </a>
+        </li>
+
         <!-- رابط الحساب -->
         <li>
           <a routerLink="/account" (click)="closeAllMenus()" 
@@ -175,3 +292,7 @@
 
   </div>
 </header>
+
+<ng-container *ngIf="showUserRequestsPopup">
+  <app-user-booking-requests (close)="showUserRequestsPopup = false"></app-user-booking-requests>
+</ng-container>

@@ -2,7 +2,7 @@ body {
     background: #f4f7fb;
 }
 
-.room-container {
+/* .room-container {
     max-width: 1100px;
     margin: 2rem auto;
     padding: 2rem;
@@ -10,6 +10,23 @@ body {
     background: linear-gradient(120deg, #f6fafd 60%, #e3eaf6 100%);
     border-radius: 18px;
     box-shadow: 0 8px 32px rgba(60, 90, 130, 0.10);
+} */
+
+.room-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  line-height: 1.6;
+  color: #333;
+}
+
+.room-container h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #2c3e50;
+  text-align: center;
 }
 
 .gallery {
@@ -25,7 +42,66 @@ body {
     object-fit: cover;
     border-radius: 12px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    cursor: pointer;
 }
+
+/* 
+.main-photo {
+  width: 65%;
+  height: 370px;
+  object-fit: cover;
+  border-radius: 16px;
+  min-width: 260px;
+  box-shadow: 0 4px 18px rgba(80, 120, 180, 0.13);
+  border: 2px solid #e3eaf6;
+  cursor: pointer;
+} */
+
+.image-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+
+.modal-image {
+  width: 90%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.close-btn {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: white;
+  color: black;
+  border: none;
+  font-size: 1.5rem;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0.25rem 0.6rem;
+}
+
+
 
 .thumbs {
     display: flex;

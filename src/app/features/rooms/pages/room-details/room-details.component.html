@@ -4,9 +4,17 @@
 
   <!-- Gallery -->
   <div class="gallery">
-    <img [src]="room.photos[0]" class="main-photo" alt="Room Image" />
+    <img [src]="room.photos[0]" class="main-photo" alt="Room Image" (click)="openImageModal(room.photos[0])" />
     <div class="thumbs">
-      <img *ngFor="let photo of room.photos.slice(1, 5)" [src]="photo" class="thumb" alt="Thumbnail" />
+      <img *ngFor="let photo of room.photos.slice(1, 5)" [src]="photo" class="thumb" alt="Thumbnail" (click)="openImageModal(photo)"/>
+    </div>
+  </div>
+
+  <!-- Image Popup Modal -->
+  <div class="modal-overlay" *ngIf="selectedImage" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <img [src]="selectedImage" alt="Full size" class="modal-image" />
+      <button class="close-btn" (click)="closeModal()">×</button>
     </div>
   </div>
 
@@ -61,10 +69,10 @@
       <div class="text-center mt-3">
           <button *ngIf="!requestSent" (click)="sendBookingRequest()" class="book-now">Send Booking Request</button>
 
-          <button *ngIf="requestSent" [routerLink]="['/chat', hostId]" class="book-now">Chat with Host</button>
+          <button *ngIf="requestSent" [routerLink]="['/chat']" class="book-now">Chat with Host</button>
         </div>
     </div>
-  </div>
+  </div> 
 
   <br><hr /><br>
   <!-- Calendar Section -->
@@ -76,16 +84,16 @@
     </div>
 
     <div class="months-grid">
-    <div *ngFor="let m of monthsShort; let i = index"
-        (click)="selectMonth(i + 1)"
-        class="month-tile"
-        [class.selected]="isMonthSelected(i + 1)"
-        [class.booked]="isMonthBooked(currentYear, i + 1)"
-        [attr.aria-pressed]="isMonthSelected(i + 1)"
-        role="button">
-    {{ m }}
+    <div
+      *ngFor="let m of monthsShort; let i = index"
+      class="month-tile"
+      [class.selected]="isMonthSelected(i + 1)"
+      [class.booked]="isMonthBooked(currentYear, i + 1)"
+      [attr.aria-pressed]="isMonthSelected(i + 1)"
+      role="button"
+      (click)="selectMonth(i + 1)">
+      {{ m }}
     </div>
-
     </div>
 
     <div *ngIf="selectedMonths.length" class="summary">
@@ -98,7 +106,7 @@
   <h3 class="mt-4 mb-2">🛏 Beds</h3>
 <div class="bed-grid">
   <div class="bed-card" *ngFor="let bed of room.beds">
-    <img *ngIf="bed.bedPhotos?.length" [src]="bed.bedPhotos[0]" alt="Bed Image" />
+    <img *ngIf="bed.bedPhotos?.length" [src]="bed.bedPhotos[0]" alt="Bed Image" (click)="openImageModal(bed.bedPhotos[0])"/>
     <div class="info">
       <h4>{{ bed.label }}</h4>
       <p>Type: {{ bed.type }}</p>

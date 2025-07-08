@@ -1,0 +1,221 @@
+/* Modern Table */
+.table.modern-table {
+    width: 80%;
+    text-align: center;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #f8fafc;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(60, 72, 88, 0.08);
+    margin: 32px auto;
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+.table.modern-table thead {
+    background:#086282;
+    color: #fff;
+}
+
+.table.modern-table th,
+.table.modern-table td {
+    padding: 18px 24px;
+    font-size: 15px;
+    border: none;
+}
+
+.table.modern-table th {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+
+.table.modern-table tbody tr {
+    background: #fff;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.table.modern-table tbody tr:hover {
+    box-shadow: 0 2px 12px rgba(79, 70, 229, 0.08);
+    transform: translateY(-2px) scale(1.01);
+}
+
+.table.modern-table td:first-child {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.table.modern-table td:nth-child(2) {
+    color: #64748b;
+    font-family: 'Fira Mono', 'Courier New', monospace;
+    font-size: 14px;
+}
+
+.table.modern-table button {
+    background:rgba(8, 98, 130, 0.7);
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 8px rgba(6, 182, 212, 0.08);
+    transition: background 0.2s, transform 0.2s;
+}
+
+.table.modern-table button:hover {
+    background: linear-gradient(90deg, #06b6d4 0%, #4f46e5 100%);
+    transform: translateY(-1px) scale(1.04);
+}
+
+.icon-star {
+    color: #fbbf24;
+    font-size: 16px;
+    margin-right: 2px;
+}
+
+/* Review Form */
+.review-form.modern-form {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(60, 72, 88, 0.12);
+    padding: 32px 28px 24px 28px;
+    max-width: 420px;
+    margin: 32px auto 0 auto;
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(24px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+
+.review-form.modern-form h4 {
+    margin-bottom: 24px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #4f46e5;
+    text-align: center;
+}
+
+.form-row {
+    margin-bottom: 20px;
+}
+
+.form-row label {
+    display: block;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 8px;
+    font-size: 15px;
+}
+
+.star-rating {
+    display: flex;
+    gap: 8px;
+    font-size: 28px;
+    margin-bottom: 0;
+}
+
+.star {
+    color: #e5e7eb;
+    cursor: pointer;
+    transition: color 0.2s, transform 0.2s;
+    user-select: none;
+    outline: none;
+}
+
+.star.filled {
+    color: #fbbf24;
+    text-shadow: 0 0 6px rgba(251, 191, 36, 0.3);
+    transform: scale(1.1);
+}
+
+.star:focus,
+.star:hover {
+    color: #f59e0b;
+    transform: scale(1.2);
+}
+
+textarea {
+    width: 100%;
+    min-height: 80px;
+    border-radius: 8px;
+    border: 1.5px solid #e5e7eb;
+    padding: 12px 14px;
+    font-size: 15px;
+    font-family: inherit;
+    transition: border 0.2s, box-shadow 0.2s;
+    resize: vertical;
+}
+
+textarea:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 2px #a5b4fc;
+    outline: none;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 18px;
+}
+
+.btn-primary {
+    background:rgba(10, 136, 77, 0.85);
+    color: #fff;
+    border: none;
+    padding: 10px 28px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.btn-primary:hover {
+    background: rgba(73, 153, 115, 0.85);
+    transform: translateY(-1px) scale(1.04);
+}
+
+.btn-secondary {
+    background: #f3f4f6;
+    color: #334155;
+    border: 1px solid #e5e7eb;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.btn-secondary:hover {
+    background: #e0e7ef;
+    transform: translateY(-1px) scale(1.02);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .table.modern-table th,
+    .table.modern-table td {
+        padding: 10px 8px;
+        font-size: 13px;
+    }
+    .review-form.modern-form {
+        padding: 18px 8px 12px 8px;
+        max-width: 98vw;
+    }
+    .form-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+    .btn-primary, .btn-secondary {
+        width: 100%;
+    }
+}

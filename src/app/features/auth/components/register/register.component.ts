@@ -32,10 +32,11 @@ export class RegisterComponent {
         next: (response) => {
           console.log('Registration successful', response);
           // saving token on session
-          sessionStorage.setItem('token', response.token);
+          // sessionStorage.setItem('token', response.token);
+          this.registerservice.setLogin(response.token);
           console.log('Token saved to sessionStorage:', response.token);
           // Navigate to login or home page after successful registration
-          this.router.navigateByUrl('hometest');
+          this.router.navigateByUrl('home');
         },
         error: (error) => {
           console.error('Registration failed', error);
