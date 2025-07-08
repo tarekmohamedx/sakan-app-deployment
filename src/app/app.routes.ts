@@ -32,6 +32,8 @@ import { UserReviewComponent } from './features/UserReviews/user-review/user-rev
 import { AiComponent } from './ai/ai.component';
 import { BecomeHostComponent } from './features/become-host/become-host.component';
 import { AdminHostsApproveComponent } from './admin/admin-hosts-approve/admin-hosts-approve.component';
+import { HostGuard } from './guards/host.guard';
+import { AdminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -48,7 +50,7 @@ export const routes: Routes = [
   { path: 'chat', component: ChatComponent },
   { path: 'becomeHost', component: BecomeHostComponent },
   { path: 'review', component: UserReviewComponent },
-  { path: 'host', component: HostLayoutComponent, children: [
+  { path: 'host', canActivate: [HostGuard]  , component: HostLayoutComponent, children: [
     {path : '', redirectTo: 'dashboard', pathMatch: 'full' },
     { path: 'dashboard', component: DashboardComponent },
     { path: 'listings', component: HostListingsComponent },
@@ -62,7 +64,7 @@ export const routes: Routes = [
     { path: 'requests', component: BookingRequestsComponent },
   ]},
 
-  { path: 'admin', component: LayoutComponent,  children:[
+  { path: 'admin', canActivate: [AdminGuard] , component: LayoutComponent,  children:[
     {path : '', redirectTo: 'dashboard', pathMatch: 'full' },
     {path:'dashboard', component:AdminDashboardComponent},
     {path: 'listings', component: AdminListingsComponent},
