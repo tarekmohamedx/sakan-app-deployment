@@ -41,16 +41,16 @@
       <div class="form-group">
         <label for="amenities">Select Amenities</label>
         <select
-          id="amenities"
-          multiple
-          [(ngModel)]="selectedAmenities"
-          name="amenities"
-          class="form-control"
-        >
-          <option *ngFor="let amenity of amenities" [value]="amenity.id">
-            {{ amenity.name }}
-          </option>
-        </select>
+        id="amenities"
+        multiple
+        formControlName="amenityIds"
+        class="form-control"
+      >
+        <option *ngFor="let amenity of amenities" [value]="amenity.id">
+          {{ amenity.name }}
+        </option>
+      </select>
+      
       </div>
 
       <!-- Map Section -->
