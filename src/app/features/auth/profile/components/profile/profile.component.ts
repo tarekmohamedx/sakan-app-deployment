@@ -29,11 +29,12 @@ export class ProfileComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router
   ) {}
+   
   ngOnInit(): void {
     this.userid = this.route.snapshot.paramMap.get('id') || '';
     console.log('User ID from route: ' + this.userid);
     this.loadProfile();
-    this.userrole = this.authservice.getuserdata()?.role || '';
+   // this.userrole = this.authservice.getuserdata()?.role || '';
     console.log('profile data = = ' + this.profileData);
   }
 
