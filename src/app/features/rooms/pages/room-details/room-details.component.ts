@@ -198,6 +198,10 @@ get selectedBedIds(): number[] {
 sendBookingRequest(): void {
   const selectedBeds = this.room.beds.filter(bed => bed.selected);
   const guestId = this.listingService.getCurrentUserId();
+  if (!guestId) {
+    Swal.fire('Error', 'You must be logged in to send a booking request.', 'error');
+    return;
+  }
 
   if (!this.moveIn || !this.moveOut) {
     Swal.fire('Warning', 'Please select check-in and check-out months.', 'warning');

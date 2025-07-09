@@ -201,6 +201,10 @@ export class ListingDetailsComponent implements OnInit {
   sendBookingRequest(): void {
     const selectedRooms = this.listing.bedroomList.filter(room => room.selected);
     const guestId = this.listingService.getCurrentUserId();
+    if (!guestId) {
+      Swal.fire('Error', 'You must be logged in to send a booking request.', 'error');
+      return;
+    }
 
     if (!this.moveIn || !this.moveOut) {
       Swal.fire('Missing Dates', 'Please select check-in and check-out months.', 'warning');
