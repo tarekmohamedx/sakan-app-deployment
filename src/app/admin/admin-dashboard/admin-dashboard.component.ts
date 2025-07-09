@@ -1,142 +1,67 @@
-import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BaseChartDirective } from 'ng2-charts';
-import { ChartConfiguration } from 'chart.js';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { finalize } from 'rxjs/operators';
+
 import { ActivityLogDto, DashboardSummaryDto } from '../../core/models/admin-dashboard';
 import { AdminDashboardService } from '../services/admin-dashboard.service';
-import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, BaseChartDirective],
+  imports: [CommonModule, NgxChartsModule],
   templateUrl: './admin-dashboard.component.html',
-  styleUrl: './admin-dashboard.component.css'
+  styleUrls: ['./admin-dashboard.component.css']
 })
-export class AdminDashboardComponent implements OnInit, AfterViewInit {
+export class AdminDashboardComponent implements OnInit {
   summary?: DashboardSummaryDto;
   signupLogs: ActivityLogDto[] = [];
   listingLogs: ActivityLogDto[] = [];
   isLoading = false;
-  isViewInitialized = false;
 
+  // Bar Chart Data
+  listingStatusData = [
+    { name: 'Active', value: 0 },
+    { name: 'Approved', value: 0 },
+    { name: 'Pending', value: 0 },
+    { name: 'Rejected', value: 0 }
+  ];
 
-  // Pagination – Signups
+  // Pie Chart Data
+  userTypeData = [
+    { name: 'Hosts', value: 0 },
+    { name: 'Guests', value: 0 }
+  ];
+
+  colorScheme = {
+    domain: ['#0a7298', '#28a745', '#ffc107', '#dc3545']
+  };
+
+  pieColorScheme = {
+    domain: ['#0a7298', '#f97316']
+  };
+
+  // Pagination
   signupCurrentPage = 1;
-  signupItemsPerPage = 5;
-
-  get signupTotalPages(): number {
-    return Math.ceil(this.signupLogs.length / this.signupItemsPerPage);
-  }
-
-  get paginatedSignupLogs(): ActivityLogDto[] {
-    const start = (this.signupCurrentPage - 1) * this.signupItemsPerPage;
-    return this.signupLogs.slice(start, start + this.signupItemsPerPage);
-  }
-
-  // Pagination – Listings
   listingCurrentPage = 1;
+  signupItemsPerPage = 5;
   listingItemsPerPage = 5;
 
-  get listingTotalPages(): number {
-    return Math.ceil(this.listingLogs.length / this.listingItemsPerPage);
-  }
-
-  get paginatedListingLogs(): ActivityLogDto[] {
-    const start = (this.listingCurrentPage - 1) * this.listingItemsPerPage;
-    return this.listingLogs.slice(start, start + this.listingItemsPerPage);
-  }
-
-  // Charts
-  barChartOptions: ChartConfiguration<'bar'>['options'] = { responsive: true };
-  barChartType: 'bar' = 'bar';
-  barChartData: ChartConfiguration<'bar'>['data'] = {
-    labels: ['Active', 'Approved', 'Pending', 'Rejected'],
-    datasets: [{
-      label: 'Listings',
-      data: [0, 0, 0, 0],
-      backgroundColor: ['#0a7298', '#28a745', '#ffc107', '#dc3545']
-    }]
-  };
-
-  pieChartOptions: ChartConfiguration<'pie'>['options'] = { responsive: true };
-  pieChartType: 'pie' = 'pie';
-  pieChartData: ChartConfiguration<'pie'>['data'] = {
-    labels: ['Hosts', 'Guests'],
-    datasets: [{
-      data: [0, 0],
-      backgroundColor: ['#0a7298', '#f97316']
-    }]
-  };
-
-  @ViewChild('refreshButton') refreshButton!: ElementRef;
-  @ViewChild('barChart') barChart?: BaseChartDirective;
-  @ViewChild('pieChart') pieChart?: BaseChartDirective;
-
-  constructor(
-    private dashboardService: AdminDashboardService,
-    private renderer: Renderer2
-  ) {}
+  constructor(private dashboardService: AdminDashboardService) {}
 
   ngOnInit(): void {
     this.loadDashboard();
-    this.renderer.setStyle(document.documentElement, 'scroll-behavior', 'smooth');
   }
-
-  // ngAfterViewInit(): void {
-  //   setTimeout(() => {
-  //     this.updateChartData();
-  //   });
-  // }
-
-ngAfterViewInit(): void {
-  this.isViewInitialized = true;
-  this.tryUpdateCharts();
-}
-
-private tryUpdateCharts(): void {
-  if (!this.isViewInitialized || !this.summary) return;
-
-  this.barChartData.datasets[0].data = [
-    this.summary.activeListings,
-    this.summary.approvedListings,
-    this.summary.pendingListings,
-    this.summary.rejectedListings
-  ];
-
-  this.pieChartData.datasets[0].data = [
-    this.summary.totalHosts,
-    this.summary.totalGuests
-  ];
-
-  setTimeout(() => {
-    this.barChart?.chart?.resize();
-    this.barChart?.chart?.update();
-
-    this.pieChart?.chart?.resize();
-    this.pieChart?.chart?.update();
-  }, 100);
-}
-
-
 
   loadDashboard(): void {
     this.isLoading = true;
 
-    // this.dashboardService.getSummary()
-    //   .pipe(finalize(() => this.isLoading = false))
-    //   .subscribe(res => {
-    //     this.summary = res;
-    //     this.updateChartData();
-    //   });
-
     this.dashboardService.getSummary()
-  .pipe(finalize(() => this.isLoading = false))
-  .subscribe(res => {
-    this.summary = res;
-    this.tryUpdateCharts(); // <--- call new safe update method
-  });
-
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe(res => {
+        this.summary = res;
+        this.updateChartData();
+      });
 
     this.dashboardService.getRecentActivity().subscribe(logs => {
       this.signupLogs = logs.filter(log => log.activityType.toLowerCase().includes('signup'));
@@ -146,55 +71,39 @@ private tryUpdateCharts(): void {
     });
   }
 
-// updateChartData(): void {
-//   if (!this.summary) return;
+  updateChartData(): void {
+    if (!this.summary) return;
 
-//   this.barChartData.datasets[0].data = [
-//     this.summary.activeListings,
-//     this.summary.approvedListings,
-//     this.summary.pendingListings,
-//     this.summary.rejectedListings
-//   ];
+    this.listingStatusData = [
+      { name: 'Active', value: this.summary.activeListings },
+      { name: 'Approved', value: this.summary.approvedListings },
+      { name: 'Pending', value: this.summary.pendingListings },
+      { name: 'Rejected', value: this.summary.rejectedListings }
+    ];
 
-//   this.pieChartData.datasets[0].data = [
-//     this.summary.totalHosts,
-//     this.summary.totalGuests
-//   ];
-//   this.barChart?.update();
-//   this.pieChart?.update();
+    this.userTypeData = [
+      { name: 'Hosts', value: this.summary.totalHosts },
+      { name: 'Guests', value: this.summary.totalGuests }
+    ];
+  }
 
-// }
+  get signupTotalPages(): number {
+    return Math.ceil(this.signupLogs.length / this.signupItemsPerPage);
+  }
 
-updateChartData(): void {
-  if (!this.summary) return;
+  get listingTotalPages(): number {
+    return Math.ceil(this.listingLogs.length / this.listingItemsPerPage);
+  }
 
-  // Update data for bar chart
-  this.barChartData.datasets[0].data = [
-    this.summary.activeListings,
-    this.summary.approvedListings,
-    this.summary.pendingListings,
-    this.summary.rejectedListings
-  ];
+  get paginatedSignupLogs(): ActivityLogDto[] {
+    const start = (this.signupCurrentPage - 1) * this.signupItemsPerPage;
+    return this.signupLogs.slice(start, start + this.signupItemsPerPage);
+  }
 
-  // Update data for pie chart
-  this.pieChartData.datasets[0].data = [
-    this.summary.totalHosts,
-    this.summary.totalGuests
-  ];
-
-  // ✅ Force update & resize once view is ready
-  setTimeout(() => {
-    this.barChart?.chart?.resize();
-    this.barChart?.chart?.update();
-
-    this.pieChart?.chart?.resize();
-    this.pieChart?.chart?.update();
-  }, 100); // Delay lets canvas container fully layout
-}
-
-
-
-
+  get paginatedListingLogs(): ActivityLogDto[] {
+    const start = (this.listingCurrentPage - 1) * this.listingItemsPerPage;
+    return this.listingLogs.slice(start, start + this.listingItemsPerPage);
+  }
 
   changeSignupPage(page: number): void {
     if (page >= 1 && page <= this.signupTotalPages) {
@@ -214,21 +123,5 @@ updateChartData(): void {
 
   getListingPageNumbers(): number[] {
     return Array.from({ length: this.listingTotalPages }, (_, i) => i + 1);
-  }
-
-  handleRefresh(): void {
-    const btn = this.refreshButton.nativeElement;
-    this.renderer.addClass(btn, 'loading');
-    this.loadDashboard();
-
-    setTimeout(() => {
-      this.renderer.removeClass(btn, 'loading');
-      this.renderer.setStyle(btn, 'background', '#c3e6cb');
-      this.renderer.setStyle(btn, 'borderColor', '#28a745');
-      setTimeout(() => {
-        this.renderer.removeStyle(btn, 'background');
-        this.renderer.removeStyle(btn, 'borderColor');
-      }, 1000);
-    }, 2000);
   }
 }
