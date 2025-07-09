@@ -18,6 +18,8 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
   signupLogs: ActivityLogDto[] = [];
   listingLogs: ActivityLogDto[] = [];
   isLoading = false;
+  isViewInitialized = false;
+
 
   // Pagination – Signups
   signupCurrentPage = 1;
@@ -81,34 +83,19 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
     this.renderer.setStyle(document.documentElement, 'scroll-behavior', 'smooth');
   }
 
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.updateChartData();
-    });
-  }
+  // ngAfterViewInit(): void {
+  //   setTimeout(() => {
+  //     this.updateChartData();
+  //   });
+  // }
 
+ngAfterViewInit(): void {
+  this.isViewInitialized = true;
+  this.tryUpdateCharts();
+}
 
-
-  loadDashboard(): void {
-    this.isLoading = true;
-
-    this.dashboardService.getSummary()
-      .pipe(finalize(() => this.isLoading = false))
-      .subscribe(res => {
-        this.summary = res;
-        this.updateChartData();
-      });
-
-    this.dashboardService.getRecentActivity().subscribe(logs => {
-      this.signupLogs = logs.filter(log => log.activityType.toLowerCase().includes('signup'));
-      this.listingLogs = logs.filter(log => log.activityType.toLowerCase().includes('listing'));
-      this.signupCurrentPage = 1;
-      this.listingCurrentPage = 1;
-    });
-  }
-
-updateChartData(): void {
-  if (!this.summary) return;
+private tryUpdateCharts(): void {
+  if (!this.isViewInitialized || !this.summary) return;
 
   this.barChartData.datasets[0].data = [
     this.summary.activeListings,
@@ -121,12 +108,92 @@ updateChartData(): void {
     this.summary.totalHosts,
     this.summary.totalGuests
   ];
-  // Force chart updates
+
   setTimeout(() => {
-    this.updateChartData();
-    window.dispatchEvent(new Event('resize'));
-  }, 0);
+    this.barChart?.chart?.resize();
+    this.barChart?.chart?.update();
+
+    this.pieChart?.chart?.resize();
+    this.pieChart?.chart?.update();
+  }, 100);
 }
+
+
+
+  loadDashboard(): void {
+    this.isLoading = true;
+
+    // this.dashboardService.getSummary()
+    //   .pipe(finalize(() => this.isLoading = false))
+    //   .subscribe(res => {
+    //     this.summary = res;
+    //     this.updateChartData();
+    //   });
+
+    this.dashboardService.getSummary()
+  .pipe(finalize(() => this.isLoading = false))
+  .subscribe(res => {
+    this.summary = res;
+    this.tryUpdateCharts(); // <--- call new safe update method
+  });
+
+
+    this.dashboardService.getRecentActivity().subscribe(logs => {
+      this.signupLogs = logs.filter(log => log.activityType.toLowerCase().includes('signup'));
+      this.listingLogs = logs.filter(log => log.activityType.toLowerCase().includes('listing'));
+      this.signupCurrentPage = 1;
+      this.listingCurrentPage = 1;
+    });
+  }
+
+// updateChartData(): void {
+//   if (!this.summary) return;
+
+//   this.barChartData.datasets[0].data = [
+//     this.summary.activeListings,
+//     this.summary.approvedListings,
+//     this.summary.pendingListings,
+//     this.summary.rejectedListings
+//   ];
+
+//   this.pieChartData.datasets[0].data = [
+//     this.summary.totalHosts,
+//     this.summary.totalGuests
+//   ];
+//   this.barChart?.update();
+//   this.pieChart?.update();
+
+// }
+
+updateChartData(): void {
+  if (!this.summary) return;
+
+  // Update data for bar chart
+  this.barChartData.datasets[0].data = [
+    this.summary.activeListings,
+    this.summary.approvedListings,
+    this.summary.pendingListings,
+    this.summary.rejectedListings
+  ];
+
+  // Update data for pie chart
+  this.pieChartData.datasets[0].data = [
+    this.summary.totalHosts,
+    this.summary.totalGuests
+  ];
+
+  // ✅ Force update & resize once view is ready
+  setTimeout(() => {
+    this.barChart?.chart?.resize();
+    this.barChart?.chart?.update();
+
+    this.pieChart?.chart?.resize();
+    this.pieChart?.chart?.update();
+  }, 100); // Delay lets canvas container fully layout
+}
+
+
+
 
 
   changeSignupPage(page: number): void {

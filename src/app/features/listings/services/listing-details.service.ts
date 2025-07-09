@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BookingRequestDto, ListingDetailsDto } from '../../../core/models/listing-details.model';
+import { BookingRequestDto, ListingAmenity, ListingDetailsDto, ReviewDto } from '../../../core/models/listing-details.model';
 import { Observable } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 
@@ -82,6 +82,16 @@ approveHost(bookingId: number): Observable<void> {
     { headers: this.getAuthHeaders() }
   );
 }
+
+getListingReviews(listingId: number): Observable<ReviewDto[]> {
+  return this.http.get<ReviewDto[]>(`${this.baseUrl}/ListingDetails/listing-reviews/${listingId}`);
+}
+
+
+// getListingAmenities(listingId: number): Observable<ListingAmenity[]> {
+//   return this.http.get<ListingAmenity[]>(`${this.baseUrl}/ListingDetails/${listingId}/amenities`);
+// }
+
 
 
 

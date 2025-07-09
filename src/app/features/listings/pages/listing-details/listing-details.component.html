@@ -161,8 +161,44 @@
   </ng-template>
 
   <br /><hr /><br />
-
   <!-- Map -->
-  <h3>Where you’ll be</h3>
-  <div id="map" style="height: 400px;"></div>
+  <h3 class="text-xl font-semibold mb-2">Where you’ll be</h3>
+  <div class="map-container">
+    <div id="map" style="height: 400px;"></div>
+  </div>
+
+
+
+  <br /><hr /><br />
+
+  <div *ngIf="listingReviews.length" class="reviews-section">
+  <h3>{{ listingReviews.length }} reviews</h3>
+  <div class="review-grid">
+    <div class="review-card" *ngFor="let review of listingReviews | slice:0:6">
+      <div class="review-header">
+        <strong>{{ review.reviewerName }}</strong>
+        <span class="date">{{ review.createdAt | date: 'MMMM yyyy' }}</span>
+        <div class="stars">
+          <span *ngFor="let s of [1,2,3,4,5]" [class.filled]="s <= review.rating">★</span>
+        </div>
+      </div>
+      <p class="comment">“{{ review.comment }}”</p>
+    </div>
+  </div>
 </div>
+
+</div>
+  
+
+
+   <br /><hr /><br />
+  <!-- <br /><hr /><br />
+<h3 class="section-title">What this place offers</h3>
+<div class="amenities-grid">
+  <div class="amenity-box" *ngFor="let item of listingAmenities">
+    <img [src]="item.iconUrl" alt="{{ item.name }}" class="amenity-icon" />
+    <span>{{ item.name }}</span>
+  </div>
+</div> -->
+
+ 
