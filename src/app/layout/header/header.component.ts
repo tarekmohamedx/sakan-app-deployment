@@ -125,8 +125,42 @@ export class HeaderComponent implements OnInit, OnDestroy {
       });
   }
 
-  onBecomeHostClick() {
+  // onBecomeHostClick() {
+  //   const status = this.hostStatus?.toLowerCase();
+  //   if (!status || status === 'null' || status === 'undefined') {
+  //     this.isPopupVisible = true; // Show modal for new host
+  //   } else if (status === 'pending') {
+  //     Swal.fire(
+  //       'Pending',
+  //       'Your request is pending. Please wait for admin approval.',
+  //       'info'
+  //     );
+  //   } else if (status === 'accepted') {
+  //     window.location.href = '/host/dashboard';
+  //   } else if (status === 'rejected') {
+  //     Swal.fire(
+  //       'Rejected',
+  //       'Sorry, your request to become a host was rejected.',
+  //       'error'
+  //     );
+  //   } else {
+  //     this.isPopupVisible = true; // fallback
+  //   }
+  // }
+
+  onBecomeHostClick(): void {
+  const role = this.authService.getRoleFromToken();
+
+  // 👉 Admin check
+  if (role.includes('Admin')) {
+    window.location.href = '/admin/dashboard';
+    return;
+  }
+
+  // 👉 Host or customer logic
+  if (role.includes('Host') || role.includes('customer')) {
     const status = this.hostStatus?.toLowerCase();
+
     if (!status || status === 'null' || status === 'undefined') {
       this.isPopupVisible = true; // Show modal for new host
     } else if (status === 'pending') {
@@ -144,9 +178,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
         'error'
       );
     } else {
-      this.isPopupVisible = true; // fallback
+      this.isPopupVisible = true;
     }
   }
+}
+
+getHostButtonLabel(): string {
+  const role = this.authService.getRoleFromToken();
+  if (role.includes('Admin')) return 'Admin Dashboard';
+  if (this.hostStatus === 'accepted') return 'Host Dashboard';
+  return 'Become a Host';
+}
+
+
 
   confirmBecomeHost() {
     const userId = this.getCurrentUserId();

@@ -54,11 +54,18 @@
       {{ hostStatus === 'accepted' ? 'Host Dashboard' : 'Become a Host' }}
     </button> -->
 
-<ng-container *ngIf="isLoggedIn">
+<!-- <ng-container *ngIf="isLoggedIn">
   <button (click)="onBecomeHostClick()" class="text-brand-primary font-semibold">
     {{ hostStatus === 'accepted' ? 'Host Dashboard' : 'Become a Host' }}
   </button>
+</ng-container> -->
+
+<ng-container *ngIf="isLoggedIn">
+  <button (click)="onBecomeHostClick()" class="text-brand-primary font-semibold">
+    {{ getHostButtonLabel() }}
+  </button>
 </ng-container>
+
 
 
 <!-- Become a Host Modal -->
