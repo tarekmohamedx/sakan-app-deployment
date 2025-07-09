@@ -171,10 +171,11 @@ getRoleFromToken(): string[] {
     return userId;
   }
 
-  forgetPassword(email: string) {
+  forgetPassword(data: { email: string }) {
     return this.httpclient.post(
       'https://localhost:7188/api/Account/forgot-password',
-      { email }
+     data,
+      { headers: { 'Content-Type': 'application/json' } }
     );
   }
 

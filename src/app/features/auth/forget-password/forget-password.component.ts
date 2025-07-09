@@ -18,6 +18,7 @@ import Swal from 'sweetalert2';
 })
 export class ForgetPasswordComponent {
   form: FormGroup;
+  isLoading = false;
 
   constructor(private fb: FormBuilder, private authService: AuthService) {
     this.form = this.fb.group({
@@ -27,6 +28,7 @@ export class ForgetPasswordComponent {
 
   submit() {
     if (this.form.valid) {
+      this.isLoading = true;
       this.authService.forgetPassword(this.form.value).subscribe({
         next: (res: any) => {
           Swal.fire({
@@ -34,6 +36,8 @@ export class ForgetPasswordComponent {
             title: 'Reset Link Sent',
             text: res.message || 'Check your email to reset your password',
           });
+          this.isLoading = false;
+          this.form.reset();
         },
         error: (err) => {
           Swal.fire({
@@ -41,6 +45,7 @@ export class ForgetPasswordComponent {
             title: 'Error',
             text: err.error?.message || 'Something went wrong',
           });
+          this.isLoading = false;
         },
       });
     }
