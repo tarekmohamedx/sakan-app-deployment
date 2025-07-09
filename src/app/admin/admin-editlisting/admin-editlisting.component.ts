@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { AdminListingService } from '../../Admin/services/admin-listing.service';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import Swal from 'sweetalert2'; 
+import { AdminListingService } from '../services/admin-listing.service';
+// import { AdminListingService } from '../services/admin-listing.service';
 
 @Component({
   selector: 'app-admin-editlisting',
@@ -26,7 +27,6 @@ export class AdminEditlistingComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private adminListingService: AdminListingService,
-    private toastr: ToastrService,
     private http: HttpClient
   ) {
     this.listingForm = this.fb.group({
@@ -55,7 +55,7 @@ export class AdminEditlistingComponent implements OnInit {
         this.isLoading = false;
       },
       error: () => {
-        this.toastr.error('Failed to load listing.', 'Error');
+        Swal.fire('Error', 'Failed to load listing.', 'error');
         this.router.navigate(['admin/listings']);
       }
     });
@@ -75,10 +75,10 @@ export class AdminEditlistingComponent implements OnInit {
       next: (urls) => {
         this.photoUrls.push(...urls);
         this.listingForm.patchValue({ photoUrls: this.photoUrls });
-        this.toastr.success('Photos uploaded successfully ✅');
+        Swal.fire('Success', 'Photos uploaded successfully ✅', 'success');
         this.selectedFiles = [];
       },
-      error: () => this.toastr.error('Failed to upload photos ❌')
+      error: () => Swal.fire('Error', 'Failed to upload photos ❌', 'error')
     });
   }
 
@@ -89,7 +89,7 @@ export class AdminEditlistingComponent implements OnInit {
 
   onSubmit(): void {
     if (!this.listingForm.valid) {
-      this.toastr.warning('Please complete the required fields.');
+      Swal.fire('Warning', 'Please complete the required fields.', 'warning');
       return;
     }
 
@@ -97,10 +97,11 @@ export class AdminEditlistingComponent implements OnInit {
 
     this.adminListingService.updateListing(this.listingId, this.listingForm.value).subscribe({
       next: () => {
-        this.toastr.success('Listing updated ✅');
-        this.router.navigate(['/admin/listings']);
+        Swal.fire('Success', 'Listing updated ✅', 'success').then(() => {
+          this.router.navigate(['/admin/listings']);
+        });
       },
-      error: () => this.toastr.error('Failed to update listing ❌')
+      error: () => Swal.fire('Error', 'Failed to update listing ❌', 'error')
     });
   }
 

@@ -121,7 +121,7 @@
       </div>
 
       <!-- Room Photos -->
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label>Upload Room Photos</label>
         <input type="file" multiple (change)="onRoomPhotosSelected($event)" />
         <button type="button" class="action-button" (click)="uploadRoomPhotos()">Upload Room Photos</button>
@@ -132,7 +132,7 @@
           <img [src]="photo" style="width: 80px; height: 80px; object-fit: cover;" class="rounded border" />
           <button type="button" class="photo-remove-btn" (click)="editForm.photoUrls?.splice(i, 1)">×</button>
         </div>
-      </div>
+      </div> -->
 
       <!-- Beds Section -->
       <div *ngFor="let bed of editForm.beds; let i = index" class="bed-photo-block">

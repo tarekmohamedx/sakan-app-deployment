@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ToastrService } from 'ngx-toastr';
 import { BookingReview } from '../../../core/models/user-reviews';
 import { UserReviewsService } from '../UserReviews.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-user-review',
@@ -19,8 +19,7 @@ export class UserReviewComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private reviewService: UserReviewsService,
-    private toastr: ToastrService
+    private reviewService: UserReviewsService
   ) {}
 
   ngOnInit(): void {
@@ -29,7 +28,7 @@ export class UserReviewComponent implements OnInit {
 
     this.reviewService.getUserBookings().subscribe({
       next: (res) => (this.bookings = res),
-      error: () => this.toastr.error('Failed to load bookings')
+      error: () => Swal.fire('Error', 'Failed to load bookings', 'error')
     });
 
 
@@ -64,17 +63,17 @@ submitReview(): void {
     Object.entries(this.reviewForm.controls).forEach(([name, control]) => {
       console.warn(`${name}:`, control.errors, 'Value:', control.value);
     });
-    this.toastr.warning('Please fill all required fields correctly.');
+     Swal.fire('Validation Error', 'Please fill all required fields correctly.', 'warning');
     return;
   }
 
   this.reviewService.submitReview(this.reviewForm.value).subscribe({
     next: () => {
-      this.toastr.success('Review submitted successfully');
+      Swal.fire('Success', 'Review submitted successfully ✅', 'success');
       this.reviewForm.reset();
       this.showFormForBookingId = null;
     },
-    error: () => this.toastr.error('Failed to submit review')
+    error: () => Swal.fire('Error', 'Failed to submit review ❌', 'error')
   });
 }
 
