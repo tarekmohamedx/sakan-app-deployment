@@ -681,6 +681,22 @@ hr{
   margin-top: 0;
 }
 
+.view-all-btn {
+  padding: 0.5rem 1rem;
+  background-color: #086282;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.view-all-btn:hover {
+  background-color: #064b5e;
+}
+
+
 
 
 // for the amenities section

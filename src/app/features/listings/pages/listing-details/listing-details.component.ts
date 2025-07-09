@@ -32,6 +32,8 @@ export class ListingDetailsComponent implements OnInit {
   listingLatitude: number = 0;
   listingLongitude: number = 0;
   listingReviews: ReviewDto[] = [];
+  showAllReviews = false;
+
   // listingAmenities: ListingAmenity[] = [];
 
   constructor(
