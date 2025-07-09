@@ -8,8 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { Router } from 'express';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../features/auth/services/auth.service';
 import { Subscription } from 'rxjs';
 import { UserBookingRequestsComponent } from '../../features/bookings/components/user-booking-requests.component';
@@ -49,47 +48,47 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userid!: string;
   statusPopupMessage = '';
 
-  constructor(private authService: AuthService , private http:HttpClient) {}
+  constructor(private authService: AuthService , private http:HttpClient, private router: Router) {}
 
-    ngOnInit(): void {
-  this.subscription = this.authService.isLoggedIn$.subscribe(status => {
-    this.isLoggedIn = status;
+//     ngOnInit(): void {
+//   this.subscription = this.authService.isLoggedIn$.subscribe(status => {
+//     this.isLoggedIn = status;
 
-    if (status) {
-      const userData = this.authService.getuserdata();
-      this.user = {
-        name: userData?.name || 'Guest',
-        profilePictureUrl: 'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png'
-      };
-    } else {
-      this.user = {
-        name: '',
-        profilePictureUrl: ''
-      };
-    }
-  });
-}
+//     if (status) {
+//       const userData = this.authService.getuserdata();
+//       this.user = {
+//         name: userData?.name || 'Guest',
+//         profilePictureUrl: 'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png'
+//       };
+//     } else {
+//       this.user = {
+//         name: '',
+//         profilePictureUrl: ''
+//       };
+//     }
+//   });
+// }
 
-  //     ngOnInit(): void {
-  //       this.loadHostStatus();
-  //       console.log('HOST STATUS:', this.hostStatus);
-  //       this.subscription = this.authService.isLoggedIn$.subscribe(status => {
-  //       this.isLoggedIn = status;
+      ngOnInit(): void {
+        this.loadHostStatus();
+        console.log('HOST STATUS:', this.hostStatus);
+        this.subscription = this.authService.isLoggedIn$.subscribe(status => {
+        this.isLoggedIn = status;
 
-  //     if (status) {
-  //       const userData = this.authService.getuserdata();
-  //       this.user = {
-  //         name: userData?.name || 'Guest',
-  //         profilePictureUrl: 'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png'
-  //       };
-  //     } else {
-  //       this.user = {
-  //         name: '',
-  //         profilePictureUrl: ''
-  //       };
-  //     }
-  //   });
-  // }
+      if (status) {
+        const userData = this.authService.getuserdata();
+        this.user = {
+          name: userData?.name || 'Guest',
+          profilePictureUrl: 'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png'
+        };
+      } else {
+        this.user = {
+          name: '',
+          profilePictureUrl: ''
+        };
+      }
+    });
+  }
 
   getToken(): string | null {
     return sessionStorage.getItem('token');
@@ -183,6 +182,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   logout(): void {
     this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
   ngOnDestroy(): void {
