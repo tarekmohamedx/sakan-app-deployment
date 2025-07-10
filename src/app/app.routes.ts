@@ -34,6 +34,7 @@ import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard
 import { AdminListingsComponent } from './admin/admin-listings/admin-listings.component';
 import { AdminEditlistingComponent } from './admin/admin-editlisting/admin-editlisting.component';
 import { AdminHostsApproveComponent } from './admin/admin-hosts-approve/admin-hosts-approve.component';
+import { AdminApproveListingsComponent } from './admin/listing/listings.component';
 
 
 export const routes: Routes = [
@@ -93,6 +94,7 @@ export const routes: Routes = [
       { path: 'listings', component: AdminListingsComponent },
       { path: 'editlisting/:id', component: AdminEditlistingComponent },
       { path: 'approveHost', component: AdminHostsApproveComponent },
+      { path: 'approvelistings', component: AdminApproveListingsComponent },
     ],
   },
 

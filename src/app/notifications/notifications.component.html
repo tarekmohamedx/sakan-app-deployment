@@ -1,0 +1,79 @@
+<!-- notifications.component.html -->
+<div class="notification-container">
+  <button 
+    class="notification-btn" 
+    (click)="toggleDropdown()"
+    [attr.aria-expanded]="showDropdown"
+    aria-label="Notifications">
+    🔔
+    <span 
+      class="notification-badge" 
+      *ngIf="unreadCount > 0"
+      [attr.aria-label]="unreadCount + ' unread notifications'">
+      {{ unreadCount }}
+    </span>
+  </button>
+
+  <!-- Overlay -->
+  <div 
+    class="dropdown-overlay" 
+    *ngIf="showDropdown"
+    (click)="closeDropdown()">
+  </div>
+  
+  <!-- Dropdown -->
+  <div 
+    class="dropdown" 
+    *ngIf="showDropdown"
+    [@slideInOut]>
+    
+    <div class="dropdown-header">
+      <span class="header-icon">🔔</span>
+      Notifications
+      <span class="header-count" *ngIf="unreadCount > 0">({{ unreadCount }})</span>
+    </div>
+    
+    <div class="notifications-list" *ngIf="notifications.length > 0; else noNotifications">
+      <a 
+        *ngFor="let notification of notifications;"
+        class="notification-item"
+        [class.unread]="!notification.isRead"
+        (click)="onNotificationClick(notification)"
+        [attr.aria-label]="notification.message">
+        
+        <div class="notification-content">          
+          <div class="notification-message">
+            {{ notification.message }}
+          </div>
+          
+          <small class="notification-time">
+            {{ notification.createdAt | date:'short' }}
+          </small>
+
+            <!-- 🗑️ Delete icon -->
+          <button 
+            class="delete-btn" 
+            (click)="deleteNotification(notification.id); $event.stopPropagation()" 
+            aria-label="Delete notification">
+            ✖
+          </button>
+        </div>
+      </a>
+    </div>
+    
+    <ng-template #noNotifications>
+      <div class="no-notifications">
+        <div class="no-notifications-icon">📭</div>
+        <div class="no-notifications-text">No notifications yet</div>
+      </div>
+    </ng-template>
+    
+    <button 
+      class="mark-all-read"
+      *ngIf="unreadCount > 0"
+      (click)="markAllAsRead()"
+      aria-label="Mark all notifications as read">
+      Mark all as read
+    </button>
+  </div>
+</div>
