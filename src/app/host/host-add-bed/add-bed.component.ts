@@ -63,6 +63,9 @@ export class BedDialogComponent {
       }
     }
   }
+  removePhoto(index: number): void {
+    this.bedPhotos.splice(index, 1);
+  }
 
   // ✅ Finalize and return the bed object
   saveBed(): void {

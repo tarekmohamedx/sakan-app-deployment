@@ -7,6 +7,8 @@ import { environment } from '../../../environments/environment';
 import { Login } from '../../../core/models/Login';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { Jwtpayloadd } from '../../../core/models/Jwtpayload';
+import { UserProfileDTO } from '../../../core/models/UserProfileDTO';
+import { updateProfile } from '../../../core/models/UpdateUserProfile';
 
 @Injectable({
   providedIn: 'root',
@@ -41,9 +43,27 @@ export class AuthService {
   Login(login: Login): Observable<any> {
     return this.httpclient.post<any>(`${environment.apiurlauth}/Login`, login);
   }
-  externalLogin() {
+  externalLogin(idtoken: string) {
     // This backend endpoint should initiate Google login (e.g. /signin-google)
-    window.location.href = `${environment.apiurlauth}/externallogin/google`;
+    // window.location.href = `${environment.apiurlauth}/externallogin/google`;
+    return this.httpclient.post<{ token: string }>(
+      'https://localhost:7188/api/Account/google-auth',
+      { Token: idtoken },
+      //{withCredentials: true},
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+  changePassword(data: {
+    currentPassword: string;
+
+    newPassword: string;
+    confirmPassword: string;
+  }) {
+    const userid = this.getuserdata()?.id;
+    return this.httpclient.post(
+      `${environment.apiurlauth}/change-password/${userid}`,
+      data
+    );
   }
 
   // getuserdata(): {
@@ -87,54 +107,69 @@ export class AuthService {
 
   //   return role;
   // }
-
-
   getuserdata(): {
-  name: string;
-  email: string;
-  id: string;
-  role: string[]; // <- Make this an array
-} | null {
-  const token = sessionStorage.getItem('token');
-  if (token) {
-    const decoded: any = jwtDecode(token);
+    name: string;
+    email: string;
+    id: string;
+    role: string[]; // <- Make this an array
+  } | null {
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      const decoded: any = jwtDecode(token);
 
-    let role = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+      let role =
+        decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
 
-    // Normalize role to always be an array
-    if (!Array.isArray(role)) {
-      role = [role];
+      // Normalize role to always be an array
+      if (!Array.isArray(role)) {
+        role = [role];
+      }
+
+      return {
+        name: decoded[
+          'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'
+        ],
+        email:
+          decoded[
+            'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'
+          ],
+        id: decoded[
+          'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'
+        ],
+        role: role,
+      };
     }
-
-    return {
-      name: decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
-      email: decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'],
-      id: decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'],
-      role: role
-    };
+    return null;
   }
-  return null;
-}
 
-getRoleFromToken(): string[] {
+  getRoleFromToken(): string[] {
     const token = this.getToken();
-  if (!token) return [];
+    if (!token) return [];
 
-  const decoded = jwtDecode(token) as { [key: string]: any };
-  const roleClaim = decoded[
-    'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
-  ];
+    const decoded = jwtDecode(token) as { [key: string]: any };
+    const roleClaim =
+      decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
 
-  // Ensure it's always returned as an array
-  if (Array.isArray(roleClaim)) {
-    return roleClaim;
-  } else if (typeof roleClaim === 'string') {
-    return [roleClaim];
-  } else {
-    return [];
+    // Ensure it's always returned as an array
+    if (Array.isArray(roleClaim)) {
+      return roleClaim;
+    } else if (typeof roleClaim === 'string') {
+      return [roleClaim];
+    } else {
+      return [];
+    }
   }
-}
 
+  // getRoleFromToken(): string | null {
+  //   const token = this.getToken();
+  //   if (!token) return null;
+
+  //   const decoded = jwtDecode(token) as { [key: string]: any };
+  //   const role =
+  //     decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+
+  //   return role;
+  // }
 
   //jwt
   getToken(): string | null {
@@ -154,14 +189,28 @@ getRoleFromToken(): string[] {
     return userId;
   }
 
+  forgetPassword(data: { email: string }) {
+    return this.httpclient.post(
+      'https://localhost:7188/api/Account/forgot-password',
+      data,
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+  }
 
+  resetPassword(data: any) {
+    return this.httpclient.post<{ message: string }>(
+      'https://localhost:7188/api/Account/reset-password',
+      data,
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+  }
 
   // Call this after login success
 
-    private hasToken(): boolean {
+  private hasToken(): boolean {
     return !!sessionStorage.getItem('token');
   }
-  
+
   setLogin(token: string): void {
     sessionStorage.setItem('token', token);
     this.isLoggedInSubject.next(true);
@@ -175,7 +224,27 @@ getRoleFromToken(): string[] {
   checkLogin(): void {
     this.isLoggedInSubject.next(this.hasToken());
   }
+  getProfile(userId: string): Observable<UserProfileDTO> {
+    return this.httpclient.get<UserProfileDTO>(
+      `${environment.apiurlprofile}/${userId}`
+    );
+  }
 
+  updateProfile(id: string, body: Partial<updateProfile>): Observable<any> {
+    return this.httpclient.put(`${environment.apiurlprofile}/Edit/${id}`, body);
+  }
 
+  deleteProfile(id: string): Observable<any> {
+    return this.httpclient.patch(
+      `${environment.apiurlprofile}/soft-delete/${id}`,
+      null
+    );
+  }
 
+  uploadUserPhoto(id: string, formData: FormData): Observable<any> {
+    return this.httpclient.post(
+      `${environment.apiurlprofile}/upload-photo/${id}`,
+      formData
+    );
+  }
 }

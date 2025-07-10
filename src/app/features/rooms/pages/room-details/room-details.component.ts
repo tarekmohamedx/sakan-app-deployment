@@ -8,6 +8,7 @@ import * as L from 'leaflet';
 import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   standalone: true,
@@ -197,38 +198,39 @@ get selectedBedIds(): number[] {
 sendBookingRequest(): void {
   const selectedBeds = this.room.beds.filter(bed => bed.selected);
   const guestId = this.listingService.getCurrentUserId();
-
-  if (!this.moveIn || !this.moveOut) {
-    alert('Please select check-in and check-out months.');
+  if (!guestId) {
+    Swal.fire('Error', 'You must be logged in to send a booking request.', 'error');
     return;
   }
 
-    const hasUnavailableBed = this.room.beds.some(b => !b.isAvailable);
-    const isWholeRoomBooking = selectedBeds.length === 0 || selectedBeds.length === this.room.beds.length;
+  if (!this.moveIn || !this.moveOut) {
+    Swal.fire('Warning', 'Please select check-in and check-out months.', 'warning');
+    return;
+  }
 
-    if (isWholeRoomBooking && hasUnavailableBed) {
-      alert("❌ You cannot book the entire room because one or more beds are already occupied.");
-      return;
-    }
+  const hasUnavailableBed = this.room.beds.some(b => !b.isAvailable);
+  const isWholeRoomBooking = selectedBeds.length === 0 || selectedBeds.length === this.room.beds.length;
 
+  if (isWholeRoomBooking && hasUnavailableBed) {
+    Swal.fire('Sorry', '❌ You cannot book the entire room because one or more beds are already occupied.', 'error');
+    return;
+  }
 
-    const dto: BookingRequestDto = {
-      guestId: guestId!,
-      listingId: this.room.listingId,
-      roomId: this.room.id,
-      bedIds: isWholeRoomBooking ? null : selectedBeds.map(b => b.id as number),
-      fromDate: new Date(this.moveIn).toISOString(),
-      toDate: new Date(this.moveOut).toISOString()
-    };
-
+  const dto: BookingRequestDto = {
+    guestId: guestId!,
+    listingId: this.room.listingId,
+    roomId: this.room.id,
+    bedIds: isWholeRoomBooking ? null : selectedBeds.map(b => b.id as number),
+    fromDate: new Date(this.moveIn).toISOString(),
+    toDate: new Date(this.moveOut).toISOString()
+  };
 
   this.listingService.createRequest(dto).subscribe(res => {
     this.requestSent = true;
     this.hostId = res.hostId;
-    alert('Your request has been sent successfully!');
+    Swal.fire('Success', 'Your request has been sent successfully!', 'success');
   });
 }
-
 
 
 

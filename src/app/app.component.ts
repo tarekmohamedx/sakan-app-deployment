@@ -14,7 +14,7 @@ import { FooterComponent } from './layout/footer/footer.component';
     HeaderComponent,
     CommonModule,
     TranslateModule,
-    FooterComponent
+    FooterComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
@@ -38,11 +38,16 @@ export class AppComponent implements OnInit {
   }
   title = 'sakan-app';
 
-   get isHostRoute(): boolean {
+  get isHostRoute(): boolean {
     return this.router.url.startsWith('/host');
   }
-   get isAdminRoute(): boolean {
+  get isAdminRoute(): boolean {
     return this.router.url.startsWith('/admin');
   }
+  get isLoginRoute(): boolean {
+    return this.router.url.startsWith('/login');
+  }
+  get isRegisterRoute(): boolean {
+    return this.router.url.startsWith('/register');
+  }
 }
-

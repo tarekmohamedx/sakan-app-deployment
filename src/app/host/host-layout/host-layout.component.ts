@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { AuthService } from '../../features/auth/services/auth.service';
 
 @Component({
   selector: 'app-host-layout',
@@ -13,7 +14,7 @@ export class HostLayoutComponent implements OnInit, OnDestroy {
   isSidebarCollapsed = false;
   isMobile = false;
 
-  constructor() {}
+  constructor(private authService: AuthService , private router: Router) {}
 
   ngOnInit(): void {
     this.checkScreenSize();
@@ -32,6 +33,11 @@ export class HostLayoutComponent implements OnInit, OnDestroy {
   @HostListener('window:resize', ['$event'])
   onResize(event: any): void {
     this.checkScreenSize();
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
   private checkScreenSize(): void {
@@ -64,24 +70,12 @@ export class HostLayoutComponent implements OnInit, OnDestroy {
     }
   }
 
-  logout(): void {
-    // Implement logout logic here
-    console.log('Logging out...');
-    
-    // Example logout implementation:
-    // Clear authentication tokens
-    // localStorage.removeItem('authToken');
-    // sessionStorage.clear();
-    
-    // Navigate to login page
-    // this.router.navigate(['/login']);
-    
-    // Show confirmation dialog
-    if (confirm('Are you sure you want to logout?')) {
-      // Perform logout
-      this.performLogout();
-    }
-  }
+  // logout(): void {
+  //   console.log('Logging out...');
+  //   if (confirm('Are you sure you want to logout?')) {
+  //     this.performLogout();
+  //   }
+  // }
 
   private performLogout(): void {
     // Clear any stored user data

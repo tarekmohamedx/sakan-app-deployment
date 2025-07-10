@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CreateListingDTO } from '../../core/models/CreateListingDTO';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../features/auth/services/auth.service';
 
 @Injectable({
@@ -12,11 +12,18 @@ export class CreatelistingserviceService {
   constructor(private http: HttpClient, private authserice: AuthService) {}
 
   createListing(dto: CreateListingDTO): Observable<any> {
+    const token = sessionStorage.getItem('token');
     const hostId = this.authserice.getuserdata()?.id ?? '';
+    const tk = this.authserice.getToken();
+   // const headers = new HttpHeaders({
+     // Authorization: `Bearer ${tk}`,
+   // });
+    // const hostId = this.authserice.getuserdata()?.id ?? '';
     const formData = this.buildFormData(dto);
     return this.http.post<any>(
       `${environment.apiurllisting}/${hostId}`,
       formData
+      
     );
   }
 
@@ -34,6 +41,10 @@ export class CreatelistingserviceService {
     formData.append('Longitude', dto.longitude.toString());
     formData.append('IsBookableAsWhole', dto.isBookableAsWhole.toString());
 
+    dto.amenityIds.forEach((id) => {
+      formData.append('AmenityIds', id.toString());
+    });
+  
     // Listing Photos
     dto.listingPhotos.forEach((photo) => {
       formData.append('ListingPhotos', photo);

@@ -10,15 +10,18 @@ import { HostDashboardDTO } from '../../core/models/host-dashboard.model';
   imports: [CommonModule],
   standalone: true,
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit {
-     async refreshData() {
-         const hostId = await this.authService.getUserIdFromToken();
-        if (hostId) {
-          this.loadDashboardData(hostId);
-        }
-      }
+ //user: { name: string; email: string; id: string; role: string } | null = null;
+  
+
+  async refreshData() {
+    const hostId = await this.authService.getUserIdFromToken();
+    if (hostId) {
+      this.loadDashboardData(hostId);
+    }
+  }
   stats: HostDashboardDTO = {
     todaysRequestsCount: 0,
     activeListingsCount: 0,
@@ -28,7 +31,7 @@ export class DashboardComponent implements OnInit {
     averageRating: 0,
     recentRequests: [],
     totalBookings: 0,
-    latestReview: undefined
+    latestReview: undefined,
   };
 
   isLoading = true;
@@ -38,20 +41,23 @@ export class DashboardComponent implements OnInit {
     private authService: AuthService,
     private hostService: HostService
   ) {}
-  
+
   async ngOnInit() {
     const hostId = await this.authService.getUserIdFromToken();
     if (hostId) {
       this.loadDashboardData(hostId);
     }
+  // this.user =  this.authService.getuserdata()
   }
-  
+
   async loadDashboardData(hostId: string): Promise<void> {
     try {
       this.isLoading = true;
-      const data = await firstValueFrom(this.hostService.getDashboardData(hostId));
+      const data = await firstValueFrom(
+        this.hostService.getDashboardData(hostId)
+      );
       console.log('Dashboard data:', data);
-      
+
       this.stats = {
         todaysRequestsCount: data?.todaysRequestsCount,
         activeListingsCount: data.activeListingsCount,
@@ -61,7 +67,7 @@ export class DashboardComponent implements OnInit {
         averageRating: data.averageRating,
         recentRequests: data.recentRequests,
         totalBookings: data.totalBookings,
-        latestReview: data.latestReview
+        latestReview: data.latestReview,
       };
     } catch (error) {
       this.error = 'Failed to load dashboard data.';
@@ -71,37 +77,41 @@ export class DashboardComponent implements OnInit {
   }
 
   get formattedRecentRequests() {
-    return this.stats.recentRequests.map(req => ({
+    return this.stats.recentRequests.map((req) => ({
       guestName: req.guestName,
       propertyName: req.listingTitle, // from your DTO
       checkIn: req.fromDate,
       checkOut: req.toDate,
       guests: '-',
       status: 'pending',
-      requestDate: req.fromDate
+      requestDate: req.fromDate,
     }));
   }
 
   getStatusClass(status: string): string {
     switch (status) {
-      case 'approved': return 'status-approved';
-      case 'declined': return 'status-declined';
-      case 'pending': return 'status-pending';
-      default: return 'status-pending';
+      case 'approved':
+        return 'status-approved';
+      case 'declined':
+        return 'status-declined';
+      case 'pending':
+        return 'status-pending';
+      default:
+        return 'status-pending';
     }
   }
 
   formatCurrency(amount: number): string {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'EGP'
+      currency: 'EGP',
     }).format(amount);
   }
 
   formatDate(date: Date): string {
     return new Intl.DateTimeFormat('en-US', {
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     }).format(date);
   }
 
@@ -110,9 +120,7 @@ export class DashboardComponent implements OnInit {
       month: 'short',
       day: 'numeric',
       hour: 'numeric',
-      minute: '2-digit'
+      minute: '2-digit',
     }).format(date);
   }
-
-
 }
