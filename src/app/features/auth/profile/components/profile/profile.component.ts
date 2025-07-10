@@ -10,6 +10,7 @@ import { UserProfileDTO } from '../../../../../core/models/UserProfileDTO';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ChangePasswordDialogComponent } from '../../../change-password-dialog/change-password-dialog.component';
 
 @Component({
   selector: 'app-profile',
@@ -29,13 +30,17 @@ export class ProfileComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router
   ) {}
-   
+
   ngOnInit(): void {
     this.userid = this.route.snapshot.paramMap.get('id') || '';
     console.log('User ID from route: ' + this.userid);
     this.loadProfile();
-   // this.userrole = this.authservice.getuserdata()?.role || '';
+    // this.userrole = this.authservice.getuserdata()?.role || '';
     console.log('profile data = = ' + this.profileData);
+  }
+
+  openChangePasswordDialog() {
+    this.dialog.open(ChangePasswordDialogComponent, { width: '600px' });
   }
 
   loadProfile(): void {

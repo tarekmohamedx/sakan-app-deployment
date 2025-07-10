@@ -67,6 +67,7 @@ export class AddApartmentComponent implements OnInit {
 
   amenities: any[] = [];
   // selectedAmenities: number[] = [];
+  isSubmitting = false;
 
   @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
   @ViewChild(MapSelectorComponentt) mapSelector!: MapSelectorComponentt;
@@ -163,7 +164,9 @@ export class AddApartmentComponent implements OnInit {
       longitude: coords.lng,
     });
   }
-
+  removePhoto(index: number): void {
+    this.listingPhotos.splice(index, 1);
+  }
   openAddRoomDialog(): void {
     const dialogRef = this.dialog.open(RoomDialogComponent, { width: '600px' });
     dialogRef.afterClosed().subscribe((result: RoomDTO | undefined) => {
@@ -176,6 +179,7 @@ export class AddApartmentComponent implements OnInit {
       // Show validation error
       return;
     }
+    this.isSubmitting = true;
 
     const dto: CreateListingDTO = {
       ...this.listingForm.value,
@@ -207,6 +211,10 @@ export class AddApartmentComponent implements OnInit {
             JSON.stringify(err?.error?.errors) ||
             'Something went wrong',
         });
+        this.isSubmitting = false; // Hide loader on error
+      },
+      complete: () => {
+        this.isSubmitting = false; // Hide loader regardless of success or error
       },
     });
   }

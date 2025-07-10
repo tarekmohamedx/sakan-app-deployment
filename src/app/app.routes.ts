@@ -29,13 +29,13 @@ import { GoogleCallbackComponent } from './features/auth/google-callback/google-
 import { ForgetPasswordComponent } from './features/auth/forget-password/forget-password.component';
 import { HostGuard } from './guards/host.guard';
 import { AdminGuard } from './guards/admin.guard';
+import { ProfileComponent } from './features/auth/profile/components/profile/profile.component';
 import { LayoutComponent } from './admin/layout/layout.component';
 import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 import { AdminListingsComponent } from './admin/admin-listings/admin-listings.component';
 import { AdminEditlistingComponent } from './admin/admin-editlisting/admin-editlisting.component';
 import { AdminHostsApproveComponent } from './admin/admin-hosts-approve/admin-hosts-approve.component';
-import { AdminApproveListingsComponent } from './admin/listing/listings.component';
-
+import { AdminApproveListingsComponent } from './admin/listing/listings.compont';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -53,6 +53,7 @@ export const routes: Routes = [
       ).then((m) => m.ResetPasswordComponent),
   },
 
+  { path: 'Profile/:id', component: ProfileComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'listings', component: ListingsPageComponent },
   { path: 'register', component: RegisterComponent },
