@@ -1,60 +1,82 @@
+<!-- Bookings without reviews -->
+<h3 class="table-title">Your Bookings <span style="color: orange;">(Pending Reviews)</span> </h3>
 <table class="table modern-table">
-    <thead>
-        <tr>
-            <th>Listing</th>
-            <th>Period</th>
-            <th>Rating</th>
-            <th>Comment</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let booking of bookings">
-            <td>{{ booking.listingTitle }}</td>
-            <td>{{ booking.fromDate }} → {{ booking.toDate }}</td>
-            <td>
-                <span class="rating">
-                    <ng-container *ngFor="let star of [1,2,3,4,5]; let i = index">
-                        <span class="star" [class.filled]="booking.rating! >= star">★</span>
-                    </ng-container>
-                </span>
-            </td>
-            <td>{{ booking.comment || 'No comment provided' }}</td>
-            <td>
-                <button (click)="showReviewForm(booking)">
-                    <span class="icon-star">★</span> Rate
-                </button>
-            </td>
-        </tr>
-    </tbody>
+  <thead>
+    <tr>
+      <th>Listing</th>
+      <th>Period</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let booking of pendingBookings">
+      <td>{{ booking.listingTitle }}</td>
+      <td>{{ booking.fromDate }} → {{ booking.toDate }}</td>
+      <td>
+        <button (click)="showReviewForm(booking)">
+          <span class="icon-star">★</span> Add Review
+        </button>
+      </td>
+    </tr>
+  </tbody>
 </table>
 
+<!-- Reviews already submitted -->
+<h3 class="table-title">Your Submitted Reviews</h3>
+<table class="table modern-table">
+  <thead>
+    <tr>
+      <th>Listing</th>
+      <th>Rating</th>
+      <th>Comment</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let booking of reviewedBookings">
+      <td>{{ booking.listingTitle }}</td>
+      <td>
+        <ng-container *ngFor="let star of [1,2,3,4,5]">
+          <span class="star" [class.filled]="booking.rating! >= star">★</span>
+        </ng-container>
+      </td>
+      <td>{{ booking.comment || 'No comment provided' }}</td>
+      <td>
+        <button (click)="showReviewForm(booking)">
+          <span class="icon-star">★</span> Update Review
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Shared Review Form -->
 <div *ngIf="showFormForBookingId !== null" class="review-form modern-form">
-    <h4>Submit Review</h4>
-    <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
-        <div class="form-row">
-            <label>Rating:</label>
-            <div class="star-rating">
-                <ng-container *ngFor="let star of [1,2,3,4,5]; let i = index">
-                    <span
-                        class="star"
-                        [class.filled]="reviewForm.value.rating >= star"
-                        (click)="setRating(star)"
-                        tabindex="0"
-                        (keydown.enter)="setRating(star)"
-                        >★</span>
+  <h4>{{ reviewForm.value.rating ? 'Update Review' : 'Submit Review' }}</h4>
+  <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
+    <div class="form-row">
+      <label>Rating:</label>
+      <div class="star-rating">
+        <ng-container *ngFor="let star of [1,2,3,4,5]">
+          <span
+            class="star"
+            [class.filled]="reviewForm.value.rating >= star"
+            (click)="setRating(star)"
+            tabindex="0"
+            (keydown.enter)="setRating(star)"
+          >★</span>
+        </ng-container>
+      </div>
+    </div>
 
-                </ng-container>
-            </div>
-        </div>
-        <div class="form-row">
-            <label>Comment:</label>
-            <textarea formControlName="comment" placeholder="Share your experience..."></textarea>
-        </div>
-        <div class="form-actions">
-            <button type="submit" class="btn-primary">Submit</button>
-            <button type="button" class="btn-secondary" (click)="showFormForBookingId = null">Cancel</button>
-        </div>
-    </form>
+    <div class="form-row">
+      <label>Comment:</label>
+      <textarea formControlName="comment" placeholder="Share your experience..."></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-primary">Submit</button>
+      <button type="button" class="btn-secondary" (click)="showFormForBookingId = null">Cancel</button>
+    </div>
+  </form>
 </div>
-

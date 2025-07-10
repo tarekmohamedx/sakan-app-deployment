@@ -8,14 +8,14 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { Router } from 'express';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../features/auth/services/auth.service';
 import { Subscription } from 'rxjs';
 import { UserBookingRequestsComponent } from '../../features/bookings/components/user-booking-requests.component';
 import { HttpClient } from '@angular/common/http';
 import { jwtDecode } from 'jwt-decode';
 import Swal from 'sweetalert2';
+import { NotificationsComponent } from '../../notifications/notifications.component';
 
 @Component({
   selector: 'app-header',
@@ -25,6 +25,7 @@ import Swal from 'sweetalert2';
     CommonModule,
     FormsModule,
     UserBookingRequestsComponent,
+    NotificationsComponent 
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
@@ -49,19 +50,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userid!: string;
   statusPopupMessage = '';
 
-  constructor(private authService: AuthService, private http: HttpClient) {}
+  constructor(private authService: AuthService , private http:HttpClient, private router: Router) {}
 
-  ngOnInit(): void {
-    this.subscription = this.authService.isLoggedIn$.subscribe((status) => {
-      this.isLoggedIn = status;
+      ngOnInit(): void {
+        this.loadHostStatus();
+      this.userid = this.authService.getuserdata()?.id || '';
+
+        console.log('HOST STATUS:', this.hostStatus);
+        this.subscription = this.authService.isLoggedIn$.subscribe(status => {
+        this.isLoggedIn = status;
 
       if (status) {
         const userData = this.authService.getuserdata();
-        this.userid = this.authService.getuserdata()?.id || '';
         this.user = {
           name: userData?.name || 'Guest',
-          profilePictureUrl:
-            'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png',
+          profilePictureUrl: 'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png'
         };
       } else {
         this.user = {
@@ -92,6 +95,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   //     }
   //   });
   // }
+
+          profilePictureUrl: ''
+        };
+      }
+    });
+  }
 
   getToken(): string | null {
     return sessionStorage.getItem('token');
@@ -128,28 +137,56 @@ export class HeaderComponent implements OnInit, OnDestroy {
       });
   }
 
-  onBecomeHostClick() {
+onBecomeHostClick(): void {
+  const role = this.authService.getRoleFromToken();
+  console.log('User role:', role);
+
+  if (role.includes('Admin')) {
+    window.location.href = '/admin/dashboard';
+    return;
+  }
+
+  if (role.includes('Host') || role.includes('Customer')) {
     const status = this.hostStatus?.toLowerCase();
+    console.log('Host status:', status);
+
     if (!status || status === 'null' || status === 'undefined') {
-      this.isPopupVisible = true; // Show modal for new host
+      this.isPopupVisible = true;
     } else if (status === 'pending') {
-      Swal.fire(
-        'Pending',
-        'Your request is pending. Please wait for admin approval.',
-        'info'
-      );
+      Swal.fire('Pending', 'Your request is pending. Please wait for admin approval.', 'info');
     } else if (status === 'accepted') {
-      window.location.href = '/host/dashboard';
+      const alreadyShown = localStorage.getItem('hostApprovedMessageShown');
+
+      if (!alreadyShown) {
+        // First time approved → show message + logout
+        Swal.fire('Approved', 'You are now a host! Please log in again to continue.', 'success')
+          .then(() => {
+            localStorage.setItem('hostApprovedMessageShown', 'true');
+            this.authService.logout();
+            this.router.navigate(['/login']);
+          });
+      } else {
+        // Already logged in again as host → go to dashboard
+        window.location.href = '/host/dashboard';
+      }
+
     } else if (status === 'rejected') {
-      Swal.fire(
-        'Rejected',
-        'Sorry, your request to become a host was rejected.',
-        'error'
-      );
+      Swal.fire('Rejected', 'Sorry, your request to become a host was rejected.', 'error');
     } else {
-      this.isPopupVisible = true; // fallback
+      this.isPopupVisible = true;
     }
   }
+}
+
+
+getHostButtonLabel(): string {
+  const role = this.authService.getRoleFromToken();
+  if (role.includes('Admin')) return 'Admin Dashboard';
+  if (this.hostStatus === 'accepted') return 'Host Dashboard';
+  return 'Become a Host';
+}
+
+
 
   confirmBecomeHost() {
     const userId = this.getCurrentUserId();
@@ -185,6 +222,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   logout(): void {
     this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
   ngOnDestroy(): void {

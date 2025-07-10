@@ -33,6 +33,19 @@ export interface BookingRequestDto {
   toDate: string;
 }
 
+export interface ListingAmenity {
+  id: number;
+  name: string;
+  iconUrl: string;
+}
+
+export interface ReviewDto {
+  reviewerName: string;
+  comment: string;
+  rating: number;
+  createdAt: string;
+}
+
 
 export interface HostInfo {
   name: string;

@@ -79,6 +79,74 @@
         </button>
       </ng-container>
 
+<!-- <ng-container *ngIf="isLoggedIn">
+  <button (click)="onBecomeHostClick()" class="text-brand-primary font-semibold">
+    {{ hostStatus === 'accepted' ? 'Host Dashboard' : 'Become a Host' }}
+  </button>
+</ng-container> -->
+
+<ng-container *ngIf="isLoggedIn">
+  <button (click)="onBecomeHostClick()" class="text-brand-primary font-semibold">
+    {{ getHostButtonLabel() }}
+  </button>
+</ng-container>
+
+
+
+<!-- Become a Host Modal -->
+<div *ngIf="isPopupVisible" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden animate-fadeIn">
+    <div class="flex justify-between items-center p-6 border-b">
+      <h2 class="text-xl font-bold text-gray-800">🚀 Join as a Host</h2>
+      <button (click)="closePopup()" class="text-gray-500 hover:text-red-600 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+             stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="p-6 space-y-6">
+      <!-- Benefits Section -->
+      <section>
+        <h3 class="text-lg font-semibold text-brand-primary mb-2">What You'll Gain</h3>
+        <ul class="list-disc list-inside text-gray-700 space-y-1">
+          <li>Earn income by renting your space</li>
+          <li>Control your schedule, guests, and prices</li>
+          <li>Reach a growing, trusted guest community</li>
+        </ul>
+      </section>
+
+      <!-- Policy Section -->
+      <section>
+        <h3 class="text-lg font-semibold text-brand-primary mb-2">Host Responsibilities</h3>
+        <p class="text-sm text-gray-600 leading-relaxed">
+          All hosts are expected to provide accurate listing information, maintain safe and clean environments,
+          and respond to guests in a timely manner. Your listing may be reviewed before approval.
+        </p>
+      </section>
+
+      <!-- Final Prompt -->
+      <section class="text-center">
+        <p class="text-gray-800 font-medium">Are you ready to join our community as a host?</p>
+      </section>
+    </div>
+
+    <div class="flex justify-end items-center gap-3 p-6 border-t">
+      <button (click)="closePopup()"
+              class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition">
+        Cancel
+      </button>
+      <button (click)="confirmBecomeHost()"
+              class="px-5 py-2 bg-brand-primary text-white font-semibold rounded-md hover:bg-brand-secondary transition">
+        Yes, Join
+      </button>
+    </div>
+  </div>
+</div>
+
+
       <!-- Become a Host Modal -->
       <div
         *ngIf="isPopupVisible"
@@ -164,7 +232,6 @@
       <div *ngIf="isPopupVisible" class="modal-backdrop fade show"></div>
 
       <!-- <button routerLink="becomeHost" class="text-brand-primary font-semibold">Become a host</button> -->
-
       <ng-container *ngIf="!isLoggedIn; else userMenu">
         <button
           routerLink="login"
@@ -210,6 +277,42 @@
                 clip-rule="evenodd"
               />
             </svg>
+            <span>My Booking Requests</span>
+          </a>
+
+          <a routerLink="/review" (click)="closeDropdown()" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer" role="menuitem">
+            <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm6 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span>My Reviews</span>
+          </a>
+
+          <a routerLink="/ai" (click)="closeDropdown()" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer" role="menuitem">
+            <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2v-6a2 2 0 012-2h2m-2-4h6a2 2 0 012 2v6a2 2 0 01-2 2H9l-4 4V6a2 2 0 012-2z"/>
+            </svg>
+            <span>Chat With Our AI</span>
+          </a>
+
+
+
+
+          <a [routerLink]="['/Profile', userid]" (click)="closeDropdown()" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">
+            <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A9 9 0 1118.88 6.196M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span>Profile</span>
+          </a>
+
+
+          <!-- فاصل -->
+          <div class="border-t border-gray-100 my-1"></div>
+
+          <!-- زر تسجيل الخروج (Logout) -->
+          <button (click)="logout()" class="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">
+            <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+            <span>Log Out</span>
           </button>
 
           <div
@@ -383,10 +486,14 @@
             </div>
           </div>
         </div>
+        <app-notifications></app-notifications>
       </ng-template>
     </div>
 
+    
+
     <div class="md:hidden">
+
       <button
         (click)="isMobileMenuOpen = !isMobileMenuOpen"
         class="text-gray-600"
@@ -405,6 +512,9 @@
             d="M4 6h16M4 12h16m-7 6h7"
           />
         </svg>
+      <app-notifications></app-notifications>&nbsp;&nbsp;&nbsp;
+      <button (click)="isMobileMenuOpen = !isMobileMenuOpen" class="text-gray-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
       </button>
     </div>
   </nav>
@@ -467,6 +577,7 @@
     </ng-container>
 
     <ng-template #mobileUserMenu>
+      
       <ul class="flex flex-col py-4 space-y-2">
         <!-- رابط المفضلة -->
         <li>
