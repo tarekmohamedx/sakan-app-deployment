@@ -15,6 +15,7 @@ import { UserBookingRequestsComponent } from '../../features/bookings/components
 import { HttpClient } from '@angular/common/http';
 import { jwtDecode } from 'jwt-decode';
 import Swal from 'sweetalert2';
+import { NotificationsComponent } from '../../notifications/notifications.component';
 
 @Component({
   selector: 'app-header',
@@ -24,6 +25,7 @@ import Swal from 'sweetalert2';
     CommonModule,
     FormsModule,
     UserBookingRequestsComponent,
+    NotificationsComponent 
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
@@ -49,25 +51,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   statusPopupMessage = '';
 
   constructor(private authService: AuthService , private http:HttpClient, private router: Router) {}
-
-//     ngOnInit(): void {
-//   this.subscription = this.authService.isLoggedIn$.subscribe(status => {
-//     this.isLoggedIn = status;
-
-//     if (status) {
-//       const userData = this.authService.getuserdata();
-//       this.user = {
-//         name: userData?.name || 'Guest',
-//         profilePictureUrl: 'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png'
-//       };
-//     } else {
-//       this.user = {
-//         name: '',
-//         profilePictureUrl: ''
-//       };
-//     }
-//   });
-// }
 
       ngOnInit(): void {
         this.loadHostStatus();
@@ -125,63 +108,47 @@ export class HeaderComponent implements OnInit, OnDestroy {
       });
   }
 
-  // onBecomeHostClick() {
-  //   const status = this.hostStatus?.toLowerCase();
-  //   if (!status || status === 'null' || status === 'undefined') {
-  //     this.isPopupVisible = true; // Show modal for new host
-  //   } else if (status === 'pending') {
-  //     Swal.fire(
-  //       'Pending',
-  //       'Your request is pending. Please wait for admin approval.',
-  //       'info'
-  //     );
-  //   } else if (status === 'accepted') {
-  //     window.location.href = '/host/dashboard';
-  //   } else if (status === 'rejected') {
-  //     Swal.fire(
-  //       'Rejected',
-  //       'Sorry, your request to become a host was rejected.',
-  //       'error'
-  //     );
-  //   } else {
-  //     this.isPopupVisible = true; // fallback
-  //   }
-  // }
-
-  onBecomeHostClick(): void {
+onBecomeHostClick(): void {
   const role = this.authService.getRoleFromToken();
+  console.log('User role:', role);
 
-  // 👉 Admin check
   if (role.includes('Admin')) {
     window.location.href = '/admin/dashboard';
     return;
   }
 
-  // 👉 Host or customer logic
-  if (role.includes('Host') || role.includes('customer')) {
+  if (role.includes('Host') || role.includes('Customer')) {
     const status = this.hostStatus?.toLowerCase();
+    console.log('Host status:', status);
 
     if (!status || status === 'null' || status === 'undefined') {
-      this.isPopupVisible = true; // Show modal for new host
+      this.isPopupVisible = true;
     } else if (status === 'pending') {
-      Swal.fire(
-        'Pending',
-        'Your request is pending. Please wait for admin approval.',
-        'info'
-      );
+      Swal.fire('Pending', 'Your request is pending. Please wait for admin approval.', 'info');
     } else if (status === 'accepted') {
-      window.location.href = '/host/dashboard';
+      const alreadyShown = localStorage.getItem('hostApprovedMessageShown');
+
+      if (!alreadyShown) {
+        // First time approved → show message + logout
+        Swal.fire('Approved', 'You are now a host! Please log in again to continue.', 'success')
+          .then(() => {
+            localStorage.setItem('hostApprovedMessageShown', 'true');
+            this.authService.logout();
+            this.router.navigate(['/login']);
+          });
+      } else {
+        // Already logged in again as host → go to dashboard
+        window.location.href = '/host/dashboard';
+      }
+
     } else if (status === 'rejected') {
-      Swal.fire(
-        'Rejected',
-        'Sorry, your request to become a host was rejected.',
-        'error'
-      );
+      Swal.fire('Rejected', 'Sorry, your request to become a host was rejected.', 'error');
     } else {
       this.isPopupVisible = true;
     }
   }
 }
+
 
 getHostButtonLabel(): string {
   const role = this.authService.getRoleFromToken();

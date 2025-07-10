@@ -44,4 +44,10 @@ export class AppComponent implements OnInit {
   get isAdminRoute(): boolean {
     return this.router.url.startsWith('/admin');
   }
+  get isLoginRoute(): boolean {
+    return this.router.url.startsWith('/login');
+  }
+  get isRegisterRoute(): boolean {
+    return this.router.url.startsWith('/register');
+  }
 }

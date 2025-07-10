@@ -29,11 +29,12 @@ import { GoogleCallbackComponent } from './features/auth/google-callback/google-
 import { ForgetPasswordComponent } from './features/auth/forget-password/forget-password.component';
 import { HostGuard } from './guards/host.guard';
 import { AdminGuard } from './guards/admin.guard';
-import { LayoutComponent } from '../app/Admin/layout/layout.component';
-import { AdminDashboardComponent } from '../app/Admin/admin-dashboard/admin-dashboard.component';
-import { AdminListingsComponent } from '../app/Admin/admin-listings/admin-listings.component';
-import { AdminEditlistingComponent } from '../app/Admin/admin-editlisting/admin-editlisting.component';
-import { AdminHostsApproveComponent } from '../app/Admin/admin-hosts-approve/admin-hosts-approve.component';
+import { LayoutComponent } from './admin/layout/layout.component';
+import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
+import { AdminListingsComponent } from './admin/admin-listings/admin-listings.component';
+import { AdminEditlistingComponent } from './admin/admin-editlisting/admin-editlisting.component';
+import { AdminHostsApproveComponent } from './admin/admin-hosts-approve/admin-hosts-approve.component';
+import { AdminApproveListingsComponent } from './admin/listing/listings.component';
 
 
 export const routes: Routes = [
@@ -93,6 +94,7 @@ export const routes: Routes = [
       { path: 'listings', component: AdminListingsComponent },
       { path: 'editlisting/:id', component: AdminEditlistingComponent },
       { path: 'approveHost', component: AdminHostsApproveComponent },
+      { path: 'approvelistings', component: AdminApproveListingsComponent },
     ],
   },
 
