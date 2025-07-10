@@ -49,26 +49,28 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userid!: string;
   statusPopupMessage = '';
 
-  constructor(private authService: AuthService , private http:HttpClient) {}
+  constructor(private authService: AuthService, private http: HttpClient) {}
 
-    ngOnInit(): void {
-  this.subscription = this.authService.isLoggedIn$.subscribe(status => {
-    this.isLoggedIn = status;
+  ngOnInit(): void {
+    this.subscription = this.authService.isLoggedIn$.subscribe((status) => {
+      this.isLoggedIn = status;
 
-    if (status) {
-      const userData = this.authService.getuserdata();
-      this.user = {
-        name: userData?.name || 'Guest',
-        profilePictureUrl: 'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png'
-      };
-    } else {
-      this.user = {
-        name: '',
-        profilePictureUrl: ''
-      };
-    }
-  });
-}
+      if (status) {
+        const userData = this.authService.getuserdata();
+        this.userid = this.authService.getuserdata()?.id || '';
+        this.user = {
+          name: userData?.name || 'Guest',
+          profilePictureUrl:
+            'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png',
+        };
+      } else {
+        this.user = {
+          name: '',
+          profilePictureUrl: '',
+        };
+      }
+    });
+  }
 
   //     ngOnInit(): void {
   //       this.loadHostStatus();

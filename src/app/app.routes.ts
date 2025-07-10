@@ -34,7 +34,7 @@ import { AdminDashboardComponent } from '../app/Admin/admin-dashboard/admin-dash
 import { AdminListingsComponent } from '../app/Admin/admin-listings/admin-listings.component';
 import { AdminEditlistingComponent } from '../app/Admin/admin-editlisting/admin-editlisting.component';
 import { AdminHostsApproveComponent } from '../app/Admin/admin-hosts-approve/admin-hosts-approve.component';
-
+import { ProfileComponent } from './features/auth/profile/components/profile/profile.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -52,6 +52,7 @@ export const routes: Routes = [
       ).then((m) => m.ResetPasswordComponent),
   },
 
+  { path: 'Profile/:id', component: ProfileComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'listings', component: ListingsPageComponent },
   { path: 'register', component: RegisterComponent },
