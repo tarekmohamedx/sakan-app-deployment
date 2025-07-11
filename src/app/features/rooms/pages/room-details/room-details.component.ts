@@ -220,9 +220,10 @@ sendBookingRequest(): void {
     guestId: guestId!,
     listingId: this.room.listingId,
     roomId: this.room.id,
-    bedIds: isWholeRoomBooking ? null : selectedBeds.map(b => b.id as number),
+    bedIds: isWholeRoomBooking ? [] : selectedBeds.map(b => b.id as number),
     fromDate: new Date(this.moveIn).toISOString(),
-    toDate: new Date(this.moveOut).toISOString()
+    toDate: new Date(this.moveOut).toISOString(),
+    createdAt: new Date()
   };
 
   this.listingService.createRequest(dto).subscribe(res => {

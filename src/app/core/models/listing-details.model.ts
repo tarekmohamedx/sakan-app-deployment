@@ -31,6 +31,7 @@ export interface BookingRequestDto {
   bedIds: number[] | null;
   fromDate: string;
   toDate: string;
+  createdAt: Date
 }
 
 export interface ListingAmenity {
