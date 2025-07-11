@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ListingDetailsService } from '../../services/listing-details.service';
-import { BookingRequestDto, ListingDetailsDto } from '../../../../core/models/listing-details.model';
+import { BookingRequestDto, ListingAmenity, ListingDetailsDto, ReviewDto } from '../../../../core/models/listing-details.model';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import * as L from 'leaflet';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -31,6 +31,10 @@ export class ListingDetailsComponent implements OnInit {
   monthsShort = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   listingLatitude: number = 0;
   listingLongitude: number = 0;
+  listingReviews: ReviewDto[] = [];
+  showAllReviews = false;
+
+  // listingAmenities: ListingAmenity[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -50,6 +54,7 @@ export class ListingDetailsComponent implements OnInit {
       this.listing = data;
       this.listingLatitude = this.listing.latitude;
       this.listingLongitude = this.listing.longitude;
+      // this.loadAmenities();
       setTimeout(() => {
         this.initMap();
       }, 0);
@@ -59,7 +64,18 @@ export class ListingDetailsComponent implements OnInit {
       this.bookedMonths = data;
       console.log('📅 Booked Months:', this.bookedMonths);
     });
+
+    this.listingService.getListingReviews(id).subscribe(reviews => {
+      this.listingReviews = reviews;
+    });
+
   }
+
+//   loadAmenities(): void {
+//   this.listingService.getListingAmenities(this.listing.id).subscribe(data => {
+//     this.listingAmenities = data;
+//   });
+// }
 
   increaseGuests() { this.guests++; }
   decreaseGuests() { this.guests = Math.max(1, this.guests - 1); }
@@ -159,6 +175,7 @@ export class ListingDetailsComponent implements OnInit {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
+    map.invalidateSize(); 
     L.marker([this.listingLatitude, this.listingLongitude]).addTo(map)
       .bindPopup('Apartment location')
       .openPopup();
@@ -201,6 +218,10 @@ export class ListingDetailsComponent implements OnInit {
   sendBookingRequest(): void {
     const selectedRooms = this.listing.bedroomList.filter(room => room.selected);
     const guestId = this.listingService.getCurrentUserId();
+    if (!guestId) {
+      Swal.fire('Error', 'You must be logged in to send a booking request.', 'error');
+      return;
+    }
 
     if (!this.moveIn || !this.moveOut) {
       Swal.fire('Missing Dates', 'Please select check-in and check-out months.', 'warning');
@@ -222,7 +243,8 @@ export class ListingDetailsComponent implements OnInit {
         listingId: this.listing.id,
         bedIds: [],
         fromDate: new Date(this.moveIn).toISOString(),
-        toDate: new Date(this.moveOut).toISOString()
+        toDate: new Date(this.moveOut).toISOString(),
+        createdAt: new Date()
       };
 
       this.listingService.createRequest(dto).subscribe(res => {
@@ -239,7 +261,8 @@ export class ListingDetailsComponent implements OnInit {
           // bedIds: room.beds?.map((b: any) => b.id).filter((id: any): id is number => id !== null) ?? [],
           bedIds: [],
           fromDate: new Date(this.moveIn).toISOString(),
-          toDate: new Date(this.moveOut).toISOString()
+          toDate: new Date(this.moveOut).toISOString(),
+          createdAt: new Date()
         };
 
         this.listingService.createRequest(dto).subscribe(res => {

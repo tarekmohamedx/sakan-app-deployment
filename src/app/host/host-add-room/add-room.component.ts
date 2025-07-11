@@ -22,11 +22,12 @@ import { MapSelectorComponentt } from '../../shared/map-selector/map-selector.co
   standalone: true,
   styleUrls: ['./add-room.component.css'],
 })
-
 export class RoomDialogComponent {
   roomForm: FormGroup;
   roomPhotos: File[] = [];
   beds: BedDTO[] = [];
+
+ 
 
   constructor(
     private fb: FormBuilder,
@@ -76,8 +77,30 @@ export class RoomDialogComponent {
     }
   }
 
+  removePhoto(index: number): void {
+    this.roomPhotos.splice(index, 1);
+  }
+
   // 🛏️ Open Bed Dialog
   openAddBedDialog(): void {
+   const roomType = this.roomForm.get('type')?.value;
+   const currentBedCount = this.beds.length;
+
+   const typeLimits: { [key: string]: number } = {
+     single: 1,
+     double: 2,
+     triple: 3,
+     quadra: 4,
+   };
+   const maxBedsAllowed = typeLimits[roomType?.toLowerCase()] ?? 99;
+   if (currentBedCount >= maxBedsAllowed) {
+     Swal.fire(
+       'Bed Limit Reached',
+       `A ${roomType} room can only have ${maxBedsAllowed} bed(s).`,
+       'info'
+     );
+     return;
+   }
     const dialogRef = this.dialog.open(BedDialogComponent, {
       width: '500px',
     });

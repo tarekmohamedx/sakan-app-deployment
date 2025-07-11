@@ -110,30 +110,6 @@
   box-shadow: 0 2px 8px rgba(80, 120, 180, 0.13);
 }
 
-/* .details-layout {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 2rem;
-  margin-block: 2.5rem;
-  align-items: start;
-  padding-inline: 1rem;
-}
-
-@media (max-width: 1024px) {
-  .details-layout {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    margin-block: 2rem;
-  }
-}
-
-@media (max-width: 600px) {
-  .details-layout {
-    padding-inline: 0.5rem;
-    gap: 1rem;
-  }
-} */
-
 
 .details-layout {
   display: grid;
@@ -189,7 +165,7 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  background: #e6ecf5;
+  /* background: #e6ecf5; */
   color: #31456e;
   border-radius: 8px;
   padding: 0.4rem 0.8rem;
@@ -399,26 +375,6 @@
   cursor: pointer;
 }
 
-/* .select-all {
-    text-align: right;
-    margin-top: 10px;
-}
-
-.select-all button {
-    background: linear-gradient(90deg, #007bff 60%, #60a5fa 100%);
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background 0.2s;
-}
-
-.select-all button:hover {
-    background: #0056b3;
-} */
-
 
 /* ---------------------------------------- calendar styles ---------------------------------------- */
 .calendar-year-selector {
@@ -470,13 +426,6 @@
   box-shadow: 0 2px 8px rgba(59,130,246,0.04);
 }
 
-/* .month-tile.disabled {
-  pointer-events: none;
-  opacity: 0.6;
-  cursor: not-allowed;
-} */
-
-
 .month-tile.selected {
   background: linear-gradient(90deg, #112c66 60%, #60a5fa8a 100%);
   color: #fff;
@@ -507,11 +456,19 @@
 }
 
 /* -----------------------------------------  map styles ----------------------------------------  */
+
 .map-container {
-  margin: 1rem 0;
+  margin-top: 2rem;
+  padding: 1rem;
   border-radius: 10px;
   overflow: hidden;
+  background: #f9f9f9;
+  z-index: 1;
+  position: relative; 
 }
+
+
+//---------------------------------------------------------------------------------------------
 
 hr{
   width: 80%;
@@ -550,4 +507,226 @@ hr{
   direction: ltr;
   text-align: left;
 }
+
+// for the reviews section
+/* Reviews Section - Enhanced Design */
+.reviews-section {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  padding: 2rem;
+  /* background: #f7fafd; */
+  background:rgb(84, 144, 204);
+  border-radius: 18px;
+  box-shadow: 0 4px 18px rgba(80, 120, 180, 0.08);
+  width: 70%;
+}
+
+.reviews-section h3 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #31456e;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.reviews-section h3::before {
+  content: '⭐';
+  font-size: 1.5rem;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 2fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.review-card {
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(80, 120, 180, 0.12);
+  border: 1.5px solid #e3eaf6;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  margin-button:40px;
+  /* width: 50%; */
+}
+
+.review-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(80, 120, 180, 0.15);
+}
+
+.review-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #31456e 60%, #a2c7f3 100%);
+}
+
+.review-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid #e3eaf6;
+}
+
+.review-header strong {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #091c46;
+}
+
+.review-header .date {
+  font-size: 0.9rem;
+  color: #7b8794;
+  font-style: italic;
+}
+
+.stars {
+  display: flex;
+  gap: 0.2rem;
+  margin-top: 0.3rem;
+}
+
+.stars span {
+  color: #e5e7eb;
+  font-size: 1.2rem;
+  transition: color 0.2s ease;
+}
+
+.stars .filled {
+  color: #fbbf24;
+}
+
+.comment {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #4b5563;
+  margin: 0;
+  font-style: italic;
+  position: relative;
+}
+
+/* .comment::before {
+  content: '"';
+  font-size: 2rem;
+  color: #31456e;
+  position: absolute;
+  left: -0.5rem;
+  top: -0.3rem;
+  opacity: 0.3;
+}
+
+.comment::after {
+  content: '"';
+  font-size: 2rem;
+  color: #31456e;
+  position: absolute;
+  right: -0.3rem;
+  bottom: -0.8rem;
+  opacity: 0.3;
+} */
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .reviews-section {
+    padding: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .review-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .review-card {
+    padding: 1.2rem;
+  }
+  
+  .reviews-section h3 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Alternative compact layout */
+.reviews-section.compact .review-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.reviews-section.compact .review-card {
+  padding: 1rem;
+}
+
+.reviews-section.compact .review-header {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reviews-section.compact .stars {
+  margin-top: 0;
+}
+
+.view-all-btn {
+  padding: 0.5rem 1rem;
+  background-color: #086282;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.view-all-btn:hover {
+  background-color: #064b5e;
+}
+
+
+
+
+// for the amenities section
+
+/* .section-title {
+  font-size: 1.5rem;
+  margin: 1.5rem 0 1rem;
+  text-align: center;
+}
+
+.amenities-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.amenity-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #f9f9f9;
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.amenity-icon {
+  width: 24px;
+  height: 24px;
+} */
+
 

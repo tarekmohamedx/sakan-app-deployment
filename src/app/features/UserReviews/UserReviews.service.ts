@@ -47,8 +47,8 @@ export class UserReviewsService {
   }
 
   // ✅ Get reviews for a host
-  getHostReviews(hostId?: string): Observable<ReviewDto[]> {
-    const id = hostId || this.getCurrentUserId();
+  getUserReviews(userId?: string): Observable<ReviewDto[]> {
+    const id = userId || this.getCurrentUserId();
     if (!id) throw new Error("Host ID not found.");
     return this.http.get<ReviewDto[]>(`${this.apiUrl}/host/${id}`, {
       headers: this.getAuthHeaders()

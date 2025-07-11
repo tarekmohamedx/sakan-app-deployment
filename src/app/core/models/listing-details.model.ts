@@ -31,6 +31,20 @@ export interface BookingRequestDto {
   bedIds: number[] | null;
   fromDate: string;
   toDate: string;
+  createdAt: Date
+}
+
+export interface ListingAmenity {
+  id: number;
+  name: string;
+  iconUrl: string;
+}
+
+export interface ReviewDto {
+  reviewerName: string;
+  comment: string;
+  rating: number;
+  createdAt: string;
 }
 
 

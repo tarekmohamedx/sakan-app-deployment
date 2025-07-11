@@ -198,6 +198,10 @@ get selectedBedIds(): number[] {
 sendBookingRequest(): void {
   const selectedBeds = this.room.beds.filter(bed => bed.selected);
   const guestId = this.listingService.getCurrentUserId();
+  if (!guestId) {
+    Swal.fire('Error', 'You must be logged in to send a booking request.', 'error');
+    return;
+  }
 
   if (!this.moveIn || !this.moveOut) {
     Swal.fire('Warning', 'Please select check-in and check-out months.', 'warning');
@@ -216,9 +220,10 @@ sendBookingRequest(): void {
     guestId: guestId!,
     listingId: this.room.listingId,
     roomId: this.room.id,
-    bedIds: isWholeRoomBooking ? null : selectedBeds.map(b => b.id as number),
+    bedIds: isWholeRoomBooking ? [] : selectedBeds.map(b => b.id as number),
     fromDate: new Date(this.moveIn).toISOString(),
-    toDate: new Date(this.moveOut).toISOString()
+    toDate: new Date(this.moveOut).toISOString(),
+    createdAt: new Date()
   };
 
   this.listingService.createRequest(dto).subscribe(res => {

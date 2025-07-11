@@ -12,7 +12,6 @@
     </div>
   </div>
 
-  
   <!-- Form Start -->
   <form [formGroup]="bedForm">
     <!-- Two-Column Fields -->
@@ -77,7 +76,16 @@
     <div *ngIf="bedPhotos.length > 0" class="preview-area">
       <h4>Uploaded Photos:</h4>
       <ul>
-        <li *ngFor="let photo of bedPhotos">{{ photo.name }}</li>
+        <li *ngFor="let photo of bedPhotos; let i = index">
+          {{ photo.name }}
+          <button
+            type="button"
+            (click)="removePhoto(i)"
+            class="delete-photo-btn"
+          >
+            🗑️ Remove
+          </button>
+        </li>
       </ul>
     </div>
 

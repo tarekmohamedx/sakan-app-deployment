@@ -26,7 +26,7 @@ import { amenitiesservice } from '../services/amenities.service';
     CommonModule,
     NgFor,
     NgIf,
-    FormsModule
+    FormsModule,
   ],
   templateUrl: './add-apartment.component.html',
   styleUrl: './add-apartment.component.css',
@@ -34,14 +34,40 @@ import { amenitiesservice } from '../services/amenities.service';
 export class AddApartmentComponent implements OnInit {
   listingForm: FormGroup;
   governorates = [
-    /* ... */
+    'Cairo',
+    'Giza',
+    'Alexandria',
+    'Dakahlia',
+    'Red Sea',
+    'Beheira',
+    'Fayoum',
+    'Gharbia',
+    'Ismailia',
+    'Monufia',
+    'Minya',
+    'Qalyubia',
+    'New Valley',
+    'Suez',
+    'Aswan',
+    'Assiut',
+    'Beni Suef',
+    'Port Said',
+    'Damietta',
+    'South Sinai',
+    'Kafr El Sheikh',
+    'Matrouh',
+    'Luxor',
+    'Qena',
+    'North Sinai',
+    'Sohag',
   ];
 
   listingPhotos: File[] = [];
   rooms: RoomDTO[] = [];
 
   amenities: any[] = [];
-  selectedAmenities: number[] = [];
+  // selectedAmenities: number[] = [];
+  isSubmitting = false;
 
   @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
   @ViewChild(MapSelectorComponentt) mapSelector!: MapSelectorComponentt;
@@ -62,6 +88,7 @@ export class AddApartmentComponent implements OnInit {
       latitude: [null, Validators.required],
       longitude: [null, Validators.required],
       isBookableAsWhole: [false],
+      amenityIds: [[]],
     });
   }
 
@@ -92,7 +119,7 @@ export class AddApartmentComponent implements OnInit {
         this.listingForm.reset();
         this.rooms = [];
         this.listingPhotos = [];
-        this.selectedAmenities = [];
+        this.listingForm.value.amenityIds = [];
         Swal.fire('Reset!', 'The form has been cleared.', 'success');
       }
     });
@@ -137,7 +164,9 @@ export class AddApartmentComponent implements OnInit {
       longitude: coords.lng,
     });
   }
-
+  removePhoto(index: number): void {
+    this.listingPhotos.splice(index, 1);
+  }
   openAddRoomDialog(): void {
     const dialogRef = this.dialog.open(RoomDialogComponent, { width: '600px' });
     dialogRef.afterClosed().subscribe((result: RoomDTO | undefined) => {
@@ -150,12 +179,13 @@ export class AddApartmentComponent implements OnInit {
       // Show validation error
       return;
     }
+    this.isSubmitting = true;
 
     const dto: CreateListingDTO = {
       ...this.listingForm.value,
       listingPhotos: this.listingPhotos,
       rooms: this.rooms,
-      amenityIds: this.selectedAmenities,
+      amenityIds: this.listingForm.value.amenityIds,
     };
 
     this.listingService.createListing(dto).subscribe({
@@ -168,12 +198,23 @@ export class AddApartmentComponent implements OnInit {
         this.listingForm.reset();
         this.rooms = [];
         this.listingPhotos = [];
-        this.selectedAmenities = [];
+        this.listingForm.value.amenityIds = [];
         this.mapSelector.clearMarker();
       },
       error: (err) => {
         console.error('API Error', err);
-        Swal.fire('Error', 'Something went wrong', 'error');
+        Swal.fire({
+          icon: 'error',
+          title: '❌ Error',
+          html:
+            err?.error?.message ||
+            JSON.stringify(err?.error?.errors) ||
+            'Something went wrong',
+        });
+        this.isSubmitting = false; // Hide loader on error
+      },
+      complete: () => {
+        this.isSubmitting = false; // Hide loader regardless of success or error
       },
     });
   }

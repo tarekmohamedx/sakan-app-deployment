@@ -29,11 +29,16 @@ import { GoogleCallbackComponent } from './features/auth/google-callback/google-
 import { ForgetPasswordComponent } from './features/auth/forget-password/forget-password.component';
 import { HostGuard } from './guards/host.guard';
 import { AdminGuard } from './guards/admin.guard';
+import { ProfileComponent } from './features/auth/profile/components/profile/profile.component';
 import { LayoutComponent } from './admin/layout/layout.component';
 import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 import { AdminListingsComponent } from './admin/admin-listings/admin-listings.component';
 import { AdminEditlistingComponent } from './admin/admin-editlisting/admin-editlisting.component';
 import { AdminHostsApproveComponent } from './admin/admin-hosts-approve/admin-hosts-approve.component';
+import { AdminApproveListingsComponent } from './admin/listing/listings.component';
+import { CreateTicketComponent } from './features/support/components/create-ticket/create-ticket.component';
+import { TicketDetailsComponent } from './features/support/components/ticket-details/ticket-details.component';
+import { MyTicketsComponent } from './features/support/components/my-tickets/my-tickets.component';
 import { AdminUsersComponent } from './admin/admin-users/admin-users.component';
 
 export const routes: Routes = [
@@ -52,6 +57,7 @@ export const routes: Routes = [
       ).then((m) => m.ResetPasswordComponent),
   },
 
+  { path: 'Profile/:id', component: ProfileComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'listings', component: ListingsPageComponent },
   { path: 'register', component: RegisterComponent },
@@ -64,6 +70,10 @@ export const routes: Routes = [
   { path: 'chat', component: ChatComponent },
   { path: 'becomeHost', component: BecomeHostComponent },
   { path: 'review', component: UserReviewComponent },
+  { path: 'contact', component: CreateTicketComponent },
+  { path: 'my-tickets', component: MyTicketsComponent},
+  { path: 'ticket/:id', component: TicketDetailsComponent },
+  { path: 'guest-ticket/:token', component: TicketDetailsComponent } ,
   {
     path: 'host',
     canActivate: [HostGuard],
@@ -93,6 +103,7 @@ export const routes: Routes = [
       { path: 'listings', component: AdminListingsComponent },
       { path: 'editlisting/:id', component: AdminEditlistingComponent },
       { path: 'approveHost', component: AdminHostsApproveComponent },
+      { path: 'approvelistings', component: AdminApproveListingsComponent },
       { path: 'users', component: AdminUsersComponent },
     ],
   },
