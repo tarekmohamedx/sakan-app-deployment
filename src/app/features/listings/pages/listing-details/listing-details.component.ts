@@ -243,7 +243,8 @@ export class ListingDetailsComponent implements OnInit {
         listingId: this.listing.id,
         bedIds: [],
         fromDate: new Date(this.moveIn).toISOString(),
-        toDate: new Date(this.moveOut).toISOString()
+        toDate: new Date(this.moveOut).toISOString(),
+        createdAt: new Date()
       };
 
       this.listingService.createRequest(dto).subscribe(res => {
@@ -260,7 +261,8 @@ export class ListingDetailsComponent implements OnInit {
           // bedIds: room.beds?.map((b: any) => b.id).filter((id: any): id is number => id !== null) ?? [],
           bedIds: [],
           fromDate: new Date(this.moveIn).toISOString(),
-          toDate: new Date(this.moveOut).toISOString()
+          toDate: new Date(this.moveOut).toISOString(),
+          createdAt: new Date()
         };
 
         this.listingService.createRequest(dto).subscribe(res => {
