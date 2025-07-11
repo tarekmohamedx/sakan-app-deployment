@@ -96,11 +96,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   //   });
   // }
 
-          profilePictureUrl: ''
-        };
-      }
-    });
-  }
+  //         profilePictureUrl: ''
+  //       };
+  //     }
+  //   });
+  // }
 
   getToken(): string | null {
     return sessionStorage.getItem('token');

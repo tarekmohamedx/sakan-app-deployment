@@ -34,7 +34,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideClientHydration(),
-    provideHttpClient(withFetch()),
+    provideHttpClient(withInterceptors([authInterceptorFn]), withFetch()),
     provideAnimations(),
     { provide: LOCALE_ID, useValue: 'ar' },
     importProvidersFrom(

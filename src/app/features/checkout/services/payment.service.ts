@@ -12,7 +12,7 @@ private apiUrl =` ${environment.apiurlpayments}`;
 
   constructor(private http: HttpClient) { }
 
-  createPaymentIntent(bookingId: number): Observable<{ clientSecret: string }> {
-    return this.http.post<{ clientSecret: string }>(`${this.apiUrl}/create-intent`, { bookingId });
+  createPaymentIntent(BookingRequestId: number): Observable<{ clientSecret: string }> {
+    return this.http.post<{ clientSecret: string }>(`${this.apiUrl}/create-intent`, { BookingRequestId });
   }
 }

@@ -9,5 +9,6 @@ export const environment = {
   googleCallbackUrl: 'https://localhost:7188/signin-google',
   PublishableKey: 'pk_test_51RfIlv4JQzQddxvZOOZEYUz7ELj5hOBm55URQddASUPv7BOfLOmy5bwlpG9bNuvOJXxWMnJ3aSkMvFWlLoklTOKl00vUuPFAyh',
   apiurlpayments: `https://localhost:7188/api/payments`,
+  apiurlsupport: `https://localhost:7188/api/supporttickets`,
   serverUrl: `https://localhost:7188`,
 };
