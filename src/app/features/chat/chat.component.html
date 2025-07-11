@@ -1,13 +1,19 @@
 <div class="chat-wrapper">
+  <figure>
+    <figcaption class="blockquote-footer">
+      Note: <cite title="Source Title">Booking Requests will be not active after one week [rejected]</cite>
+    </figcaption>
+  </figure>
   <div class="chat-container">
     <!-- Sidebar -->
+    
     <div class="sidebar">
       <div class="sidebar-header">
         <h2>Messages</h2>
       </div>
       <div class="chat-list">
         <div
-          *ngFor="let chat of newchats"
+          *ngFor="let chat of chats"
           [class.active]="selectedChat?.chatId === chat.chatId"
           class="chat-item"
           (click)="selectChat(chat)"
@@ -16,10 +22,14 @@
             <i class="fas fa-home"></i>
             <div class="chat-item-details">
               <div class="chat-header-row">
-                <h5 class="chat-username">{{ getUserName(chat) }}</h5>
-                <span class="status-badge" *ngIf="chat.listingStatus" [ngClass]="chat.listingStatus.toLowerCase()">
+                <!-- <p class="lead">{{approvalStatus}}</p> -->
+                <h5 class="chat-username text-bold">{{ getUserName(chat) }}</h5>
+                <!-- <span class="status-badge" *ngIf="chat.listingStatus" [ngClass]="chat.listingStatus.toLowerCase()">
                   {{ chat.listingStatus }}
-                </span>
+                </span> -->
+                <!-- <span>
+                  {{approvalStatus | titlecase}}
+                </span> -->
               </div>
               <p class="lead">{{ getLatestMessage(chat) }}</p>
             </div>
@@ -33,46 +43,62 @@
 
       <!-- Header -->
       <div *ngIf="selectedChat" class="chat-header">
+        <p class="lead text-center">{{approvalStatus}}</p>
         <h2>
-          <a
-            [routerLink]="['/listing', selectedChat.listingId]"
-            class="listing-link"
-          >
+          <a [routerLink]="['/listing', selectedChat.listingId]" class="listing-link ">
             {{ selectedChat.listingTitle }}
           </a>
           - {{ selectedChat.hostName }}
         </h2>
 
         <ng-container [ngSwitch]="approvalStatus">
-  
-          <button
-            *ngSwitchCase="'GoToPayment'"
-            class="btn success"
-            (click)="goToPayment()"
-          >
-            Go to Payment
-          </button>
-        
-          <span *ngSwitchCase="'PendingHost'" class="status-msg pending">
-            Waiting for host approval
+          <!-- Pending (none approved yet) -->
+          <span *ngSwitchCase="'Pending'" class="status-msg pending">
+            {{ BookingStatusToString(approvalStatus) }}
           </span>
         
-          <span *ngSwitchCase="'PendingGuest'" class="status-msg pending">
-            Waiting for guest approval
+          <!-- Guest approved only -->
+          <span *ngSwitchCase="'ApprovedByGuest'" class="status-msg waiting">
+            {{ BookingStatusToString(approvalStatus) }}
           </span>
         
-          <span *ngSwitchCase="'PendingUserBooking'" class="status-msg pending">
-            Waiting for guest to complete booking
+          <!-- Host approved only -->
+          <span *ngSwitchCase="'ApprovedByHost'" class="status-msg waiting">
+            {{ BookingStatusToString(approvalStatus) }}
           </span>
         
-          <button
-            *ngSwitchDefault
-            class="approve-btn"
-            (click)="onApproveClick()"
-          >
-            Approve
-          </button>
+          <!-- Both approved, but guest hasn't booked -->
+          <span *ngSwitchCase="'PendingUserBooking'" class="status-msg payment">
+            {{ BookingStatusToString(approvalStatus) }}
+          </span>
+        
+          <!-- Booking fully approved, proceed to payment -->
+          <span *ngSwitchCase="'GoToPayment'" class="status-msg payment">
+            {{ BookingStatusToString(approvalStatus) }}
+          </span>
+        
+          <!-- Booking fully approved (final) -->
+          <span *ngSwitchCase="'Approved'" class="status-msg success">
+            {{ BookingStatusToString(approvalStatus) }}
+          </span>
+        
+          <!-- Host rejected -->
+          <span *ngSwitchCase="'RejectedByHost'" class="status-msg rejected">
+            {{ BookingStatusToString(approvalStatus) }}
+          </span>
+        
+          <!-- Guest rejected -->
+          <span *ngSwitchCase="'RejectedByGuest'" class="status-msg rejected">
+            {{ BookingStatusToString(approvalStatus) }}
+          </span>
+        
+          <!-- Default fallback -->
+          <span *ngSwitchDefault class="status-msg default">
+            {{ BookingStatusToString(approvalStatus) }}
+          </span>
         </ng-container>
+        
+        
         
         
         
@@ -112,15 +138,22 @@
 
       <!-- Chat Input -->
       <div *ngIf="selectedChat" class="chat-input">
-        <input
-          type="text"
-          [(ngModel)]="newMessage"
-          placeholder="Type your message..."
-          (keyup.enter)="sendMessage()"
-        />
+        <input type="text" [(ngModel)]="newMessage" placeholder="Type your message..." (keyup.enter)="sendMessage()" />
         <button (click)="sendMessage()">
           <i class="fas fa-paper-plane"></i>
         </button>
+        <!-- <button class="reject-btn">
+        Reject
+      </button> -->
+        <button *ngIf="shouldShowApproveButton()" class="approve-btn" (click)="onApproveClick(selectedChat)"
+          [disabled]="shouldDisableApproveButton()">
+          Approve
+        </button>
+      
+        <button *ngIf="approvalStatus === 'GoToPayment' && !isHost()" class="go-to-payment-btn" (click)="goToPayment()">
+          Go to Payment
+        </button>
+
       </div>
     </div>
   </div>
