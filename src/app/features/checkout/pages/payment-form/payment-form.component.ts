@@ -14,7 +14,7 @@ import { BehaviorSubject, combineLatest, filter, firstValueFrom, take } from 'rx
   styleUrl: './payment-form.component.css'
 })
 export class PaymentFormComponent implements OnInit, OnDestroy {
- @Input() bookingId!: number;
+ @Input() BookingRequestId!: number;
   @Input() amount!: number;
 
   @ViewChild('cardNumberElement') cardNumberRef!: ElementRef;
@@ -42,7 +42,7 @@ export class PaymentFormComponent implements OnInit, OnDestroy {
   async ngOnInit(): Promise<void> {
     loadStripe(environment.PublishableKey).then(stripe => this.stripeReady$.next(stripe));
     
-    firstValueFrom(this.paymentService.createPaymentIntent(3))
+    firstValueFrom(this.paymentService.createPaymentIntent(2))
       .then(response => this.clientSecretReady$.next(response.clientSecret))
       .catch(err => this.paymentError = "Failed to get payment secret.");
   }
@@ -106,7 +106,7 @@ export class PaymentFormComponent implements OnInit, OnDestroy {
       this.paymentError = error.message ?? "An unknown error occurred.";
     } else if (paymentIntent?.status === 'succeeded') { // <-- التحقق هنا
       this.paymentSuccess = true;
-      setTimeout(() => this.router.navigate(['/booking-success', this.bookingId]), 2000);
+      setTimeout(() => this.router.navigate(['/chat']), 2000);
     } else {
       // حالة أخرى مثل 'requires_action'
       this.paymentError = "Further action is required to complete the payment.";

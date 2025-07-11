@@ -36,7 +36,9 @@ import { AdminListingsComponent } from './admin/admin-listings/admin-listings.co
 import { AdminEditlistingComponent } from './admin/admin-editlisting/admin-editlisting.component';
 import { AdminHostsApproveComponent } from './admin/admin-hosts-approve/admin-hosts-approve.component';
 import { AdminApproveListingsComponent } from './admin/listing/listings.component';
-// import { AdminApproveListingsComponent } from './admin/listing/listings.compont';
+import { CreateTicketComponent } from './features/support/components/create-ticket/create-ticket.component';
+import { TicketDetailsComponent } from './features/support/components/ticket-details/ticket-details.component';
+import { MyTicketsComponent } from './features/support/components/my-tickets/my-tickets.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -67,6 +69,10 @@ export const routes: Routes = [
   { path: 'chat', component: ChatComponent },
   { path: 'becomeHost', component: BecomeHostComponent },
   { path: 'review', component: UserReviewComponent },
+  { path: 'contact', component: CreateTicketComponent },
+  { path: 'my-tickets', component: MyTicketsComponent},
+  { path: 'ticket/:id', component: TicketDetailsComponent },
+  { path: 'guest-ticket/:token', component: TicketDetailsComponent } ,
   {
     path: 'host',
     canActivate: [HostGuard],

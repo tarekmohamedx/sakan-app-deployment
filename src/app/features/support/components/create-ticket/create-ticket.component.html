@@ -1,0 +1,120 @@
+<!-- === Main Container with a Soft Background === -->
+<div class="bg-gray-50">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto py-16 sm:py-24">
+
+      <!-- =================================== -->
+      <!-- 1. Page Header (Clean & Focused)  -->
+      <!-- =================================== -->
+      <div class="text-center">
+        <p class="text-base font-semibold text-brand-primary uppercase tracking-wider">
+          Contact Us
+        </p>
+        <h1 class="mt-2 text-4xl sm:text-5xl font-extrabold text-gray-900 tracking-tight">
+          We're Ready To Help
+        </h1>
+        <p class="mt-5 max-w-2xl mx-auto text-xl text-gray-500">
+          Your question or feedback is important to us. Find your answer below or send us a message.
+        </p>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- 2. Form & Info Section (Two-column layout - REVERSED)  -->
+      <!-- ======================================================== -->
+      <div class="mt-16 bg-white rounded-2xl shadow-xl">
+        <div class="grid grid-cols-1 lg:grid-cols-2">
+
+          <!-- === Left Column: Contact Info & FAQ === -->
+          <div class="p-8 sm:p-10 bg-gray-100 lg:rounded-l-2xl">
+            <h3 class="text-xl font-bold text-gray-900">Contact Information</h3>
+            <p class="mt-2 text-gray-600">Find us at our office or through our other contact channels.</p>
+            <ul class="mt-8 space-y-6">
+              <li class="flex">
+                <div class="flex-shrink-0">
+                  <div class="h-12 w-12 bg-white text-brand-primary rounded-md flex items-center justify-center shadow-md">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 6.75z" /></svg>
+                  </div>
+                </div>
+                <div class="ml-4">
+                  <h4 class="text-base font-medium text-gray-900">Phone</h4>
+                  <p class="text-gray-600">+1 (555) 123-4567</p>
+                </div>
+              </li>
+              <li class="flex">
+                <div class="flex-shrink-0">
+                   <div class="h-12 w-12 bg-white text-brand-primary rounded-md flex items-center justify-center shadow-md">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></svg>
+                  </div>
+                </div>
+                <div class="ml-4">
+                  <h4 class="text-base font-medium text-gray-900">Email</h4>
+                  <p class="text-gray-600">supportexample.com</p>
+                </div>
+              </li>
+            </ul>
+            <hr class="my-10">
+            <h3 class="text-xl font-bold text-gray-900">Frequently Asked Questions</h3>
+            <div class="mt-6 space-y-4">
+               <details class="group bg-white p-4 rounded-lg shadow-sm cursor-pointer">
+                <summary class="flex justify-between items-center font-medium">How do I cancel a booking?<svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></summary>
+                <p class="text-gray-600 mt-3 text-sm">You can cancel a booking from your "My Bookings" page. Be sure to check the cancellation policy for any applicable terms.</p>
+              </details>
+            </div>
+          </div>
+
+          <!-- === Right Column: The Form === -->
+          <div class="p-8 sm:p-10">
+            <!-- Form View -->
+            <div *ngIf="!submissionSuccess">
+              <h2 class="text-2xl font-bold text-gray-900">Send a message</h2>
+              <form [formGroup]="ticketForm" (ngSubmit)="onSubmit()" class="mt-8 space-y-6">
+                <!-- Guest Fields -->
+                <ng-container *ngIf="!isUserLoggedIn">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                      <label for="guestName" class="block text-sm font-medium text-gray-700">Full Name</label>
+                      <input id="guestName" formControlName="guestName" type="text" placeholder="John Doe" class="mt-1 w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-brand-primary focus:border-brand-primary">
+                    </div>
+                    <div>
+                      <label for="guestEmail" class="block text-sm font-medium text-gray-700">Email Address</label>
+                      <input id="guestEmail" formControlName="guestEmail" type="email" placeholder="you@example.com" class="mt-1 w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-brand-primary focus:border-brand-primary">
+                    </div>
+                  </div>
+                </ng-container>
+                <!-- Subject -->
+                <div>
+                  <label for="subject" class="block text-sm font-medium text-gray-700">Subject</label>
+                  <input id="subject" formControlName="subject" type="text" placeholder="e.g., Question about listing #123" class="mt-1 w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-brand-primary focus:border-brand-primary">
+                </div>
+                <!-- Description -->
+                <div>
+                  <label for="description" class="block text-sm font-medium text-gray-700">Message</label>
+                  <textarea id="description" formControlName="description" rows="5" placeholder="Please describe your issue..." class="mt-1 w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-brand-primary focus:border-brand-primary"></textarea>
+                </div>
+                <!-- Submit Button -->
+                <div>
+                  <button type="submit" [disabled]="ticketForm.invalid || isLoading" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-brand-primary hover:bg-brand-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary disabled:bg-gray-400">
+                    <span *ngIf="!isLoading">Send Message</span>
+                    <span *ngIf="isLoading">Submitting...</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+            <!-- Success View -->
+            <div *ngIf="submissionSuccess" class="flex flex-col items-center justify-center text-center h-full min-h-[500px]">
+              <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100">
+                <svg class="h-10 w-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+              </div>
+              <h3 class="mt-5 text-2xl font-bold text-gray-900">Message Sent!</h3>
+              <p class="mt-2 text-base text-gray-600">Thank you! We'll be in touch soon.</p>
+              <button (click)="submissionSuccess = false; ticketForm.reset({category: 'General'});" class="mt-8 text-sm font-medium text-brand-primary hover:text-brand-secondary">
+                Submit another message
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

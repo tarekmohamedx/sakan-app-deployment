@@ -67,11 +67,38 @@ export class HeaderComponent implements OnInit, OnDestroy {
       } else {
         this.user = {
           name: '',
-          profilePictureUrl: ''
+          profilePictureUrl: '',
         };
       }
     });
   }
+
+  //     ngOnInit(): void {
+  //       this.loadHostStatus();
+  //       console.log('HOST STATUS:', this.hostStatus);
+  //       this.subscription = this.authService.isLoggedIn$.subscribe(status => {
+  //       this.isLoggedIn = status;
+
+  //     if (status) {
+  //       const userData = this.authService.getuserdata();
+  //       this.user = {
+  //         name: userData?.name || 'Guest',
+  //         profilePictureUrl: 'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png'
+  //       };
+  //     } else {
+  //       this.user = {
+  //         name: '',
+  //         profilePictureUrl: ''
+  //       };
+  //     }
+  //   });
+  // }
+
+  //         profilePictureUrl: ''
+  //       };
+  //     }
+  //   });
+  // }
 
   getToken(): string | null {
     return sessionStorage.getItem('token');
