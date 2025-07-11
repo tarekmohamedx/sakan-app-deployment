@@ -1,0 +1,47 @@
+<div class="admin-users-container">
+  <div class="users-header">
+    <h2>Manage Users</h2>
+    <div class="role-switch">
+      <button [class.active]="selectedRole === 'host'" (click)="switchRole('host')">Hosts</button>
+      <button [class.active]="selectedRole === 'guest'" (click)="switchRole('guest')">Guests</button>
+    </div>
+    <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()" placeholder="Search by name or email..." class="search-input" />
+  </div>
+  <div class="users-table-container">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of filteredUsers">
+          <td>
+            <input *ngIf="editUser?.id === user.id" [(ngModel)]="editUserName" class="edit-input" />
+            <span *ngIf="editUser?.id !== user.id">{{ user.userName }}</span>
+          </td>
+          <td>
+            <input *ngIf="editUser?.id === user.id" [(ngModel)]="editEmail" class="edit-input" />
+            <span *ngIf="editUser?.id !== user.id">{{ user.email }}</span>
+          </td>
+          <td>{{ user.role }}</td>
+          <td>
+            <div *ngIf="editUser?.id === user.id">
+              <button class="save-btn" (click)="saveEdit()">Save</button>
+              <button class="cancel-btn" (click)="cancelEdit()">Cancel</button>
+            </div>
+            <div *ngIf="editUser?.id !== user.id">
+              <button class="edit-btn" (click)="startEdit(user)">Edit</button>
+              <button class="delete-btn" (click)="deleteUser(user)">Delete</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="loading" class="loading-text">Loading...</div>
+    <div *ngIf="!loading && filteredUsers.length === 0" class="no-users-text">No users found.</div>
+  </div>
+</div>

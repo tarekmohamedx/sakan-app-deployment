@@ -20,14 +20,18 @@ export class ChatHubService {
   connectionStatus$ = this.connectionStatusSubject.asObservable();
 
   private bookingRequestSubject = new Subject<any>();
-public bookingRequest$ = this.bookingRequestSubject.asObservable();
+  public bookingRequest$ = this.bookingRequestSubject.asObservable();
+  
 
   /**
    * Start SignalR connection if not already connected.
    * Safe to call multiple times.
    */
   public async startConnection(userId: string): Promise<void> {
-    if (this.hubConnection && this.hubConnection.state === signalR.HubConnectionState.Connected) {
+    if (
+      this.hubConnection &&
+      this.hubConnection.state === signalR.HubConnectionState.Connected
+    ) {
       return;
     }
 
@@ -57,12 +61,12 @@ public bookingRequest$ = this.bookingRequestSubject.asObservable();
 
     this.hubConnection.on('ReceiveBookingRequestInfo', (data) => {
       console.log('Received booking info:', data);
-      this.bookingRequestSubject.next(data); 
+      this.bookingRequestSubject.next(data);
     });
 
     this.hubConnection.on('ReceiveBookingStatusUpdate', (data: any) => {
-      console.log('[SignalR] Booking status update received:', data);
-      // alert(`Booking status updated: ${data.status} for ${data.listingTitle} by ${data.userName}`);
+      // console.log('[SignalR] Booking status update received:', data);
+      this.bookingRequestSubject.next(data);
       this.showBookingStatusAlert(data);
     });
 
@@ -84,14 +88,14 @@ userName
 "guest1"*/
 
     this.isInitialized = true;
-
   }
 
   /**
    * Ensure SignalR connection is active
    */
   private async ensureConnection(): Promise<void> {
-    if (this.hubConnection.state === signalR.HubConnectionState.Connected) return;
+    if (this.hubConnection.state === signalR.HubConnectionState.Connected)
+      return;
 
     if (!this.connectionPromise) {
       this.connectionPromise = this.hubConnection
@@ -131,12 +135,19 @@ userName
    */
   public stopConnection(): void {
     if (this.hubConnection) {
-      this.hubConnection.stop().catch((err) => console.error('[SignalR] Error stopping connection:', err));
+      this.hubConnection
+        .stop()
+        .catch((err) =>
+          console.error('[SignalR] Error stopping connection:', err)
+        );
       this.connectionStatusSubject.next(false);
     }
   }
 
-  public async invokeChatWithHost(listingId: number, guestId: string): Promise<void> {
+  public async invokeChatWithHost(
+    listingId: number,
+    guestId: string
+  ): Promise<void> {
     try {
       await this.ensureConnection();
       await this.hubConnection.invoke('ChatWithHost', listingId, guestId);
@@ -146,37 +157,33 @@ userName
     }
   }
 
+  async showBookingStatusAlert(data: {
+    guestApproved: boolean;
+    hostApproved: boolean;
+    listingTitle: string;
+    status: string;
+    userName: string;
+  }) {
+    const statusMessage = {
+      GoToPayment: 'Booking approved! Please proceed to payment.',
+      PendingHost: 'Guest approved. Waiting for host confirmation.',
+      PendingGuest: 'Host approved. Waiting for guest confirmation.',
+      Approved: 'Booking fully approved!',
+      PendingUserBooking: 'Guest needs to book first.',
+    };
 
-
-async showBookingStatusAlert(data: {
-  guestApproved: boolean;
-  hostApproved: boolean;
-  listingTitle: string;
-  status: string;
-  userName: string;
-}) {
-  const statusMessage = {
-    GoToPayment: "Booking approved! Please proceed to payment.",
-    PendingHost: "Guest approved. Waiting for host confirmation.",
-    PendingGuest: "Host approved. Waiting for guest confirmation.",
-    Approved: "Booking fully approved!",
-    PendingUserBooking: "Guest needs to book first.",
-  };
-
-  Swal.fire({
-    title: `Booking Update - ${data.listingTitle}`,
-    html: `
+    Swal.fire({
+      title: `Booking Update - ${data.listingTitle}`,
+      html: `
       <strong>${data.userName}</strong> updated the booking status.<br><br>
       <b>Status:</b> ${data.status}<br>
       <b>Guest Approved:</b> ${data.guestApproved ? '✅ Yes' : '❌ No'}<br>
       <b>Host Approved:</b> ${data.hostApproved ? '✅ Yes' : '❌ No'}
     `,
-    icon: 'info',
-    confirmButtonText: 'OK',
-    timer: 7000,
-    timerProgressBar: true
-  });
-}
-
-  
+      icon: 'info',
+      confirmButtonText: 'OK',
+      timer: 7000,
+      timerProgressBar: true,
+    });
+  }
 }

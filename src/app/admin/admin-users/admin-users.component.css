@@ -1,0 +1,115 @@
+.admin-users-container {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  padding: 32px 28px;
+  margin: 32px auto;
+  max-width: 900px;
+}
+.users-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 18px;
+}
+.role-switch button {
+  background: #e2e8f0;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  padding: 8px 22px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-right: 6px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.role-switch button.active {
+  background: #0a7298;
+  color: #fff;
+}
+.search-input {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 1rem;
+  width: 260px;
+  background: #f8fafc;
+}
+.users-table-container {
+  overflow-x: auto;
+}
+.users-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.users-table th,
+.users-table td {
+  padding: 14px 18px;
+  text-align: left;
+  font-weight: 600;
+  color: #374151;
+}
+.users-table th {
+  font-weight: 700;
+  background: #f1f5f9;
+  border-bottom: 2px solid #e2e8f0;
+}
+.users-table tbody tr {
+  border-bottom: 1px solid #e2e8f0;
+  transition: background 0.2s;
+}
+.users-table tbody tr:hover {
+  background: #f9fafb;
+}
+.users-table td {
+  font-weight: 400;
+}
+.edit-input {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  font-size: 1rem;
+  width: 100%;
+  background: #f8fafc;
+}
+.edit-btn, .delete-btn, .save-btn, .cancel-btn {
+  background: #0a7298;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 16px;
+  margin-right: 6px;
+  font-size: 0.98rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+.edit-btn:hover, .save-btn:hover {
+  background: #086282;
+}
+.delete-btn {
+  background: #e53e3e;
+}
+.delete-btn:hover {
+  background: #c53030;
+}
+.cancel-btn {
+  background: #a0aec0;
+  color: #fff;
+}
+.cancel-btn:hover {
+  background: #718096;
+}
+.loading-text, .no-users-text {
+  text-align: center;
+  color: #a0aec0;
+  margin: 24px 0 0 0;
+  font-size: 1.1rem;
+}

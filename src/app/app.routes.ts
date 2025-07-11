@@ -39,6 +39,7 @@ import { AdminApproveListingsComponent } from './admin/listing/listings.componen
 import { CreateTicketComponent } from './features/support/components/create-ticket/create-ticket.component';
 import { TicketDetailsComponent } from './features/support/components/ticket-details/ticket-details.component';
 import { MyTicketsComponent } from './features/support/components/my-tickets/my-tickets.component';
+import { AdminUsersComponent } from './admin/admin-users/admin-users.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -103,6 +104,7 @@ export const routes: Routes = [
       { path: 'editlisting/:id', component: AdminEditlistingComponent },
       { path: 'approveHost', component: AdminHostsApproveComponent },
       { path: 'approvelistings', component: AdminApproveListingsComponent },
+      { path: 'users', component: AdminUsersComponent },
     ],
   },
 
