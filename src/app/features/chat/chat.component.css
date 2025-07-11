@@ -169,7 +169,7 @@
   box-shadow: 0 0 0 3px rgba(49, 69, 110, 0.1);
 }
 
-.chat-input button {
+/* .chat-input button:not(.go-to-payment-btn):not(.approve-btn) {
   padding: 0.75rem 1.5rem;
   background: linear-gradient(90deg, #31456e 60%, #a2c7f3 100%);
   color: white;
@@ -181,10 +181,10 @@
   box-shadow: 0 2px 8px rgba(59,130,246,0.09);
 }
 
-.chat-input button:hover {
+chat-input button:not(.go-to-payment-btn):not(.approve-btn):hover {
   background: linear-gradient(90deg, #072e9ba9 60%, #58709ed8 100%);
   box-shadow: 0 4px 16px rgba(59,130,246,0.13);
-}
+} */
 
 .no-chat-selected {
   display: flex;
@@ -249,56 +249,128 @@
   text-decoration: underline;
 }
 
-/* الزر الأساسي للموافقة */
 .approve-btn {
-  background-color: #007bff;
+  background: linear-gradient(70deg, #31456e 60%, #a2c7f3 100%);
   color: white;
   border: none;
-  padding: 8px 16px;
-  font-weight: bold;
-  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 6px rgba(49, 69, 110, 0.1);
 }
 
 .approve-btn:hover {
-  background-color: #0056b3;
+  background: linear-gradient(90deg, #0e2350 60%, #58709ed8 100%);
+  box-shadow: 0 4px 12px rgba(59,130,246,0.2);
 }
 
-/* زر Go to Payment */
-.btn.success {
+.approve-btn:disabled {
+  background: linear-gradient(90deg, #d1d5db 60%, #e5e7eb 100%);
+  color: #6b7280;
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: none;
+}
+
+/* payment button */
+.chat-input .go-to-payment-btn {
+  all: unset;
   background-color: #28a745;
   color: white;
-  border: none;
   padding: 8px 16px;
   font-weight: bold;
   border-radius: 8px;
   cursor: pointer;
+  border: none;
   transition: background-color 0.3s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-.btn.success:hover {
+.chat-input .go-to-payment-btn:hover {
   background-color: #218838;
 }
 
-/* الرسائل النصية حسب الحالة */
-.status-msg {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-weight: 500;
-  color: #555;
-  background-color: #f1f1f1;
-  margin-top: 8px;
+.chat-input .go-to-payment-btn:disabled {
+  background-color: #94d3a2;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
-/* تخصيص لكل حالة */
-.status-msg.text-success {
-  color: #28a745;
-  background-color: #e6ffed;
+
+.status-msg {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  color: #2d3748;
+  background-color: #f6fafd;
+  margin-top: 8px;
+  box-shadow: 0 1px 3px rgba(59, 130, 246, 0.07);
+  transition: all 0.3s ease;
 }
 
 .status-msg.pending {
-  color: #ffc107;
-  background-color: #fff8e1;
+  background-color: rgba(59,130,246,0.09);
+  color: #31456e;
+  border-left: 4px solid #a2c7f3;
 }
+
+.status-msg.waiting {
+  background-color: #e0e7ef;
+  color: #091c46;
+  border-left: 4px solid #b6c6db;
+}
+
+.status-msg.payment {
+  background-color: #dbeafe;
+  color: #0e2350;
+  border-left: 4px solid #60a5fa8a;
+}
+
+.status-msg.success {
+  background-color: #e6ffed;
+  color: #1e40af;
+  border-left: 4px solid #60a5fa8a;
+}
+
+.status-msg.rejected {
+  background-color: #fef2f2;
+  color: #b91c1c;
+  border-left: 4px solid #ef4444;
+  box-shadow: 0 1px 4px rgba(239, 68, 68, 0.1);
+}
+
+.status-msg.default {
+  background-color: #f9f9fb;
+  color: #6b7280;
+  border-left: 4px solid #e5e7eb;
+}
+
+.reject-btn {
+  background: linear-gradient(90deg, #b91c1c, #ef4444);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 6px rgba(185, 28, 28, 0.2);
+}
+
+.reject-btn:hover {
+  background: linear-gradient(90deg, #7f1d1d, #dc2626);
+  box-shadow: 0 4px 12px rgba(185, 28, 28, 0.3);
+}
+
+.reject-btn:disabled {
+  background-color: #fca5a5;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+

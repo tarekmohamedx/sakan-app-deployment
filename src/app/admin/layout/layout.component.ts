@@ -19,8 +19,8 @@ export class LayoutComponent {
 
   menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', route: '/admin/dashboard' },
-    { id: 'guests', label: 'Guests', icon: 'people', route: '/admin/guests' },
-    { id: 'hosts', label: 'Hosts', icon: 'person_pin', route: '/admin/hosts' },
+    { id: 'guests', label: 'Users', icon: 'people', route: '/admin/users' },
+   // { id: 'hosts', label: 'Hosts', icon: 'person_pin', route: '/admin/hosts' },
     { id: 'listings-approval', label: 'Approve / Reject Listings', icon: 'approval', route: '/admin/approvelistings' },
     { id: 'complaints', label: 'View & Manage Complaints', icon: 'report_problem', route: '/admin/complaints' },
     { id: 'listings', label: 'Listings Management', icon: 'home_work', route: '/admin/listings' },
