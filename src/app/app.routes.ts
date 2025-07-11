@@ -34,7 +34,7 @@ import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard
 import { AdminListingsComponent } from './admin/admin-listings/admin-listings.component';
 import { AdminEditlistingComponent } from './admin/admin-editlisting/admin-editlisting.component';
 import { AdminHostsApproveComponent } from './admin/admin-hosts-approve/admin-hosts-approve.component';
-
+import { AdminUsersComponent } from './admin/admin-users/admin-users.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
@@ -93,6 +93,7 @@ export const routes: Routes = [
       { path: 'listings', component: AdminListingsComponent },
       { path: 'editlisting/:id', component: AdminEditlistingComponent },
       { path: 'approveHost', component: AdminHostsApproveComponent },
+      { path: 'users', component: AdminUsersComponent },
     ],
   },
 
