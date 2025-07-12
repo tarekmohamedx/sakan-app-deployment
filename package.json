@@ -43,6 +43,7 @@
     "moment": "^2.30.1",
     "ng2-charts": "^8.0.0",
     "ngx-daterangepicker-material": "^6.0.4",
+    "ngx-owl-carousel-o": "^20.0.0",
     "ngx-slider-v2": "^17.0.0",
     "ngx-toastr": "^19.0.0",
     "rxjs": "~7.8.0",
