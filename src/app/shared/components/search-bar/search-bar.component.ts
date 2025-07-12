@@ -14,6 +14,8 @@ import * as L from 'leaflet';
 import { FilterParams } from '../../../core/models/filter-params.model';
 import { Amenity } from '../../../core/models/amenity.model';
 import { ListingsService } from '../../../features/listings/services/listings.service';
+import moment from 'moment';
+
 
 @Component({
   selector: 'app-search-bar',
@@ -32,6 +34,15 @@ export class SearchBarComponent implements OnInit {
   activePopover: 'location' | 'dates' | 'advanced' | null = null;
   isMobileFiltersOpen = false;
 
+  minDate = moment().subtract(1, 'months');
+maxDate = moment().add(3, 'months');
+ranges = {
+  'Today': [moment(), moment()],
+  'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+  'This Month': [moment().startOf('month'), moment().endOf('month')],
+};
+
+
   // --- 2. بيانات الفلاتر ---
   allAmenities: Amenity[] = [];
   selectedDateRange: string = '';
@@ -48,7 +59,8 @@ export class SearchBarComponent implements OnInit {
 
   // --- 3. إعدادات المكتبات ---
   map!: L.Map;
-  mapOptions: L.MapOptions = { layers: [L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' })], zoom: 11, center: L.latLng(30.0444, 31.2357) };
+  private currentMarker: L.Marker | null = null;
+  mapOptions: L.MapOptions = { layers: [L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' })], zoom: 10, center: L.latLng(30.0444, 31.2357) };
   priceSliderOptions: Options = { floor: 0, ceil: 10000, step: 100, translate: (v) => `EGP ${v}` };
   datePickerOptions: any = { alwaysShowCalendars: true, autoApply: true, opens: 'center'};
 
@@ -135,7 +147,39 @@ export class SearchBarComponent implements OnInit {
     });
   }
 
-  onMapReady(map: L.Map) { this.map = map; setTimeout(() => map.invalidateSize(), 100); }
+  onMapReady(map: L.Map) { 
+    this.map = map; 
+    setTimeout(() => map.invalidateSize(), 100);
+    this.map.on('click', (e: L.LeafletMouseEvent) => {
+    // استدعاء دالة جديدة لإنشاء العلامة
+    this.addOrUpdateMarker(e.latlng);
+  }); 
+  }
+
+  addOrUpdateMarker(latlng: L.LatLng): void {
+  // تعريف أيقونة مخصصة (مهم لتجنب مشاكل العرض في Angular)
+  const customIcon = L.icon({
+    iconUrl: '../../../assets/marker-icon.png', // تأكدي أن هذا المسار صحيح
+    shadowUrl: '../../../assets/marker-shadow.png', // تأكدي أن هذا المسار صحيح
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
+  // إذا كانت هناك علامة موجودة، قم بإزالتها أولاً
+  if (this.currentMarker) {
+    this.map.removeLayer(this.currentMarker);
+  }
+
+  // إنشاء العلامة الجديدة، مع الأيقونة المخصصة، وإضافتها للخريطة
+  this.currentMarker = L.marker(latlng, { icon: customIcon }).addTo(this.map);
+
+  // اختياري: تحريك الخريطة لتوسيط العلامة الجديدة
+  this.map.panTo(latlng);
+
+  // this.searchForm.patchValue({ latitude: latlng.lat, longitude: latlng.lng });
+}
 
   onDatesSelected(event: { startDate: any, endDate: any }): void {
     const { startDate, endDate } = event;
@@ -228,10 +272,7 @@ export class SearchBarComponent implements OnInit {
   this.closePopover();
   this.isMobileFiltersOpen = false;
   
-  this.router.navigate([], {
-    relativeTo: this.route,
-    queryParams: filterParams,
-  });
+  this.searchTriggered.emit(filterParams); 
 }
 
   resetFilters(): void {
