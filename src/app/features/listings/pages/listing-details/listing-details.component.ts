@@ -216,61 +216,82 @@ export class ListingDetailsComponent implements OnInit {
   }
 
   sendBookingRequest(): void {
-    const selectedRooms = this.listing.bedroomList.filter(room => room.selected);
-    const guestId = this.listingService.getCurrentUserId();
-    if (!guestId) {
-      Swal.fire('Error', 'You must be logged in to send a booking request.', 'error');
-      return;
-    }
+  const selectedRooms = this.listing.bedroomList.filter(room => room.selected);
+  const guestId = this.listingService.getCurrentUserId();
 
-    if (!this.moveIn || !this.moveOut) {
-      Swal.fire('Missing Dates', 'Please select check-in and check-out months.', 'warning');
-      return;
-    }
+  if (!guestId) {
+    Swal.fire('Error', 'You must be logged in to send a booking request.', 'error');
+    return;
+  }
 
-    if (selectedRooms.length === 0) {
-      const hasUnavailableBed = this.listing.bedroomList.some(room =>
-        room.beds?.some(bed => !bed.isAvailable)
+  if (!this.moveIn || !this.moveOut) {
+    Swal.fire('Missing Dates', 'Please select check-in and check-out months.', 'warning');
+    return;
+  }
+
+  if (selectedRooms.length === 0) {
+    const hasUnavailableBed = this.listing.bedroomList.some(room =>
+      room.beds?.some(bed => !bed.isAvailable)
+    );
+
+    if (hasUnavailableBed) {
+      Swal.fire(
+        'Unavailable Beds',
+        "Sorry, you can't book the entire apartment because a room or bed is already booked.\nPlease choose a specific room to proceed.",
+        'error'
       );
+      return;
+    }
 
-      if (hasUnavailableBed) {
-        Swal.fire('Unavailable Beds', "Sorry, you can't book the entire apartment because a room or bed is already booked.\nPlease choose a specific room to proceed.", 'error');
-        return;
+    // Booking the whole apartment
+    const dto: BookingRequestDto = {
+      guestId: guestId!,
+      listingId: this.listing.id,
+      bedIds: [],
+      fromDate: new Date(this.moveIn).toISOString(),
+      toDate: new Date(this.moveOut).toISOString(),
+      createdAt: new Date()
+    };
+
+    this.listingService.createRequest(dto).subscribe({
+      next: (res) => {
+        this.requestSent = true;
+        this.hostId = res.hostId;
+        Swal.fire('Success', 'Your request has been sent successfully!', 'success');
+      },
+      error: (err) => {
+        const msg = err?.error?.message || err?.error?.title || 'An error occurred while sending the request.';
+        Swal.fire('Request Error', msg, 'error');
       }
+    });
+  } else {
+    // Booking per selected room
+    selectedRooms.forEach(room => {
+      const bedIds = room.beds?.filter(b => b.selected).map(b => b.id) ?? [];
 
       const dto: BookingRequestDto = {
         guestId: guestId!,
         listingId: this.listing.id,
+        roomId: room.id,
         bedIds: [],
         fromDate: new Date(this.moveIn).toISOString(),
         toDate: new Date(this.moveOut).toISOString(),
         createdAt: new Date()
       };
 
-      this.listingService.createRequest(dto).subscribe(res => {
-        this.requestSent = true;
-        this.hostId = res.hostId;
-        Swal.fire('Success', 'Your request has been sent successfully!', 'success');
-      });
-    } else {
-      selectedRooms.forEach(room => {
-        const dto: BookingRequestDto = {
-          guestId: guestId!,
-          listingId: this.listing.id,
-          roomId: room.id,
-          // bedIds: room.beds?.map((b: any) => b.id).filter((id: any): id is number => id !== null) ?? [],
-          bedIds: [],
-          fromDate: new Date(this.moveIn).toISOString(),
-          toDate: new Date(this.moveOut).toISOString(),
-          createdAt: new Date()
-        };
-
-        this.listingService.createRequest(dto).subscribe(res => {
+      this.listingService.createRequest(dto).subscribe({
+        next: (res) => {
           this.requestSent = true;
           this.hostId = res.hostId;
           Swal.fire('Success', 'Your request has been sent successfully!', 'success');
-        });
+        },
+        error: (err) => {
+          const msg = err?.error?.message || err?.error?.title || 'An error occurred while sending the request.';
+          Swal.fire('Request Error', msg, 'error');
+        }
       });
-    }
+    });
   }
+}
+
 }

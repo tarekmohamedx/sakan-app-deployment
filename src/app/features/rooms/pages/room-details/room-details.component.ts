@@ -198,6 +198,7 @@ get selectedBedIds(): number[] {
 sendBookingRequest(): void {
   const selectedBeds = this.room.beds.filter(bed => bed.selected);
   const guestId = this.listingService.getCurrentUserId();
+
   if (!guestId) {
     Swal.fire('Error', 'You must be logged in to send a booking request.', 'error');
     return;
@@ -226,12 +227,19 @@ sendBookingRequest(): void {
     createdAt: new Date()
   };
 
-  this.listingService.createRequest(dto).subscribe(res => {
-    this.requestSent = true;
-    this.hostId = res.hostId;
-    Swal.fire('Success', 'Your request has been sent successfully!', 'success');
+  this.listingService.createRequest(dto).subscribe({
+    next: (res) => {
+      this.requestSent = true;
+      this.hostId = res.hostId;
+      Swal.fire('Success', 'Your request has been sent successfully!', 'success');
+    },
+    error: (err) => {
+      const msg = err?.error?.message || err?.error?.title || 'An unexpected error occurred while sending the request.';
+      Swal.fire('Request Error', msg, 'error');
+    }
   });
 }
+
 
 
 

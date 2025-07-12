@@ -12,6 +12,7 @@ import { ListingCardComponent } from '../../../../shared/components/listing-card
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { WishlistService } from '../../../wishlist/services/wishlist.service';
+import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
 
 @Component({
   selector: 'app-home-page',
@@ -20,7 +21,8 @@ import { WishlistService } from '../../../wishlist/services/wishlist.service';
     SearchBarComponent,
     ListingCardComponent,
     FormsModule,
-    RouterModule
+    RouterModule,
+    CarouselModule
   ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css'
@@ -30,6 +32,27 @@ export class HomePageComponent implements OnInit {
     highestRatedListings$!: Observable<ListingSummary[]>;
   newestListings$!: Observable<ListingSummary[]>; // <-- جديد
   mostAffordableListings$!: Observable<ListingSummary[]>; // <-- جديد
+
+  customCarouselOptions: OwlOptions = {
+    loop: true,           // جعل التمرير لانهائياً
+    mouseDrag: true,        // السماح بالسحب بالماوس
+    touchDrag: true,        // السماح بالسحب باللمس
+    pullDrag: false,
+    dots: false,            // إخفاء النقاط الصغيرة في الأسفل
+    navSpeed: 700,
+    navText: [              // استخدام أيقونات Font Awesome للأسهم (يمكنكِ استخدام SVG)
+        '<i class="fa fa-chevron-left"></i>', 
+        '<i class="fa fa-chevron-right"></i>'
+    ],
+    responsive: {         // جعل عدد العناصر متجاوباً مع حجم الشاشة
+      0: { items: 1 },      // شاشة الموبايل: عنصر واحد
+      600: { items: 2 },    // شاشة التابلت: عنصران
+      940: { items: 3 },    // شاشة متوسطة: 3 عناصر
+      1200: { items: 4 }    // شاشة كبيرة: 4 عناصر
+    },
+    nav: true             // إظهار أزرار "التالي" و "السابق"
+  }
+
   
   // بيانات ثابتة لقسم "Featured Destinations"
   featuredDestinations = [

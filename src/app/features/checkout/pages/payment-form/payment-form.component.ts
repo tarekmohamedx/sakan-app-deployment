@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { loadStripe, Stripe, StripeCardCvcElement, StripeCardExpiryElement, StripeCardNumberElement} from '@stripe/stripe-js';
 import { environment } from '../../../../environments/environment';
 import { PaymentService } from '../../services/payment.service';
@@ -14,7 +14,7 @@ import { BehaviorSubject, combineLatest, filter, firstValueFrom, take } from 'rx
   styleUrl: './payment-form.component.css'
 })
 export class PaymentFormComponent implements OnInit, OnDestroy {
- @Input() BookingRequestId!: number;
+ BookingRequestId!: number;
   @Input() amount!: number;
 
   @ViewChild('cardNumberElement') cardNumberRef!: ElementRef;
@@ -37,14 +37,19 @@ export class PaymentFormComponent implements OnInit, OnDestroy {
   paymentError: string | null = null;
   paymentSuccess = false;
 
-  constructor(private paymentService: PaymentService, private router: Router) {}
+  constructor(private paymentService: PaymentService, private router: Router, private route: ActivatedRoute) {}
 
   async ngOnInit(): Promise<void> {
     loadStripe(environment.PublishableKey).then(stripe => this.stripeReady$.next(stripe));
+
+    const idFromRoute = this.route.snapshot.paramMap.get('id');
+    if (idFromRoute) {
+      this.BookingRequestId = +idFromRoute;
     
-    firstValueFrom(this.paymentService.createPaymentIntent(2))
+    firstValueFrom(this.paymentService.createPaymentIntent(this.BookingRequestId))
       .then(response => this.clientSecretReady$.next(response.clientSecret))
       .catch(err => this.paymentError = "Failed to get payment secret.");
+    }
   }
 
   ngAfterViewInit(): void {
@@ -106,7 +111,7 @@ export class PaymentFormComponent implements OnInit, OnDestroy {
       this.paymentError = error.message ?? "An unknown error occurred.";
     } else if (paymentIntent?.status === 'succeeded') { // <-- التحقق هنا
       this.paymentSuccess = true;
-      setTimeout(() => this.router.navigate(['/chat']), 2000);
+      setTimeout(() => this.router.navigate(['/listings']), 2000);
     } else {
       // حالة أخرى مثل 'requires_action'
       this.paymentError = "Further action is required to complete the payment.";

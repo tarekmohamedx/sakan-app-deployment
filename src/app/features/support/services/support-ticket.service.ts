@@ -37,6 +37,6 @@ export class SupportTicketService {
   }
 
   addGuestReply(token: string, dto: CreateReplyDto): Observable<any> {
-    return this.http.post(`${this.apiUrl}/guest/${token}/reply`, dto);
+    return this.http.post(`${this.apiUrl}/guest/${token}/replies`, dto);
   }
 }
