@@ -1,3 +1,4 @@
+import { Options } from 'ngx-slider-v2';
 import {
   ApplicationConfig,
   importProvidersFrom,
@@ -22,6 +23,7 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { AuthService } from './features/auth/services/auth.service';
 import { authInterceptorFn } from '../app/interceptor/auth-interceptor.service';
+import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
 
 registerLocaleData(localeAr);
 
@@ -34,7 +36,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideClientHydration(),
-    provideHttpClient(withInterceptors([authInterceptorFn]), withFetch()),
+    provideHttpClient(withInterceptors([authInterceptorFn]),withFetch()),
     provideAnimations(),
     { provide: LOCALE_ID, useValue: 'ar' },
     importProvidersFrom(
@@ -49,7 +51,8 @@ export const appConfig: ApplicationConfig = {
           useFactory: HttpLoaderFactory,
           deps: [HttpClient],
         },
-      })
+      }),
+      NgxDaterangepickerMd.forRoot(),
     ),
     {
       provide: MAT_DIALOG_DEFAULT_OPTIONS,

@@ -69,17 +69,12 @@
         <div class="h-64 w-full rounded-lg overflow-hidden" leaflet [leafletOptions]="mapOptions" (leafletMapReady)="onMapReady($event)"></div>
     </div>
     <!-- Dates Popover -->
-    <div *ngIf="activePopover === 'dates'" (click)="$event.stopPropagation()" class="absolute left-1/2 -translate-x-1/2 mt-2 bg-white rounded-3xl shadow-lg p-4 z-20">
-        
-        <input
-    type="button"
-    ngxDaterangepickerMd
-    class="w-full text-center border-gray-300 rounded-lg p-2"
-    
-    [locale]="datePickerOptions"  
-    (datesUpdated)="onDatesSelected($event)" 
-/>
-      </div>
+        <ngx-daterangepicker-material *ngIf="activePopover === 'dates'" (click)="$event.stopPropagation()" class="absolute  mt-5 translate-x-[25%] z-20"
+            (datesUpdated)="onDatesSelected($event)"        
+            [autoApply]="true"
+            [showDropdowns]="true"
+            
+        />
     <!-- Advanced Filters Popover -->
     <div *ngIf="activePopover === 'advanced'" (click)="$event.stopPropagation()" class="absolute top-full right-0 mt-2 w-[400px] bg-white rounded-2xl shadow-lg p-6 z-20">
         <h4 class="font-bold mb-4">Filters</h4>

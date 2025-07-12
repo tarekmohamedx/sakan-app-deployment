@@ -1,7 +1,7 @@
 <!-- ======================================================= -->
 <!--      1. قسم البطل (Hero Section) مع شريط البحث          -->
 <!-- ======================================================= -->
-<section class="relative h-[550px] flex items-center justify-center text-center">
+<section class="relative h-[550px] flex items-center justify-center">
     <!-- صورة الخلفية -->
     <div class="absolute inset-0">
         <img src="https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg" alt="Cozy living room" class="w-full h-full object-cover">
@@ -10,9 +10,9 @@
     </div>
 
     <!-- المحتوى فوق الصورة -->
-    <div class="relative z-10">
-        <h1 class="text-4xl md:text-5xl font-bold mb-2  text-white">Find Your Perfect Space</h1>
-        <p class="text-lg md:text-xl mb-8  text-white">Hassle-Free Renting Starts Here</p>
+    <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-4xl md:text-5xl font-bold mb-2  text-white text-center">Find Your Perfect Space</h1>
+        <p class="text-lg md:text-xl mb-8  text-white text-center ">Hassle-Free Renting Starts Here</p>
 
         <!-- استخدام شريط البحث المشترك -->
         <app-search-bar (searchTriggered)="onSearch($event)"></app-search-bar>
@@ -51,15 +51,21 @@
     </div>
     
     <!-- هنا ستضعين مكون الـ Carousel -->
-    <!-- سأستخدم *ngIf و *ngFor كمثال، ولكن يجب استبدالهما بمكتبة مثل ngx-owl-carousel-o -->
-    <div *ngIf="highestRatedListings$ | async as listings" class="flex space-x-4 overflow-x-auto pb-4">
-        <div *ngFor="let listing of listings" class="flex-shrink-0 w-80">
+    <div *ngIf="highestRatedListings$ | async as listings">
+      <!-- نتأكد من وجود عناصر قبل عرض الـ Carousel -->
+      <owl-carousel-o *ngIf="listings.length > 0" [options]="customCarouselOptions">
+
+        <ng-template carouselSlide *ngFor="let listing of listings">
+          <div class="p-2">
             <app-listing-card 
-            [listing]="listing"
-            [isFavorite]="isListingInFavorites(listing.id)"
-            (favoriteToggle)="handleFavoriteToggle($event)">
+              [listing]="listing"
+              [isFavorite]="isListingInFavorites(listing.id)"
+              (favoriteToggle)="handleFavoriteToggle($event)">
             </app-listing-card>
-        </div>
+          </div>
+        </ng-template>
+
+      </owl-carousel-o>
     </div>
 </section>
 
@@ -89,15 +95,21 @@
     </div>
     
     <!-- Carousel لعرض أحدث الوحدات -->
-    <div *ngIf="newestListings$ | async as listings" class="flex space-x-4 overflow-x-auto pb-4 -mx-4 px-4">
-        <!-- استخدام scroll-snap لتحسين تجربة التمرير على الموبايل -->
-        <div *ngFor="let listing of listings" class="flex-shrink-0 w-80 snap-center">
+    <div *ngIf="newestListings$ | async as listings">
+      <!-- نتأكد من وجود عناصر قبل عرض الـ Carousel -->
+      <owl-carousel-o *ngIf="listings.length > 0" [options]="customCarouselOptions">
+
+        <ng-template carouselSlide *ngFor="let listing of listings">
+          <div class="p-2">
             <app-listing-card 
-            [listing]="listing"
-            [isFavorite]="isListingInFavorites(listing.id)"
-            (favoriteToggle)="handleFavoriteToggle($event)">
+              [listing]="listing"
+              [isFavorite]="isListingInFavorites(listing.id)"
+              (favoriteToggle)="handleFavoriteToggle($event)">
             </app-listing-card>
-        </div>
+          </div>
+        </ng-template>
+
+      </owl-carousel-o>
     </div>
 </section>
 
@@ -114,13 +126,20 @@
     </div>
     
     <!-- Carousel لعرض أرخص الوحدات -->
-    <div *ngIf="mostAffordableListings$ | async as listings" class="flex space-x-4 overflow-x-auto pb-4 -mx-4 px-4">
-        <div *ngFor="let listing of listings" class="flex-shrink-0 w-80 snap-center">
+    <div *ngIf="mostAffordableListings$ | async as listings">
+      <!-- نتأكد من وجود عناصر قبل عرض الـ Carousel -->
+      <owl-carousel-o *ngIf="listings.length > 0" [options]="customCarouselOptions">
+
+        <ng-template carouselSlide *ngFor="let listing of listings">
+          <div class="p-2">
             <app-listing-card 
-            [listing]="listing"
-            [isFavorite]="isListingInFavorites(listing.id)"
-            (favoriteToggle)="handleFavoriteToggle($event)">
+              [listing]="listing"
+              [isFavorite]="isListingInFavorites(listing.id)"
+              (favoriteToggle)="handleFavoriteToggle($event)">
             </app-listing-card>
-        </div>
+          </div>
+        </ng-template>
+
+      </owl-carousel-o>
     </div>
 </section>

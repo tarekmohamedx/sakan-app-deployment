@@ -541,9 +541,21 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
   }
   
-  goToPayment() {
-    this.router.navigate(['/payment']);
-    //still need to implement the payment logic
+  async goToPayment() {
+     try {
+      if (!this.selectedChat) return; 
+
+      const guestId = this.GetGuestIdIfHost(this.selectedChat);
+      const bookingId = await this.GetBookingId(this.selectedChat.chatId, guestId);
+
+      if (bookingId) {
+        this.router.navigate(['/payment', bookingId]);
+      }
+    } catch (error) {
+      console.error('Go to payment failed:', error);
+      
+        this.toastr.error('Something went wrong. Please try again.');
+    }
   }
 
   async GetBookingId(chatId: number, guestId: string): Promise<number> {

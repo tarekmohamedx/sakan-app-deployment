@@ -64,7 +64,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'ai', component: AiComponent },
   { path: 'wishlist', component: WishlistPageComponent },
-  { path: 'payment', component: PaymentFormComponent },
+  { path: 'payment/:id', component: PaymentFormComponent },
   { path: 'listing/:id', component: ListingDetailsComponent },
   { path: 'room/:id', component: RoomDetailsComponent },
   { path: 'chat', component: ChatComponent },
