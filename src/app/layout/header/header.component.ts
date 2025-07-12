@@ -25,7 +25,7 @@ import { NotificationsComponent } from '../../notifications/notifications.compon
     CommonModule,
     FormsModule,
     UserBookingRequestsComponent,
-    NotificationsComponent 
+    NotificationsComponent,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
@@ -50,19 +50,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userid!: string;
   statusPopupMessage = '';
 
-  constructor(private authService: AuthService , private http:HttpClient, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private http: HttpClient,
+    private router: Router
+  ) {}
 
-      ngOnInit(): void {
-        this.loadHostStatus();
-        console.log('HOST STATUS:', this.hostStatus);
-        this.subscription = this.authService.isLoggedIn$.subscribe(status => {
-        this.isLoggedIn = status;
+  ngOnInit(): void {
+    this.loadHostStatus();
+    console.log('HOST STATUS:', this.hostStatus);
+    this.subscription = this.authService.isLoggedIn$.subscribe((status) => {
+      this.isLoggedIn = status;
 
       if (status) {
         const userData = this.authService.getuserdata();
+        this.userid = this.authService.getuserdata()?.id || '';
         this.user = {
           name: userData?.name || 'Guest',
-          profilePictureUrl: 'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png'
+          profilePictureUrl:
+            'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png',
         };
       } else {
         this.user = {
@@ -135,56 +141,63 @@ export class HeaderComponent implements OnInit, OnDestroy {
       });
   }
 
-onBecomeHostClick(): void {
-  const role = this.authService.getRoleFromToken();
-  console.log('User role:', role);
+  onBecomeHostClick(): void {
+    const role = this.authService.getRoleFromToken();
+    console.log('User role:', role);
 
-  if (role.includes('Admin')) {
-    window.location.href = '/admin/dashboard';
-    return;
-  }
+    if (role.includes('Admin')) {
+      window.location.href = '/admin/dashboard';
+      return;
+    }
 
-  if (role.includes('Host') || role.includes('Customer')) {
-    const status = this.hostStatus?.toLowerCase();
-    console.log('Host status:', status);
+    if (role.includes('Host') || role.includes('Customer')) {
+      const status = this.hostStatus?.toLowerCase();
+      console.log('Host status:', status);
 
-    if (!status || status === 'null' || status === 'undefined') {
-      this.isPopupVisible = true;
-    } else if (status === 'pending') {
-      Swal.fire('Pending', 'Your request is pending. Please wait for admin approval.', 'info');
-    } else if (status === 'accepted') {
-      const alreadyShown = localStorage.getItem('hostApprovedMessageShown');
+      if (!status || status === 'null' || status === 'undefined') {
+        this.isPopupVisible = true;
+      } else if (status === 'pending') {
+        Swal.fire(
+          'Pending',
+          'Your request is pending. Please wait for admin approval.',
+          'info'
+        );
+      } else if (status === 'accepted') {
+        const alreadyShown = localStorage.getItem('hostApprovedMessageShown');
 
-      if (!alreadyShown) {
-        // First time approved → show message + logout
-        Swal.fire('Approved', 'You are now a host! Please log in again to continue.', 'success')
-          .then(() => {
+        if (!alreadyShown) {
+          // First time approved → show message + logout
+          Swal.fire(
+            'Approved',
+            'You are now a host! Please log in again to continue.',
+            'success'
+          ).then(() => {
             localStorage.setItem('hostApprovedMessageShown', 'true');
             this.authService.logout();
             this.router.navigate(['/login']);
           });
+        } else {
+          // Already logged in again as host → go to dashboard
+          window.location.href = '/host/dashboard';
+        }
+      } else if (status === 'rejected') {
+        Swal.fire(
+          'Rejected',
+          'Sorry, your request to become a host was rejected.',
+          'error'
+        );
       } else {
-        // Already logged in again as host → go to dashboard
-        window.location.href = '/host/dashboard';
+        this.isPopupVisible = true;
       }
-
-    } else if (status === 'rejected') {
-      Swal.fire('Rejected', 'Sorry, your request to become a host was rejected.', 'error');
-    } else {
-      this.isPopupVisible = true;
     }
   }
-}
 
-
-getHostButtonLabel(): string {
-  const role = this.authService.getRoleFromToken();
-  if (role.includes('Admin')) return 'Admin Dashboard';
-  if (this.hostStatus === 'accepted') return 'Host Dashboard';
-  return 'Become a Host';
-}
-
-
+  getHostButtonLabel(): string {
+    const role = this.authService.getRoleFromToken();
+    if (role.includes('Admin')) return 'Admin Dashboard';
+    if (this.hostStatus === 'accepted') return 'Host Dashboard';
+    return 'Become a Host';
+  }
 
   confirmBecomeHost() {
     const userId = this.getCurrentUserId();
