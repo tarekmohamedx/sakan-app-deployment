@@ -39,7 +39,7 @@ import { AdminApproveListingsComponent } from '../app/Admin/listing/listings.com
 import { CreateTicketComponent } from './features/support/components/create-ticket/create-ticket.component';
 import { TicketDetailsComponent } from './features/support/components/ticket-details/ticket-details.component';
 import { MyTicketsComponent } from './features/support/components/my-tickets/my-tickets.component';
-import { AdminUsersComponent } from './admin/admin-users/admin-users.component';
+import { AdminUsersComponent } from '../app/Admin/admin-users/admin-users.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomePageComponent },
