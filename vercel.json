@@ -1,0 +1,6 @@
+{
+  "outputDirectory": "dist/sakan-app",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
