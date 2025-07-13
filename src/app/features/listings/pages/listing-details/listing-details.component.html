@@ -35,7 +35,7 @@
         <br />
         <div class="host-summary" *ngIf="listing.host">
           <div class="avatar-circle">
-            {{ listing.host.name?.charAt(0) | uppercase }}
+            {{ listing.host.name.charAt(0) | uppercase }}
           </div>
           <h3>Hosted by {{ listing.host.name }}</h3>
         </div>
@@ -75,15 +75,15 @@
       <div class="price-breakdown">
         <div class="row">
           <span>Selected room(s) total</span>
-          <span>£{{ selectedRoomsTotal ?? 0 }}</span>
+          <span>£{{ selectedRoomsTotal }}</span>
         </div>
         <div class="row">
           <span>Number of rooms booked</span>
-          <span>{{ selectedRoomCount ?? 0 }}</span>
+          <span>{{ selectedRoomCount }}</span>
         </div>
         <div class="row total">
           <span>Total costs</span>
-          <span>£{{ totalCost?.toFixed(2) ?? '0.00' }}</span>
+          <span>£{{ totalCost.toFixed(2) }}</span>
         </div>
         <div class="row" *ngIf="allRoomsSelected">
           <span>You selected all rooms (the whole apartment)</span>
