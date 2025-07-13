@@ -1,0 +1,80 @@
+
+/* Basic ngx-slider styles */
+.ngx-slider {
+  display: inline-block;
+  position: relative;
+  height: 4px;
+  width: 100%;
+  margin: 25px 5px 25px 5px;
+  vertical-align: middle;
+}
+
+.ngx-slider .ngx-slider-bar {
+  background: #d8e0f3;
+  height: 4px;
+  width: 100%;
+}
+
+.ngx-slider .ngx-slider-selection {
+  background: #0db9f0;
+  height: 100%;
+}
+
+.ngx-slider .ngx-slider-pointer {
+  background: #0db9f0;
+  border: 2px solid #0db9f0;
+  width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  top: -6px;
+  position: absolute;
+  cursor: pointer;
+}
+
+.ngx-slider .ngx-slider-pointer:after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.ngx-slider .ngx-slider-bubble {
+  font-size: 12px;
+  position: absolute;
+  top: -30px;
+  margin-left: -50%;
+  text-align: center;
+}
+
+.ngx-slider .ngx-slider-limit {
+  font-size: 12px;
+  color: #999;
+  position: absolute;
+  top: -30px;
+  margin-left: -50%;
+  text-align: center;
+}
+
+.ngx-slider .ngx-slider-tick {
+  position: absolute;
+  display: inline-block;
+  vertical-align: top;
+  height: 4px;
+  width: 1px;
+  background: #d8e0f3;
+  margin-top: 0;
+}
+
+.ngx-slider .ngx-slider-tick.ngx-slider-selected {
+  background: #0db9f0;
+}
+@import "../node_modules/leaflet/dist/leaflet.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import 'ngx-toastr/toastr';
+

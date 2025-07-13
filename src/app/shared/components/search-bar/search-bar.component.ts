@@ -6,7 +6,7 @@ import { debounceTime } from 'rxjs';
 
 // استيراد المكتبات والمكونات
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
-import { NgxSliderModule, Options } from 'ngx-slider-v2';
+import { NgxSliderModule, Options } from '@angular-slider/ngx-slider';
 import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
 import * as L from 'leaflet';
 

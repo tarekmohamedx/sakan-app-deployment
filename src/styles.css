@@ -1,8 +1,0 @@
-
-@import "../node_modules/ngx-slider-v2/scss/ngx-slider.scss";
-@import "../node_modules/leaflet/dist/leaflet.css";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-@import 'ngx-toastr/toastr';
-
