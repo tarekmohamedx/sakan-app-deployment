@@ -1,6 +1,6 @@
 {
   "outputDirectory": "dist/sakan-app",
-  "buildCommand": "rm -f package-lock.json && npm install --legacy-peer-deps && npm run build",
+  "buildCommand": "rm -f package-lock.json && npm cache clean --force && npm install --legacy-peer-deps --force && npm run build",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
