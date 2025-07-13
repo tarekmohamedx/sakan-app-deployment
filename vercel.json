@@ -1,5 +1,6 @@
 {
   "outputDirectory": "dist/sakan-app",
+  "buildCommand": "npm install --legacy-peer-deps && npm run build",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
