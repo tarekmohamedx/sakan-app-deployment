@@ -34,7 +34,7 @@ export class AdminHostsApproveComponent implements OnInit {
   loadHosts(): void {
     this.isLoading = true;
     this.adminService.getHosts().subscribe({
-      next: (data) => {
+      next: (data: AdminHost[]) => {
         this.hosts = data;
         this.filterHosts();
         this.isLoading = false;
@@ -79,7 +79,7 @@ export class AdminHostsApproveComponent implements OnInit {
     };
 
     this.adminService.approveOrRejectHost(dto).subscribe({
-      next: (res) => {
+      next: (res: any) => {
         Swal.fire('Success', res.message, 'success');
         this.loadHosts();
       },

@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2'; 
-import { AdminListingService } from '../../Admin/services/admin-listing.service';
+import { AdminListingService } from '../../admin/services/admin-listing.service';
 // Uncomment the following line if you have a service for listing management
 // import { AdminListingService } from '../services/admin-listing.service';
 
@@ -50,7 +50,7 @@ export class AdminEditlistingComponent implements OnInit {
 
   loadListing(): void {
     this.adminListingService.getListingById(this.listingId).subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.photoUrls = data.photoUrls || [];
         this.listingForm.patchValue({ ...data, photoUrls: this.photoUrls });
         this.isLoading = false;
@@ -73,7 +73,7 @@ export class AdminEditlistingComponent implements OnInit {
     this.selectedFiles.forEach(file => formData.append('listingPhotos', file));
 
     this.http.post<string[]>('https://localhost:7188/api/upload/upload', formData).subscribe({
-      next: (urls) => {
+      next: (urls: string[]) => {
         this.photoUrls.push(...urls);
         this.listingForm.patchValue({ photoUrls: this.photoUrls });
         Swal.fire('Success', 'Photos uploaded successfully ✅', 'success');
